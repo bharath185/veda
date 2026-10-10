@@ -1,0 +1,113 @@
+services:
+  # 1. PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: shopflow-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: shopflow_user
+      POSTGRES_PASSWORD: shopflow_secret
+      POSTGRES_DB: shopflow_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shopflow_user -d shopflow_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. Redis Cache & Queue
+  redis:
+    image: redis:7-alpine
+    container_name: shopflow-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 3. NestJS Backend API
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: shopflow-api
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://shopflow_user:shopflow_secret@postgres:5432/shopflow_db?schema=public
+      REDIS_URL: redis://redis:6379
+      API_BASE_URL: http://localhost:4000
+      WEB_BASE_URL: http://localhost:3000
+      ADMIN_BASE_URL: http://localhost:3001
+      DELIVERY_BASE_URL: http://localhost:3002
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # 4. Customer Storefront (Web)
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: shopflow-web
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  # 5. Admin Dashboard
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+    container_name: shopflow-admin
+    restart: always
+    ports:
+      - "3001:3001"
+    depends_on:
+      - api
+
+  # 6. Delivery Partner App
+  delivery:
+    build:
+      context: .
+      dockerfile: apps/delivery/Dockerfile
+    container_name: shopflow-delivery
+    restart: always
+    ports:
+      - "3002:3002"
+    depends_on:
+      - api
+
+  # 7. Nginx Ingress Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: shopflow-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - web
+      - admin
+      - delivery
+
+volumes:
+  postgres_data:
+  redis_data:

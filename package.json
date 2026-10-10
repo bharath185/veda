@@ -1,0 +1,23 @@
+{
+  "name": "shopflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-Ready Multi-Vendor E-Commerce Platform",
+  "packageManager": "pnpm@11.5.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "db:generate": "pnpm --filter @shopflow/db generate",
+    "db:migrate": "pnpm --filter @shopflow/db migrate",
+    "db:seed": "pnpm --filter @shopflow/db seed",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
+  },
+  "devDependencies": {
+    "turbo": "^2.4.4",
+    "typescript": "^5.7.3",
+    "prettier": "^3.5.2"
+  }
+}

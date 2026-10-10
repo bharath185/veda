@@ -1,0 +1,59 @@
+import { z } from 'zod';
+import { SharePlatform } from './enums.js';
+
+export const GenerateShareLinkSchema = z.object({
+  productId: z.string().min(1, 'Product ID is required'),
+  platform: z.nativeEnum(SharePlatform).default(SharePlatform.INSTAGRAM),
+  customCampaign: z.string().optional(),
+  discountPercent: z.number().min(0).max(100).optional(),
+});
+
+export type GenerateShareLinkInput = z.infer<typeof GenerateShareLinkSchema>;
+
+export interface ShareLinkResponse {
+  id: string;
+  shortCode: string;
+  shortUrl: string;
+  deepLinkUrl: string;
+  platform: SharePlatform;
+  utmParams: {
+    source: string;
+    medium: string;
+    campaign: string;
+  };
+  ogImages: {
+    square1080: string; // 1080x1080 for Instagram Feed
+    story1920: string;  // 1080x1920 for Instagram Story
+    landscape1200: string; // 1200x630 for WhatsApp / Twitter
+  };
+  readyCaption: string;
+  hashtags: string[];
+  qrCodeUrl: string;
+}
+
+export function buildInstagramCaption(params: {
+  productTitle: string;
+  price: number;
+  compareAtPrice?: number;
+  currency?: string;
+  shortUrl: string;
+  tags?: string[];
+}): string {
+  const currencySymbol = params.currency === 'USD' ? '$' : '₹';
+  const discountText =
+    params.compareAtPrice && params.compareAtPrice > params.price
+      ? ` 🔥 ${(Math.round(((params.compareAtPrice - params.price) / params.compareAtPrice) * 100))}% OFF (was ${currencySymbol}${params.compareAtPrice})`
+      : '';
+
+  const hashtags = (params.tags || [])
+    .map((tag) => `#${tag.replace(/[^a-zA-Z0-9]/g, '')}`)
+    .slice(0, 10)
+    .join(' ');
+
+  return `✨ NEW DROP: ${params.productTitle} ✨\n\n` +
+    `Get yours now for only ${currencySymbol}${params.price}!${discountText}\n\n` +
+    `🛒 Tap the link in bio or visit: ${params.shortUrl}\n` +
+    `⚡ Limited stock available — Free express shipping on orders today!\n\n` +
+    `🏷️ Tag a friend who needs this!\n\n` +
+    `${hashtags || '#shopflow #trending #deals #musthave'}`;
+}

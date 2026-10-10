@@ -1,0 +1,171 @@
+{
+  "info": {
+    "name": "ShopFlow API Collection",
+    "description": "Production API Collection for ShopFlow Enterprise E-Commerce Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"SecurePass@123\",\n  \"role\": \"CUSTOMER\",\n  \"phone\": \"+919876543210\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/register" }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@shopflow.io\",\n  \"password\": \"ShopFlow@1234\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login" }
+          }
+        },
+        {
+          "name": "Enable 2FA TOTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/auth/2fa/enable" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Products Catalogue",
+      "item": [
+        {
+          "name": "List Products (Filters & Sort)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/products?page=1&limit=20&sort=newest" }
+          }
+        },
+        {
+          "name": "Product Details with JSON-LD",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/products/aura-pro-5g-smartphone" }
+          }
+        },
+        {
+          "name": "Full-Text Search",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/products/search?q=Aura" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Cart & Checkout",
+      "item": [
+        {
+          "name": "Get User Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/cart" }
+          }
+        },
+        {
+          "name": "Create Checkout Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "idempotency-key", "value": "demo_idemp_key_123" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shippingAddressId\": \"addr-default-1\",\n  \"gateway\": \"RAZORPAY\",\n  \"couponCode\": \"SUPERFEST20\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/checkout/session" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Instagram Share Generator",
+      "item": [
+        {
+          "name": "Generate Share Link & Captions",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"sf-prod-1\",\n  \"platform\": \"instagram\",\n  \"discountPercent\": 13\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/share/generate" }
+          }
+        },
+        {
+          "name": "Dynamic 1080x1080 OG Image",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/share/og-image/sf-prod-1?format=square1080&discount=13" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Delivery Partner",
+      "item": [
+        {
+          "name": "Get Courier Assignments",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/delivery/assignments" }
+          }
+        },
+        {
+          "name": "Ping Live GPS Location",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"ORD-DEMO-1\",\n  \"latitude\": 12.9716,\n  \"longitude\": 77.6412,\n  \"speed\": 32.4\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/delivery/location" }
+          }
+        }
+      ]
+    }
+  ]
+}
