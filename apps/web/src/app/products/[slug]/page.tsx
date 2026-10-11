@@ -2,37 +2,38 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Star, ShieldCheck, Truck, RefreshCw, ShoppingBag, Heart, Share2, Check, ArrowLeft } from 'lucide-react';
+import { Star, ShieldCheck, Truck, RefreshCw, ShoppingBag, Heart, Share2, Check, ArrowLeft, Leaf, Award } from 'lucide-react';
 import { useIsMobile } from '../../../hooks/useIsMobile';
 import { DesktopHeader } from '../../../components/desktop/DesktopHeader';
 import { MobileBottomNav } from '../../../components/mobile/MobileBottomNav';
 import { useCartStore } from '../../../store/useCartStore';
 
 const productDetails = {
-  id: 'sf-prod-1',
-  title: 'Aura Pro 5G Flagship Smartphone',
-  slug: 'aura-pro-5g-smartphone',
+  id: 'vd-prod-1',
+  title: 'Swarna Bhasma Amrit Chyawanprash with Wild Forest Amla (1kg)',
+  slug: 'swarna-bhasma-chyawanprash-1kg',
   description:
-    'Experience supreme engineering with the Aura Pro 5G. Featuring an ultra-vivid 120Hz LTPO AMOLED display, flagship Snapdragon processor, Sony 50MP triple camera system with optical stabilization, and 120W HyperCharge fast-charging capability. Encased in aerospace-grade aluminum and IP68 water resistance.',
-  price: 69999,
-  compareAtPrice: 79999,
-  rating: 4.9,
-  reviewCount: 142,
+    'Experience the pinnacle of classical Rasayana therapy. Handcrafted strictly according to Charaka Samhita classical texts using wild-harvested Indian Gooseberries (Amla), pure 24K Gold Bhasma, A2 Gir Cow Cultured Ghee, raw forest honey, and 42 therapeutic botanicals including Ashwagandha, Shatavari, and Pippali. Enhances Ojas (vitality), ignites Agni (metabolic fire), and supports deep cellular immunity. 100% Non-Pharma herbal medicine, heavy-metal screened and AYUSH certified.',
+  price: 1499,
+  compareAtPrice: 1799,
+  rating: 4.95,
+  reviewCount: 218,
   images: [
-    'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=1000&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1511707171634-5f897ff02560?w=1000&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=1000&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=1000&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=1000&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=1000&auto=format&fit=crop&q=80',
   ],
   variants: [
-    { id: 'v-1', name: '12GB RAM + 256GB Storage', price: 69999, compareAtPrice: 79999, sku: 'SF-AURA-12-256' },
-    { id: 'v-2', name: '16GB RAM + 512GB Storage', price: 77999, compareAtPrice: 87999, sku: 'SF-AURA-16-512' },
+    { id: 'v-1', name: '1kg Sealed Glass Jar (Family Pack)', price: 1499, compareAtPrice: 1799, sku: 'VD-CHYAWAN-1KG' },
+    { id: 'v-2', name: '500g Glass Jar (Trial Pack)', price: 849, compareAtPrice: 999, sku: 'VD-CHYAWAN-500G' },
   ],
   specs: [
-    { label: 'Display', value: '6.78" 1.5K 120Hz LTPO AMOLED, 4500 nits' },
-    { label: 'Processor', value: 'Qualcomm Snapdragon 8 Gen 3 (4nm)' },
-    { label: 'Camera', value: '50MP Sony IMX890 OIS + 50MP Ultra-wide + 64MP 3x Periscope' },
-    { label: 'Battery', value: '5400 mAh with 120W GaN SuperCharge' },
-    { label: 'Protection', value: 'Corning Gorilla Glass Armor + IP68' },
+    { label: 'Key Botanicals', value: 'Wild Forest Amla, 24K Gold Bhasma, Ashwagandha, Shatavari, Pippali' },
+    { label: 'Dosha Impact', value: 'Tridoshic (Balances Vata, Pitta & Kapha simultaneously)' },
+    { label: 'Processing Base', value: 'A2 Gir Cow Cultured Bilona Ghee & Raw Forest Honey' },
+    { label: 'Dosage Recommendation', value: '1 to 2 teaspoons twice daily with warm A2 milk or water' },
+    { label: 'Certifications', value: 'AYUSH Premium Certified · Zero Heavy Metals · GMP Compliant' },
+    { label: 'Classification', value: '100% Non-Pharma Classical Ayurvedic Medicine' },
   ],
 };
 
@@ -56,7 +57,7 @@ export default function ProductDetailPage() {
         await navigator.clipboard.writeText(data.readyCaption);
       } else {
         await navigator.clipboard.writeText(
-          `✨ NEW DROP: ${productDetails.title} for ₹${selectedVariant.price.toLocaleString('en-IN')}! 🛒 Visit http://localhost:3000/products/${productDetails.slug} #shopflow`,
+          `🌿 PURE AYURVEDA: ${productDetails.title} for only ₹${selectedVariant.price.toLocaleString('en-IN')}! 🌿 100% Non-Pharma AYUSH certified. Check it out at: http://localhost:3005/products/${productDetails.slug} #ayurveda #pureherbs`,
         );
       }
       setCopiedShare(true);
@@ -102,7 +103,7 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col pb-28 md:pb-12">
+    <div className="min-h-screen bg-[#FDFBF7] flex flex-col pb-28 md:pb-12 text-slate-800">
       {/* Schema.org JSON-LD */}
       <script
         type="application/ld+json"
@@ -113,19 +114,19 @@ export default function ProductDetailPage() {
 
       {/* Mobile Top Navigation */}
       {isMobile && (
-        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="p-1 rounded-full hover:bg-slate-100 text-slate-700">
-            <ArrowLeft className="w-5 h-5" />
+        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-emerald-100 px-4 py-3 flex items-center justify-between">
+          <Link href="/" className="p-1 rounded-full hover:bg-emerald-50 text-slate-700">
+            <ArrowLeft className="w-5 h-5 text-emerald-800" />
           </Link>
-          <span className="font-bold text-sm text-slate-800 truncate max-w-[200px]">
+          <span className="font-bold text-xs text-slate-800 truncate max-w-[200px]">
             {productDetails.title}
           </span>
           <button
             onClick={handleShare}
-            className="p-2 rounded-full hover:bg-slate-100 text-slate-700"
+            className="p-2 rounded-full hover:bg-emerald-50 text-slate-700"
             title="Share on Instagram"
           >
-            {copiedShare ? <Check className="w-5 h-5 text-emerald-600" /> : <Share2 className="w-5 h-5" />}
+            {copiedShare ? <Check className="w-5 h-5 text-emerald-600" /> : <Share2 className="w-5 h-5 text-emerald-800" />}
           </button>
         </header>
       )}
@@ -134,14 +135,14 @@ export default function ProductDetailPage() {
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10 flex-1 w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
         {/* Gallery Section */}
         <div className="md:col-span-6 space-y-4">
-          <div className="aspect-square rounded-3xl overflow-hidden bg-white border border-slate-200 shadow-sm relative group">
+          <div className="aspect-square rounded-3xl overflow-hidden bg-white border border-emerald-100 shadow-sm relative group">
             <img
               src={productDetails.images[selectedImage]}
               alt={productDetails.title}
               className="w-full h-full object-cover transition-transform duration-500 hover:scale-110 cursor-crosshair"
             />
-            <span className="absolute top-4 left-4 bg-emerald-500 text-white text-xs font-black uppercase px-3 py-1 rounded-full shadow-md">
-              In Stock · Express Delivery
+            <span className="absolute top-4 left-4 bg-emerald-800 text-white text-xs font-black uppercase px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
+              <Leaf className="w-3.5 h-3.5 text-amber-200" /> AYUSH Certified · Non-Pharma
             </span>
           </div>
 
@@ -151,7 +152,7 @@ export default function ProductDetailPage() {
                 key={idx}
                 onClick={() => setSelectedImage(idx)}
                 className={`w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all ${
-                  selectedImage === idx ? 'border-indigo-600 shadow-md ring-2 ring-indigo-200' : 'border-slate-200 opacity-70 hover:opacity-100'
+                  selectedImage === idx ? 'border-emerald-700 shadow-md ring-2 ring-emerald-200' : 'border-slate-200 opacity-70 hover:opacity-100'
                 }`}
               >
                 <img src={img} alt="Thumb" className="w-full h-full object-cover" />
@@ -163,8 +164,10 @@ export default function ProductDetailPage() {
         {/* Product Details Section */}
         <div className="md:col-span-6 space-y-6">
           <div>
-            <div className="text-xs font-extrabold uppercase text-indigo-600 tracking-wider">Smartphones & Flagships</div>
-            <h1 className="text-2xl md:text-4xl font-black text-slate-900 mt-1 tracking-tight">
+            <div className="text-xs font-extrabold uppercase text-emerald-700 tracking-wider flex items-center gap-1.5">
+              <Award className="w-3.5 h-3.5" /> Classical Rasayanas & Rejuvenators
+            </div>
+            <h1 className="text-2xl md:text-3xl font-black text-slate-900 mt-1 tracking-tight">
               {productDetails.title}
             </h1>
             <div className="flex items-center gap-3 mt-3">
@@ -173,26 +176,26 @@ export default function ProductDetailPage() {
                 <span>{productDetails.rating}</span>
               </div>
               <span className="text-slate-300">·</span>
-              <span className="text-xs text-slate-500 font-semibold">{productDetails.reviewCount} Verified Customer Reviews</span>
+              <span className="text-xs text-slate-500 font-semibold">{productDetails.reviewCount} Verified Patient Reviews</span>
             </div>
           </div>
 
           {/* Pricing */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex items-baseline gap-4">
+          <div className="bg-white rounded-3xl p-5 border border-emerald-100 shadow-xs flex items-baseline gap-4">
             <span className="text-3xl md:text-4xl font-black text-slate-900">
               ₹{selectedVariant.price.toLocaleString('en-IN')}
             </span>
             <span className="text-lg text-slate-400 line-through">
               ₹{selectedVariant.compareAtPrice.toLocaleString('en-IN')}
             </span>
-            <span className="text-xs font-black text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
-              Save ₹{(selectedVariant.compareAtPrice - selectedVariant.price).toLocaleString('en-IN')}
+            <span className="text-xs font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+              Save ₹{(selectedVariant.compareAtPrice - selectedVariant.price).toLocaleString('en-IN')} (20% OFF)
             </span>
           </div>
 
           {/* Variant Matrix */}
           <div className="space-y-3">
-            <span className="font-bold text-xs uppercase tracking-wider text-slate-400">Select Configuration</span>
+            <span className="font-bold text-xs uppercase tracking-wider text-emerald-800">Choose Size & Packaging</span>
             <div className="grid grid-cols-2 gap-3">
               {productDetails.variants.map((variant) => (
                 <button
@@ -200,27 +203,27 @@ export default function ProductDetailPage() {
                   onClick={() => setSelectedVariant(variant)}
                   className={`p-3.5 rounded-2xl border text-left transition-all ${
                     selectedVariant.id === variant.id
-                      ? 'border-indigo-600 bg-indigo-50/50 shadow-sm'
+                      ? 'border-emerald-700 bg-emerald-50/60 shadow-sm'
                       : 'border-slate-200 hover:border-slate-300 bg-white'
                   }`}
                 >
                   <div className="text-xs font-bold text-slate-900">{variant.name}</div>
-                  <div className="text-sm font-black text-indigo-600 mt-1">₹{variant.price.toLocaleString('en-IN')}</div>
+                  <div className="text-sm font-black text-emerald-700 mt-1">₹{variant.price.toLocaleString('en-IN')}</div>
                 </button>
               ))}
             </div>
           </div>
 
-          <p className="text-sm text-slate-600 leading-relaxed font-normal">{productDetails.description}</p>
+          <p className="text-xs text-slate-600 leading-relaxed font-medium">{productDetails.description}</p>
 
-          {/* Technical Specifications */}
-          <div className="border border-slate-200 bg-white rounded-2xl p-5 space-y-3">
-            <h4 className="font-bold text-xs uppercase tracking-wider text-slate-400">Key Specifications</h4>
+          {/* Botanical Specifications */}
+          <div className="border border-emerald-100 bg-white rounded-3xl p-5 space-y-3">
+            <h4 className="font-extrabold text-xs uppercase tracking-wider text-emerald-800">Classical Botanical Profile</h4>
             <div className="space-y-2 text-xs">
               {productDetails.specs.map((s) => (
-                <div key={s.label} className="flex justify-between py-1 border-b border-slate-100 last:border-none">
+                <div key={s.label} className="flex justify-between py-1.5 border-b border-slate-100 last:border-none">
                   <span className="text-slate-500 font-medium">{s.label}</span>
-                  <span className="text-slate-900 font-bold text-right">{s.value}</span>
+                  <span className="text-slate-900 font-bold text-right max-w-xs">{s.value}</span>
                 </div>
               ))}
             </div>
@@ -231,14 +234,14 @@ export default function ProductDetailPage() {
             <div className="flex gap-4 pt-4">
               <button
                 onClick={handleAddToCart}
-                className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-2 text-base transition-all"
+                className="flex-1 bg-emerald-800 hover:bg-emerald-700 text-white font-bold py-4 rounded-2xl shadow-xl shadow-emerald-800/25 flex items-center justify-center gap-2 text-base transition-all"
               >
                 <ShoppingBag className="w-5 h-5" />
-                Add to Cart
+                Add to Herbal Cart
               </button>
               <button
                 onClick={handleShare}
-                className="px-6 py-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold flex items-center gap-2 text-sm shadow-sm transition-colors"
+                className="px-6 py-4 rounded-2xl border border-emerald-200 bg-white hover:bg-emerald-50 text-slate-700 font-bold flex items-center gap-2 text-sm shadow-sm transition-colors"
                 title="Generate Instagram Story/Post Share Link with UTM & Captions"
               >
                 {copiedShare ? (
@@ -248,7 +251,7 @@ export default function ProductDetailPage() {
                   </>
                 ) : (
                   <>
-                    <Share2 className="w-4 h-4" />
+                    <Share2 className="w-4 h-4 text-emerald-700" />
                     <span>Instagram Share</span>
                   </>
                 )}
@@ -260,17 +263,17 @@ export default function ProductDetailPage() {
 
       {/* Mobile Sticky Add to Cart Bottom Bar */}
       {isMobile && (
-        <div className="fixed bottom-14 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3 flex items-center justify-between gap-4 shadow-lg">
+        <div className="fixed bottom-14 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-emerald-100 px-4 py-3 flex items-center justify-between gap-4 shadow-lg">
           <div>
             <div className="text-[10px] text-slate-400 font-bold">Total Price</div>
             <div className="text-lg font-black text-slate-900">₹{selectedVariant.price.toLocaleString('en-IN')}</div>
           </div>
           <button
             onClick={handleAddToCart}
-            className="flex-1 bg-indigo-600 active:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-sm shadow-md"
+            className="flex-1 bg-emerald-800 active:bg-emerald-900 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-sm shadow-md"
           >
             <ShoppingBag className="w-4 h-4" />
-            Add to Cart
+            Add to Herbal Cart
           </button>
         </div>
       )}

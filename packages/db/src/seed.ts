@@ -3,29 +3,15 @@ import * as crypto from 'crypto';
 
 const prisma = new PrismaClient();
 
-// Helper to hash password matching the auth service Argon2id/crypto fallback
 function hashPasswordMock(password: string): string {
   const salt = 'shopflow_static_salt_for_dev_seed';
   return crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
 }
 
 async function main() {
-  console.log('🌱 Starting ShopFlow Database Seed...');
+  console.log('🌿 Starting ShopFlow Veda - Authentic Ayurveda & Herbal Wellness Seed...');
 
-  // Clean existing data
-  await prisma.$executeRawUnsafe(`
-    DO $$ DECLARE
-      r RECORD;
-    BEGIN
-      FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = current_schema()) LOOP
-        EXECUTE 'TRUNCATE TABLE ' || quote_ident(r.tablename) || ' CASCADE';
-      END LOOP;
-    END $$;
-  `).catch(() => {
-    console.log('Skipping truncate if tables not yet created or non-postgres');
-  });
-
-  // 1. Seed Users
+  // 1. Seed Core Accounts
   const passwordHash = hashPasswordMock('ShopFlow@1234');
 
   const admin = await prisma.user.upsert({
@@ -33,7 +19,7 @@ async function main() {
     update: {},
     create: {
       email: 'admin@shopflow.io',
-      name: 'ShopFlow Super Admin',
+      name: 'Vaidya R. K. Sharma (Chief Ayurvedic Officer)',
       passwordHash,
       role: UserRole.ADMIN,
       isEmailVerified: true,
@@ -46,7 +32,7 @@ async function main() {
     update: {},
     create: {
       email: 'delivery@shopflow.io',
-      name: 'Ramesh Express Delivery',
+      name: 'Ramesh Express Delivery (Herbal Logistics)',
       passwordHash,
       role: UserRole.DELIVERY,
       isEmailVerified: true,
@@ -59,12 +45,12 @@ async function main() {
     update: {},
     create: {
       userId: deliveryUser.id,
-      vehicleType: 'EV Scooter',
+      vehicleType: 'EV Scooter (Eco Delivery)',
       vehicleNumber: 'KA-01-EQ-9988',
       status: DeliveryAgentStatus.AVAILABLE,
       currentOrders: 0,
-      rating: 4.95,
-      totalDeliveries: 342,
+      rating: 4.96,
+      totalDeliveries: 420,
     },
   });
 
@@ -81,7 +67,7 @@ async function main() {
     },
   });
 
-  const customerAddress = await prisma.address.create({
+  await prisma.address.create({
     data: {
       userId: customer.id,
       fullName: 'Priya Sharma',
@@ -103,7 +89,7 @@ async function main() {
     update: {},
     create: {
       email: 'vendor@shopflow.io',
-      name: 'UrbanStyle Brands Ltd',
+      name: 'Kerala Ayurveda Botanical Gardens Ltd',
       passwordHash,
       role: UserRole.VENDOR,
       isEmailVerified: true,
@@ -111,204 +97,196 @@ async function main() {
     },
   });
 
-  console.log('✅ Users & Roles created: Admin, Delivery, Customer, Vendor');
+  console.log('✅ Ayurvedic Practitioners, Admin & Test Users Seeded');
 
-  // 2. Seed 10 Categories
+  // 2. Seed 10 Classical Ayurveda & Non-Pharma Wellness Categories
   const categoryDefs = [
-    { name: 'Smartphones & Accessories', slug: 'smartphones-accessories', description: 'Next-gen flagship phones, cases, chargers and wireless audio.' },
-    { name: 'Laptops & Computing', slug: 'laptops-computing', description: 'Ultrabooks, gaming rigs, mechanical keyboards, and 4K monitors.' },
-    { name: 'Audio & Headphones', slug: 'audio-headphones', description: 'Audiophile headphones, noise-cancelling earbuds, and smart home speakers.' },
-    { name: 'Smart Wearables', slug: 'smart-wearables', description: 'Fitness bands, titanium smartwatches, and bio-tracking rings.' },
-    { name: 'Men Fashion & Apparel', slug: 'men-fashion', description: 'Premium streetwear, breathable linen shirts, and tailor-fit denim.' },
-    { name: 'Women Fashion & Luxury', slug: 'women-fashion', description: 'Contemporary ethnic wear, designer dresses, and organic cotton essentials.' },
-    { name: 'Home & Smart Living', slug: 'home-smart-living', description: 'Robot vacuums, ergonomic standing desks, and ambient IoT lighting.' },
-    { name: 'Fitness & Sports', slug: 'fitness-sports', description: 'Adjustable dumbbells, yoga mats, resistance bands, and hydration packs.' },
-    { name: 'Beauty & Skincare', slug: 'beauty-skincare', description: 'Dermatologist-tested serums, sunscreen, and botanical cleansers.' },
-    { name: 'Books & Stationery', slug: 'books-stationery', description: 'Bestselling paperbacks, fountain pens, and bullet journals.' },
+    { name: 'Classical Rasayanas & Chyawanprash', slug: 'classical-rasayanas', description: 'Ancient restorative revitalizers, A2 cow ghee Chyawanprash, and herbal jams for vitality and longevity.' },
+    { name: 'Pure Herbal Supplements & Capsules', slug: 'herbal-supplements', description: 'Standardized KSM-66 Ashwagandha, Himalayan Shilajit resin, Curcumin 95%, and pure botanicals.' },
+    { name: 'Organic Churnas & Single Herb Powders', slug: 'churnas-kwath', description: 'Stone-ground Triphala, Ashwagandha, Trikatu, Amla, and Shatavari fine medicinal churnas.' },
+    { name: 'Medicated Thailams & Classical Oils', slug: 'ayurvedic-thailams', description: 'Authentic Tailams brewed for 21 days: Mahanarayan, Ksheerabala 101, Anu Tailam Nasya, and pain relief oils.' },
+    { name: 'Ayurvedic Botanical Skincare', slug: 'botanical-skincare', description: 'Kashmiri Kumkumadi Tailam, Nalpamradi glow oils, Sandalwood ubtans, and pure saffron face elixirs.' },
+    { name: 'Classical Hair Care & Bhringraj', slug: 'hair-nourishment', description: 'Neelibhringadi cold-pressed hair tonics, Bhringraj infused oils, and herbal Reetha scalp cleansers.' },
+    { name: 'Digestive & Gut Health Tonics', slug: 'digestive-gut-health', description: 'Hingwashtak, Triphala detox, Isabgol, and classical fermented Asava-Arishta digestive tonics.' },
+    { name: 'Immunity Kadhas & Herbal Drops', slug: 'immunity-kadhas', description: 'Ayush Kwath decoction concentrates, Pancha Tulsi drops, Giloy Ghanvati, and throat-soothing syrups.' },
+    { name: 'Mind, Sleep & Stress Tonics', slug: 'stress-sleep-tonics', description: 'Brahmi Medhya Rasayana, Shankhpushpi elixirs, Jatamansi calming sleep drops, and Saraswatarishta.' },
+    { name: 'Detox Herbal Teas & Infusions', slug: 'wellness-herbal-teas', description: 'Cumin-Coriander-Fennel CCF tri-dosha tea, Spiced Tulsi ginger brew, and caffeine-free evening tisanes.' },
   ];
 
   const categoryMap = new Map<string, string>();
   for (const cat of categoryDefs) {
     const createdCat = await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: {},
+      update: { name: cat.name, description: cat.description },
       create: {
         name: cat.name,
         slug: cat.slug,
         description: cat.description,
-        image: `https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80`,
+        image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&auto=format&fit=crop&q=80',
       },
     });
     categoryMap.set(cat.slug, createdCat.id);
   }
-  console.log('✅ 10 Categories seeded');
+  console.log('✅ 10 Classical Ayurveda Categories Seeded');
 
-  // 3. Seed 50 Products with Variants & Inventory
-  const productSamples = [
-    // Category 1: Smartphones & Accessories (5 items)
-    { title: 'Aura Pro 5G Flagship Smartphone', slug: 'aura-pro-5g-smartphone', cat: 'smartphones-accessories', price: 69999, compare: 79999, tags: ['flagship', '5g', 'oled', 'camera'], stock: 45 },
-    { title: 'UltraShield Magnetic Kevlar Case', slug: 'ultrashield-kevlar-case', cat: 'smartphones-accessories', price: 1999, compare: 2499, tags: ['magsafe', 'phone-case', 'carbon'], stock: 150 },
-    { title: 'HyperCharge 120W GaN Fast Charger', slug: 'hypercharge-120w-gan-charger', cat: 'smartphones-accessories', price: 3499, compare: 4299, tags: ['gan', 'fast-charger', 'usbc'], stock: 80 },
-    { title: 'MagGrip Wireless Car Mount & Qi2', slug: 'maggrip-qi2-wireless-car-mount', cat: 'smartphones-accessories', price: 2899, compare: 3500, tags: ['wireless', 'car-mount', 'qi2'], stock: 65 },
-    { title: 'OptiClear Privacy Glass Screen Protector (2-Pack)', slug: 'opticlear-privacy-glass-pack', cat: 'smartphones-accessories', price: 899, compare: 1299, tags: ['screen-protector', 'tempered-glass'], stock: 300 },
+  // 3. Seed 50 Authentic Ayurvedic & Herbal Health Products (Non-Pharma)
+  const ayurvedaProducts = [
+    // Category 1: Classical Rasayanas & Chyawanprash (5 items)
+    { title: 'Swarna Bhasma Amrit Chyawanprash with Wild Forest Amla (1kg)', slug: 'swarna-bhasma-chyawanprash-1kg', cat: 'classical-rasayanas', price: 1499, compare: 1799, tags: ['chyawanprash', 'swarna-bhasma', 'immunity', 'amla', 'rasayana'], stock: 85 },
+    { title: 'Brahma Rasayana Brain & Longevity Elixir (500g)', slug: 'brahma-rasayana-brain-elixir', cat: 'classical-rasayanas', price: 649, compare: 799, tags: ['medhya', 'rasayana', 'memory', 'brahmi', 'shankhpushpi'], stock: 60 },
+    { title: 'Ashwagandha Avaleha Vitality Herbal Jam (400g)', slug: 'ashwagandha-avaleha-vitality-jam', cat: 'classical-rasayanas', price: 549, compare: 699, tags: ['ashwagandha', 'avaleha', 'stamina', 'strength'], stock: 95 },
+    { title: 'Shatavari Gulam Classical Hormonal Harmony Rasayana (500g)', slug: 'shatavari-gulam-hormonal-harmony', cat: 'classical-rasayanas', price: 599, compare: 749, tags: ['shatavari', 'women-health', 'vitality', 'ayurveda'], stock: 70 },
+    { title: 'Agastya Haritaki Rasayana Respiratory Wellness Jam (250g)', slug: 'agastya-haritaki-rasayana-respiratory', cat: 'classical-rasayanas', price: 380, compare: 480, tags: ['lungs', 'haritaki', 'cough-relief', 'herbal'], stock: 110 },
 
-    // Category 2: Laptops & Computing (5 items)
-    { title: 'Zenith Titan 16" Creator Laptop (M3 Max, 64GB)', slug: 'zenith-titan-16-creator-laptop', cat: 'laptops-computing', price: 219999, compare: 239999, tags: ['laptop', 'workstation', 'creator'], stock: 15 },
-    { title: 'Vortex Mechanical Wireless Keyboard RGB', slug: 'vortex-mechanical-wireless-keyboard', cat: 'laptops-computing', price: 8499, compare: 9999, tags: ['keyboard', 'rgb', 'mechanical', 'wireless'], stock: 90 },
-    { title: 'Apex Ergo Precision Wireless Mouse', slug: 'apex-ergo-precision-mouse', cat: 'laptops-computing', price: 5499, compare: 6499, tags: ['mouse', 'ergonomic', 'bluetooth'], stock: 120 },
-    { title: 'UltraView 34" Curved QD-OLED Monitor 175Hz', slug: 'ultraview-34-curved-qdoled-monitor', cat: 'laptops-computing', price: 74999, compare: 89999, tags: ['monitor', 'curved', 'oled', 'gaming'], stock: 22 },
-    { title: 'ThunderDock 14-in-1 Thunderbolt 4 Docking Station', slug: 'thunderdock-14-in-1-docking-station', cat: 'laptops-computing', price: 15999, compare: 18999, tags: ['dock', 'thunderbolt4', 'usb-hub'], stock: 40 },
+    // Category 2: Pure Herbal Supplements & Capsules (5 items)
+    { title: 'Pure Himalayan Shilajit Resin (Gold Grade with Fulvic Acid 75%) 20g', slug: 'pure-himalayan-shilajit-resin-20g', cat: 'herbal-supplements', price: 1299, compare: 1699, tags: ['shilajit', 'fulvic-acid', 'testosterone', 'energy', 'himalayan'], stock: 120 },
+    { title: 'KSM-66 Organic Ashwagandha Root Extract 600mg (60 Veg Capsules)', slug: 'ksm66-organic-ashwagandha-capsules', cat: 'herbal-supplements', price: 799, compare: 999, tags: ['ashwagandha', 'ksm66', 'stress-relief', 'cortisol'], stock: 240 },
+    { title: 'Turmeric Curcumin 95% with Piperine Black Pepper Extract (60 Veg Capsules)', slug: 'turmeric-curcumin-95-piperine-capsules', cat: 'herbal-supplements', price: 699, compare: 899, tags: ['curcumin', 'turmeric', 'anti-inflammatory', 'joint-health'], stock: 180 },
+    { title: 'Pure Brahmi Gotu Kola Cognitive Enhancer 500mg (60 Capsules)', slug: 'pure-brahmi-cognitive-enhancer-capsules', cat: 'herbal-supplements', price: 549, compare: 699, tags: ['brahmi', 'memory', 'focus', 'clarity'], stock: 130 },
+    { title: 'Guduchi Giloy (Tinospora Cordifolia) Pure Extract 500mg (60 Capsules)', slug: 'guduchi-giloy-immunity-capsules', cat: 'herbal-supplements', price: 449, compare: 599, tags: ['giloy', 'guduchi', 'platelet-support', 'immunity'], stock: 210 },
 
-    // Category 3: Audio & Headphones (5 items)
-    { title: 'SonicWave ANC Over-Ear Hi-Fi Headphones', slug: 'sonicwave-anc-over-ear-headphones', cat: 'audio-headphones', price: 24999, compare: 29999, tags: ['anc', 'headphones', 'hifi', 'audiophile'], stock: 55 },
-    { title: 'PulseBuds Pro Spatial Audio Wireless Earbuds', slug: 'pulsebuds-pro-spatial-audio', cat: 'audio-headphones', price: 12999, compare: 15999, tags: ['earbuds', 'spatial-audio', 'tws'], stock: 140 },
-    { title: 'SoundSphere 360 Room-Filling Smart Speaker', slug: 'soundsphere-360-smart-speaker', cat: 'audio-headphones', price: 16999, compare: 19999, tags: ['speaker', 'smart-home', 'dolby'], stock: 35 },
-    { title: 'BassPod Portable Waterproof Bluetooth Speaker IP67', slug: 'basspod-portable-waterproof-speaker', cat: 'audio-headphones', price: 4499, compare: 5999, tags: ['waterproof', 'bluetooth', 'speaker'], stock: 85 },
-    { title: 'StudioCraft XLR Dynamic Podcast Microphone', slug: 'studiocraft-xlr-dynamic-microphone', cat: 'audio-headphones', price: 9999, compare: 12499, tags: ['microphone', 'podcast', 'studio'], stock: 30 },
+    // Category 3: Organic Churnas & Single Herb Powders (5 items)
+    { title: 'Stone-Ground Organic Triphala Churna Digestive Detox (250g)', slug: 'organic-triphala-churna-digestive-detox', cat: 'churnas-kwath', price: 299, compare: 399, tags: ['triphala', 'churna', 'amla', 'haritaki', 'bibhitaki', 'gut-cleanse'], stock: 350 },
+    { title: 'Avipattikar Churna Hyper-Acidity & Pitta Balancing Powder (200g)', slug: 'avipattikar-churna-hyperacidity-pitta', cat: 'churnas-kwath', price: 249, compare: 320, tags: ['avipattikar', 'acidity', 'pitta-dosha', 'indigestion'], stock: 160 },
+    { title: 'Trikatu Churna Metabolism & Agni Ignition Formula (100g)', slug: 'trikatu-churna-metabolism-agni', cat: 'churnas-kwath', price: 220, compare: 290, tags: ['trikatu', 'ginger', 'black-pepper', 'pippali', 'digestion'], stock: 140 },
+    { title: 'Organic Shade-Dried Shatavari Root Churna (200g)', slug: 'organic-shatavari-root-churna', cat: 'churnas-kwath', price: 349, compare: 450, tags: ['shatavari', 'women-vitality', 'cooling-herb'], stock: 180 },
+    { title: 'Raw Wild Moringa Leaf Powder Superfood Churna (250g)', slug: 'raw-wild-moringa-leaf-powder', cat: 'churnas-kwath', price: 320, compare: 420, tags: ['moringa', 'iron-rich', 'superfood', 'multivitamin'], stock: 220 },
 
-    // Category 4: Smart Wearables (5 items)
-    { title: 'Chronos Horizon Titanium Smartwatch 46mm', slug: 'chronos-horizon-titanium-smartwatch', cat: 'smart-wearables', price: 34999, compare: 39999, tags: ['smartwatch', 'titanium', 'gps', 'ecg'], stock: 45 },
-    { title: 'VitalRing Gen 3 Sleep & Readiness Smart Ring', slug: 'vitalring-gen-3-smart-ring', cat: 'smart-wearables', price: 19999, compare: 22999, tags: ['smart-ring', 'sleep-tracker', 'biometrics'], stock: 60 },
-    { title: 'AeroBand Pro Lightweight GPS Fitness Tracker', slug: 'aeroband-pro-fitness-tracker', cat: 'smart-wearables', price: 4999, compare: 6499, tags: ['fitness-tracker', 'waterproof', 'heart-rate'], stock: 110 },
-    { title: 'PulseGlow Hydro-Proof Braided Watch Strap 22mm', slug: 'pulseglow-braided-watch-strap', cat: 'smart-wearables', price: 1499, compare: 1999, tags: ['strap', 'accessories', 'braided'], stock: 200 },
-    { title: 'CardioBeat Wireless Chest Strap HRM Sensor', slug: 'cardiobeat-chest-strap-hrm', cat: 'smart-wearables', price: 3299, compare: 3999, tags: ['hrm', 'sensor', 'training'], stock: 75 },
+    // Category 4: Medicated Thailams & Classical Oils (5 items)
+    { title: 'Mahanarayan Taila Classical Medicated Joint & Muscle Pain Oil (200ml)', slug: 'mahanarayan-taila-joint-pain-oil', cat: 'ayurvedic-thailams', price: 499, compare: 650, tags: ['mahanarayan', 'joint-pain', 'arthritis', 'vata-balance', 'massage'], stock: 140 },
+    { title: 'Ksheerabala 101 Avarthi Concentrated Nervous System Drops (10ml)', slug: 'ksheerabala-101-avarthi-drops', cat: 'ayurvedic-thailams', price: 420, compare: 550, tags: ['ksheerabala', 'nerve-care', 'insomnia', 'neuropathy'], stock: 90 },
+    { title: 'Anu Thailam Classical Nasya Nasal Drops for Sinus & Head Clarity (20ml)', slug: 'anu-thailam-classical-nasya-drops', cat: 'ayurvedic-thailams', price: 210, compare: 280, tags: ['anu-tailam', 'nasya', 'sinusitis', 'migraine', 'prana'], stock: 260 },
+    { title: 'Dhanwantharam Thailam Pre & Post-Natal Rejuvenating Body Oil (200ml)', slug: 'dhanwantharam-thailam-body-oil', cat: 'ayurvedic-thailams', price: 460, compare: 580, tags: ['dhanwantharam', 'maternity', 'vata-relief', 'abhyanga'], stock: 80 },
+    { title: 'Murivenna Classical Healing & Sprain Herbal Oil (100ml)', slug: 'murivenna-classical-healing-oil', cat: 'ayurvedic-thailams', price: 240, compare: 310, tags: ['murivenna', 'wound-healing', 'sprain', 'bone-health'], stock: 130 },
 
-    // Category 5: Men Fashion & Apparel (5 items)
-    { title: 'TerraBreeze Organic Supima Heavyweight Tee', slug: 'terrabreeze-supima-heavyweight-tee', cat: 'men-fashion', price: 1899, compare: 2499, tags: ['tshirt', 'organic', 'minimal', 'cotton'], stock: 250 },
-    { title: 'Nomad Tech All-Weather Waterproof Trench Coat', slug: 'nomad-tech-waterproof-trench-coat', cat: 'men-fashion', price: 9999, compare: 12999, tags: ['jacket', 'waterproof', 'outerwear'], stock: 40 },
-    { title: 'UrbanKnit Merino Wool Relaxed Quarter-Zip', slug: 'urbanknit-merino-wool-quarter-zip', cat: 'men-fashion', price: 5499, compare: 6999, tags: ['sweater', 'merino-wool', 'winter'], stock: 60 },
-    { title: 'AeroFlex 4-Way Stretch Performance Chino', slug: 'aeroflex-stretch-performance-chino', cat: 'men-fashion', price: 3499, compare: 4499, tags: ['pants', 'chinos', 'stretch'], stock: 115 },
-    { title: 'Legacy Handcrafted Italian Leather Oxford Shoes', slug: 'legacy-handcrafted-leather-oxford', cat: 'men-fashion', price: 8999, compare: 11999, tags: ['footwear', 'formal', 'leather'], stock: 35 },
+    // Category 5: Ayurvedic Botanical Skincare (5 items)
+    { title: 'Kashmiri Saffron 26-Herb Kumkumadi Miraculous Night Glow Oil (30ml)', slug: 'kashmiri-saffron-kumkumadi-night-oil', cat: 'botanical-skincare', price: 1299, compare: 1699, tags: ['kumkumadi', 'saffron', 'facial-oil', 'pigmentation', 'glow'], stock: 175 },
+    { title: 'Nalpamradi Thailam Skin Brightening & Tan Reversal Oil (200ml)', slug: 'nalpamradi-thailam-skin-brightening-oil', cat: 'botanical-skincare', price: 599, compare: 799, tags: ['nalpamradi', 'turmeric', 'de-tan', 'bridal-glow', 'skin'], stock: 150 },
+    { title: 'Raktachandan Pure Red Sandalwood & Rose Petal Face Ubtan (100g)', slug: 'raktachandan-red-sandalwood-ubtan', cat: 'botanical-skincare', price: 449, compare: 599, tags: ['sandalwood', 'ubtan', 'blemish-care', 'cooling-lepa'], stock: 190 },
+    { title: 'Shata Dhauta Ghrita (100-Times Washed A2 Cow Ghee) Moisture Cream 50g', slug: 'shata-dhauta-ghrita-washed-ghee-cream', cat: 'botanical-skincare', price: 799, compare: 999, tags: ['washed-ghee', 'eczema', 'barrier-repair', 'deep-hydration'], stock: 110 },
+    { title: 'Wild Neem & Lodhra Anti-Acne Clarifying Herbal Lepa (100g)', slug: 'wild-neem-lodhra-anti-acne-lepa', cat: 'botanical-skincare', price: 380, compare: 480, tags: ['neem', 'acne', 'detox', 'pitta-lepa'], stock: 165 },
 
-    // Category 6: Women Fashion & Luxury (5 items)
-    { title: 'Aurelia Mulberry Silk Evening Wrap Dress', slug: 'aurelia-mulberry-silk-wrap-dress', cat: 'women-fashion', price: 11499, compare: 14999, tags: ['dress', 'silk', 'luxury', 'evening'], stock: 28 },
-    { title: 'Solstice Handwoven Chanderi Floral Saree', slug: 'solstice-handwoven-chanderi-saree', cat: 'women-fashion', price: 7999, compare: 9999, tags: ['saree', 'ethnic', 'handwoven'], stock: 45 },
-    { title: 'CloudStep Ultra-Cushioned Leather Loafers', slug: 'cloudstep-leather-loafers', cat: 'women-fashion', price: 4499, compare: 5499, tags: ['shoes', 'loafers', 'comfort'], stock: 70 },
-    { title: 'Lumina Vegan Saffiano Leather Structured Tote', slug: 'lumina-vegan-saffiano-tote', cat: 'women-fashion', price: 5999, compare: 7499, tags: ['bag', 'tote', 'vegan-leather'], stock: 50 },
-    { title: 'Breeze Linen Oversized Resort Shirt', slug: 'breeze-linen-oversized-resort-shirt', cat: 'women-fashion', price: 2699, compare: 3299, tags: ['shirt', 'linen', 'casual'], stock: 120 },
+    // Category 6: Classical Hair Care & Bhringraj (5 items)
+    { title: 'Neelibhringadi Kerathailam Classical Hair Fall Defense Oil (200ml)', slug: 'neelibhringadi-kerathailam-hair-oil', cat: 'hair-nourishment', price: 499, compare: 650, tags: ['neelibhringadi', 'hair-growth', 'dandruff', 'ayurvedic-oil'], stock: 220 },
+    { title: 'Mahabhringraj Scalp Revitalizer with 16 Wild Forest Herbs (200ml)', slug: 'mahabhringraj-scalp-revitalizer-oil', cat: 'hair-nourishment', price: 449, compare: 580, tags: ['bhringraj', 'premature-greying', 'scalp-health'], stock: 190 },
+    { title: 'Traditional Reetha, Shikakai & Methi Gentle Scalp Wash (300ml)', slug: 'traditional-reetha-shikakai-scalp-wash', cat: 'hair-nourishment', price: 399, compare: 499, tags: ['shikakai', 'reetha', 'no-sulphates', 'herbal-shampoo'], stock: 170 },
+    { title: 'Brahmi & Amla Cooling Hair Pack & Follicle Tonic (150g)', slug: 'brahmi-amla-cooling-hair-pack', cat: 'hair-nourishment', price: 320, compare: 420, tags: ['hair-pack', 'amla', 'cooling', 'thickening'], stock: 140 },
+    { title: 'Japa Pushpa (Hibiscus) & Fenugreek Hair Butter Conditioning Mask (150g)', slug: 'japa-pushpa-hibiscus-hair-butter', cat: 'hair-nourishment', price: 480, compare: 620, tags: ['hibiscus', 'hair-mask', 'frizz-control', 'conditioning'], stock: 115 },
 
-    // Category 7: Home & Smart Living (5 items)
-    { title: 'RoboClean Lidar Omni Self-Emptying Vacuum & Mop', slug: 'roboclean-lidar-omni-vacuum-mop', cat: 'home-smart-living', price: 48999, compare: 58999, tags: ['vacuum', 'smart-home', 'robotics'], stock: 20 },
-    { title: 'AuraGlow Smart Gradient Floor Lamp Matter-Ready', slug: 'auraglow-smart-gradient-floor-lamp', cat: 'home-smart-living', price: 7999, compare: 9999, tags: ['lighting', 'smart-home', 'matter'], stock: 65 },
-    { title: 'ErgoRise Dual-Motor Electric Standing Desk 140x70', slug: 'ergorise-dual-motor-standing-desk', cat: 'home-smart-living', price: 26999, compare: 31999, tags: ['desk', 'ergonomic', 'furniture'], stock: 25 },
-    { title: 'AeroPure Smart HEPA H13 Air Purifier with AQI Display', slug: 'aeropure-smart-hepa-air-purifier', cat: 'home-smart-living', price: 13999, compare: 16999, tags: ['air-purifier', 'hepa', 'health'], stock: 45 },
-    { title: 'HydroPure Countertop UV Reverse Osmosis Purifier', slug: 'hydropure-countertop-uv-ro-purifier', cat: 'home-smart-living', price: 18499, compare: 21999, tags: ['water-purifier', 'kitchen', 'uv'], stock: 30 },
+    // Category 7: Digestive & Gut Health Tonics (5 items)
+    { title: 'Hingwashtak Churna Gas, Bloating & Agni Digestive Powder (100g)', slug: 'hingwashtak-churna-bloating-relief', cat: 'digestive-gut-health', price: 210, compare: 280, tags: ['hingwashtak', 'bloating', 'gas-relief', 'digestion', 'hing'], stock: 250 },
+    { title: 'Pure Sat Isabgol (Psyllium Husk) Organic Colon Cleanser (200g)', slug: 'pure-sat-isabgol-organic-psyllium-husk', cat: 'digestive-gut-health', price: 280, compare: 360, tags: ['isabgol', 'fiber', 'constipation', 'gut-cleanse'], stock: 310 },
+    { title: 'Jeerakarishtam Classical Fermented Postpartum & Digestive Arishta (450ml)', slug: 'jeerakarishtam-digestive-arishta', cat: 'digestive-gut-health', price: 260, compare: 340, tags: ['arishta', 'cumin', 'gut-ferment', 'postpartum'], stock: 140 },
+    { title: 'Kalmegh & Bhumi Amla Liver Detox & Hepato-Protective Syrup (200ml)', slug: 'kalmegh-bhumi-amla-liver-syrup', cat: 'digestive-gut-health', price: 340, compare: 440, tags: ['liver-care', 'kalmegh', 'fatty-liver', 'detox'], stock: 180 },
+    { title: 'Pudina & Ajwain Concentrated Digestive Elixir Drops (30ml)', slug: 'pudina-ajwain-digestive-drops', cat: 'digestive-gut-health', price: 199, compare: 250, tags: ['ajwain', 'pudina', 'quick-relief', 'stomach-ache'], stock: 270 },
 
-    // Category 8: Fitness & Sports (5 items)
-    { title: 'PowerDial 24kg Quick-Adjust Dumbbell Pair', slug: 'powerdial-quick-adjust-dumbbell-pair', cat: 'fitness-sports', price: 18999, compare: 22999, tags: ['dumbbell', 'home-gym', 'strength'], stock: 35 },
-    { title: 'GripLock High-Density Natural Rubber Yoga Mat 6mm', slug: 'griplock-natural-rubber-yoga-mat', cat: 'fitness-sports', price: 2999, compare: 3999, tags: ['yoga', 'mat', 'pilates'], stock: 150 },
-    { title: 'Velocity Pro High-Speed Bearing Jump Rope', slug: 'velocity-pro-speed-jump-rope', cat: 'fitness-sports', price: 999, compare: 1499, tags: ['crossfit', 'cardio', 'jump-rope'], stock: 180 },
-    { title: 'HydraFlow Insulated 1.2L Stainless Steel Bottle', slug: 'hydraflow-insulated-steel-bottle', cat: 'fitness-sports', price: 1499, compare: 1999, tags: ['water-bottle', 'insulated', 'outdoor'], stock: 220 },
-    { title: 'RecoveryGun Pro Deep Tissue Percussion Massager', slug: 'recoverygun-pro-deep-tissue-massager', cat: 'fitness-sports', price: 6999, compare: 8999, tags: ['massager', 'recovery', 'therapy'], stock: 55 },
+    // Category 8: Immunity Kadhas & Herbal Drops (5 items)
+    { title: 'Ayush Kwath Concentrated Kadha Decoction (Tulsi, Cinnamon, Sunthi, Marich) 200g', slug: 'ayush-kwath-concentrated-kadha', cat: 'immunity-kadhas', price: 349, compare: 450, tags: ['kadha', 'ayush-kwath', 'immunity', 'cough-cold', 'decoction'], stock: 290 },
+    { title: 'Pancha Tulsi 5-Species Pure Herbal Extract Drops (30ml)', slug: 'pancha-tulsi-herbal-extract-drops', cat: 'immunity-kadhas', price: 249, compare: 320, tags: ['tulsi', 'respiratory', 'antiviral', 'drops'], stock: 380 },
+    { title: 'Yashtimadhu (Mulethi Licorice) Soothing Throat & Vocal Elixir (100ml)', slug: 'yashtimadhu-mulethi-throat-elixir', cat: 'immunity-kadhas', price: 220, compare: 290, tags: ['mulethi', 'sore-throat', 'singers', 'licorice'], stock: 200 },
+    { title: 'Vasaka & Kantakari Bronchial Relief Herbal Syrup (200ml)', slug: 'vasaka-kantakari-bronchial-syrup', cat: 'immunity-kadhas', price: 280, compare: 360, tags: ['lungs', 'vasaka', 'asthma-support', 'bronchial'], stock: 160 },
+    { title: 'Haldi Doodh Golden Milk Spiced Mix with Saffron & Black Pepper (150g)', slug: 'haldi-doodh-golden-milk-spiced-mix', cat: 'immunity-kadhas', price: 380, compare: 480, tags: ['golden-milk', 'turmeric', 'bedtime-drink', 'healing'], stock: 190 },
 
-    // Category 9: Beauty & Skincare (5 items)
-    { title: 'Radiance Boost 15% Vitamin C + Ferulic Acid Serum', slug: 'radiance-boost-vitamin-c-serum', cat: 'beauty-skincare', price: 1299, compare: 1699, tags: ['serum', 'skincare', 'vitamin-c'], stock: 320 },
-    { title: 'HydraBarrier Ceramide & Hyaluronic Moisture Cream', slug: 'hydrabarrier-ceramide-moisture-cream', cat: 'beauty-skincare', price: 999, compare: 1399, tags: ['moisturizer', 'ceramide', 'dry-skin'], stock: 280 },
-    { title: 'SolarShield Invisible Aqua Gel Sunscreen SPF 50+ PA++++', slug: 'solarshield-invisible-aqua-sunscreen', cat: 'beauty-skincare', price: 799, compare: 999, tags: ['sunscreen', 'spf50', 'matte'], stock: 400 },
-    { title: 'GlowPeel 10% AHA + 2% BHA Exfoliating Facial Peeling', slug: 'glowpeel-aha-bha-exfoliating-peeling', cat: 'beauty-skincare', price: 849, compare: 1199, tags: ['exfoliant', 'aha', 'bha'], stock: 210 },
-    { title: 'GentleZen Centella Balancing Cleansing Oil 200ml', slug: 'gentlezen-centella-cleansing-oil', cat: 'beauty-skincare', price: 1099, compare: 1499, tags: ['cleanser', 'k-beauty', 'centella'], stock: 190 },
+    // Category 9: Mind, Sleep & Stress Tonics (5 items)
+    { title: 'Saraswatarishta Classical Memory, Speech & Focus Arishta with Gold (450ml)', slug: 'saraswatarishta-memory-speech-arishta', cat: 'stress-sleep-tonics', price: 360, compare: 460, tags: ['saraswatarishta', 'brahmi', 'speech', 'intellect', 'arishta'], stock: 120 },
+    { title: 'Shankhpushpi Herbal Syrup for Concentration & Academic Vitality (200ml)', slug: 'shankhpushpi-concentration-syrup', cat: 'stress-sleep-tonics', price: 240, compare: 310, tags: ['shankhpushpi', 'students', 'exam-focus', 'brain-tonic'], stock: 230 },
+    { title: 'Jatamansi & Tagara Restful Deep Sleep Drops (30ml)', slug: 'jatamansi-tagara-deep-sleep-drops', cat: 'stress-sleep-tonics', price: 449, compare: 580, tags: ['jatamansi', 'tagara', 'sleep', 'insomnia-aid', 'calm'], stock: 140 },
+    { title: 'Brahmi Ghritham Classical Medicated A2 Cow Ghee for Mental Clarity (200g)', slug: 'brahmi-ghritham-mental-clarity-ghee', cat: 'stress-sleep-tonics', price: 590, compare: 750, tags: ['ghee', 'brahmi-ghee', 'adhd-support', 'brain-food'], stock: 85 },
+    { title: 'Ashwagandha & Vacha Anti-Anxiety Aromatherapy Pulse Point Oil (10ml)', slug: 'ashwagandha-vacha-pulse-point-oil', cat: 'stress-sleep-tonics', price: 299, compare: 380, tags: ['aromatherapy', 'anxiety-relief', 'pulse-point', 'stress'], stock: 160 },
 
-    // Category 10: Books & Stationery (5 items)
-    { title: 'The Architectural Mindset: Systems & Scalability', slug: 'architectural-mindset-systems-scalability', cat: 'books-stationery', price: 1499, compare: 1799, tags: ['book', 'tech', 'architecture'], stock: 100 },
-    { title: 'ZenWrite Hand-Turned Brass Fountain Pen (Fine Nib)', slug: 'zenwrite-brass-fountain-pen', cat: 'books-stationery', price: 3499, compare: 4299, tags: ['pen', 'fountain-pen', 'brass'], stock: 65 },
-    { title: 'A5 Dotted Hardcover 160gsm Bullet Planner Notebook', slug: 'a5-dotted-hardcover-bullet-planner', cat: 'books-stationery', price: 1199, compare: 1599, tags: ['journal', 'stationery', 'planner'], stock: 210 },
-    { title: 'Vintage Italian Top-Grain Leather Pen Sleeve', slug: 'vintage-leather-pen-sleeve', cat: 'books-stationery', price: 1699, compare: 2199, tags: ['accessories', 'leather', 'desk'], stock: 85 },
-    { title: 'DeskZen Magnetic Walnut Cable Organizer & Block', slug: 'deskzen-walnut-cable-organizer', cat: 'books-stationery', price: 1899, compare: 2499, tags: ['desk-setup', 'wood', 'organization'], stock: 95 },
-
-    // Extra items to make exactly 50 total products
-    { title: 'SonicWave Wireless ANC Earbuds Compact', slug: 'sonicwave-compact-wireless-earbuds', cat: 'audio-headphones', price: 5999, compare: 7999, tags: ['earbuds', 'anc', 'wireless'], stock: 130 },
-    { title: 'AuraView MagSafe Foldable Desk Stand', slug: 'auraview-magsafe-foldable-desk-stand', cat: 'smartphones-accessories', price: 1699, compare: 2199, tags: ['magsafe', 'stand', 'aluminum'], stock: 140 },
-    { title: 'Zenith Sleeve 16" Water-Repellent Neoprene Case', slug: 'zenith-sleeve-16-inch-neoprene-case', cat: 'laptops-computing', price: 1899, compare: 2499, tags: ['laptop-case', 'sleeve', 'protective'], stock: 120 },
-    { title: 'BioTrack Sleep Companion Smart Alarm Clock', slug: 'biotrack-sleep-companion-alarm-clock', cat: 'smart-wearables', price: 6499, compare: 7999, tags: ['alarm-clock', 'smart-home', 'sleep'], stock: 50 },
-    { title: 'TerraBreeze Relaxed French Terry Hoodie', slug: 'terrabreeze-french-terry-hoodie', cat: 'men-fashion', price: 3899, compare: 4899, tags: ['hoodie', 'organic-cotton', 'streetwear'], stock: 80 },
-    { title: 'AuraGold 18k Vermeil Dainty Chain Pendant', slug: 'auragold-18k-vermeil-chain-pendant', cat: 'women-fashion', price: 6499, compare: 7999, tags: ['jewelry', 'gold', 'pendant'], stock: 40 },
-    { title: 'BrewMaster Smart Temperature Gooseneck Kettle', slug: 'brewmaster-smart-gooseneck-kettle', cat: 'home-smart-living', price: 7499, compare: 8999, tags: ['coffee', 'kettle', 'smart-kitchen'], stock: 45 },
-    { title: 'IsoGrip Hex Neoprene Coated Kettlebell 16kg', slug: 'isogrip-kettlebell-16kg', cat: 'fitness-sports', price: 3499, compare: 4299, tags: ['kettlebell', 'crossfit', 'weights'], stock: 60 },
-    { title: 'Bakuchiol 2% Age-Defense Retinol-Alternative Elixir', slug: 'bakuchiol-age-defense-elixir', cat: 'beauty-skincare', price: 1499, compare: 1899, tags: ['anti-aging', 'bakuchiol', 'clean-beauty'], stock: 150 },
-    { title: 'Minimalist Walnut Monitor Riser with USB-C Pass-through', slug: 'walnut-monitor-riser-usbc-passthrough', cat: 'books-stationery', price: 4999, compare: 5999, tags: ['desk-setup', 'woodwork', 'ergonomics'], stock: 40 },
+    // Category 10: Detox Herbal Teas & Infusions (5 items)
+    { title: 'Classical CCF Tea (Cumin, Coriander, Fennel) Tridoshic Gut Detox (150g)', slug: 'classical-ccf-cumin-coriander-fennel-tea', cat: 'wellness-herbal-teas', price: 299, compare: 380, tags: ['ccf-tea', 'detox', 'tridosha', 'caffeine-free', 'pitta-cooler'], stock: 240 },
+    { title: 'Krishna Tulsi & Lemongrass Calming Evening Tisane (100g Loose Leaf)', slug: 'krishna-tulsi-lemongrass-tisane', cat: 'wellness-herbal-teas', price: 260, compare: 340, tags: ['tulsi-tea', 'lemongrass', 'herbal-infusion', 'antioxidants'], stock: 210 },
+    { title: 'Kashmiri Kahwa Green Tea with Crushed Almonds, Saffron & Cardamom (100g)', slug: 'kashmiri-kahwa-saffron-almonds-tea', cat: 'wellness-herbal-teas', price: 499, compare: 650, tags: ['kahwa', 'saffron-tea', 'warming', 'luxury-blend'], stock: 160 },
+    { title: 'Digestive Ajwain, Mulethi & Peppermint Post-Meal Herbal Infusion (20 Tea Bags)', slug: 'ajwain-mulethi-peppermint-tea-bags', cat: 'wellness-herbal-teas', price: 280, compare: 350, tags: ['tea-bags', 'post-meal', 'bloating-tea', 'organic'], stock: 190 },
+    { title: 'Organic Hibiscus Petal & Brahmi Cellular Rejuvenation Tea (100g)', slug: 'hibiscus-petal-brahmi-rejuvenation-tea', cat: 'wellness-herbal-teas', price: 320, compare: 400, tags: ['hibiscus', 'blood-pressure-support', 'vitamin-c', 'ruby-tea'], stock: 175 },
   ];
 
-  console.log(`Creating ${productSamples.length} full e-commerce products with variants and inventories...`);
+  console.log(`Creating ${ayurvedaProducts.length} certified Ayurvedic formulations with variants and inventories...`);
 
-  for (let i = 0; i < productSamples.length; i++) {
-    const p = productSamples[i];
+  for (let i = 0; i < ayurvedaProducts.length; i++) {
+    const p = ayurvedaProducts[i];
     const categoryId = categoryMap.get(p.cat);
     if (!categoryId) continue;
 
-    const imageUrl = `https://images.unsplash.com/photo-${1500000000000 + (i * 12345678 % 100000000)}?w=1000&auto=format&fit=crop&q=80`;
+    const botanicalImage = [
+      'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=800&auto=format&fit=crop&q=80',
+    ][i % 5];
 
     const product = await prisma.product.create({
       data: {
         title: p.title,
         slug: p.slug,
-        description: `Experience supreme engineering and refined aesthetics with the ${p.title}. Crafted from high-grade materials with uncompromising attention to detail, precision ergonomics, and peak endurance for daily use. Fully backed by ShopFlow 1-year warranty and express replacement service.`,
+        description: `Authentic non-pharma Ayurvedic formulation: ${p.title}. Crafted according to classical Charaka & Sushruta Samhita guidelines using wild-harvested, pesticide-free botanicals. Formulated under strict GMP & AYUSH Premium guidelines, verified for zero heavy metals and peak therapeutic active phytocompounds. Suitable for daily holistic wellness.`,
         categoryId,
         tags: p.tags,
         images: [
-          'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1000&auto=format&fit=crop&q=80',
-          'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1000&auto=format&fit=crop&q=80',
-          'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=1000&auto=format&fit=crop&q=80',
+          botanicalImage,
+          'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop&q=80',
         ],
         featured: i < 8,
         isPublished: true,
-        metaTitle: `${p.title} | ShopFlow Official Store`,
-        metaDescription: `Buy ${p.title} online at best price with express shipping, genuine warranty, and instant discounts on ShopFlow.`,
-        avgRating: 4.5 + ((i % 5) * 0.1),
-        reviewCount: 12 + (i * 7),
+        metaTitle: `${p.title} | Certified Pure Ayurveda & Herbal Remedies`,
+        metaDescription: `Buy 100% genuine ${p.title} online. AYUSH certified, zero chemicals, pure botanical extracts with fast doorstep courier delivery.`,
+        avgRating: 4.8 + ((i % 3) * 0.1),
+        reviewCount: 35 + (i * 12),
       },
     });
 
-    // Create 2 variants per product
+    // Create 2 size/pack variants per herbal product
     const variant1 = await prisma.productVariant.create({
       data: {
         productId: product.id,
-        sku: `SF-${p.slug.toUpperCase().slice(0, 8)}-STD`,
-        size: 'Standard',
-        color: 'Space Grey',
+        sku: `VD-${p.slug.toUpperCase().slice(0, 8)}-STD`,
+        size: 'Standard Pack',
+        color: 'Glass Jar / Sealed Tin',
         price: p.price,
         compareAtPrice: p.compare,
         stock: p.stock,
-        weight: 0.5,
+        weight: 0.35,
       },
     });
 
     const variant2 = await prisma.productVariant.create({
       data: {
         productId: product.id,
-        sku: `SF-${p.slug.toUpperCase().slice(0, 8)}-PRO`,
-        size: 'Deluxe',
-        color: 'Midnight Black',
-        price: p.price * 1.15,
-        compareAtPrice: p.compare * 1.15,
-        stock: Math.floor(p.stock * 0.7),
-        weight: 0.6,
+        sku: `VD-${p.slug.toUpperCase().slice(0, 8)}-ECO`,
+        size: 'Value Pack (2x Quantity)',
+        color: 'Eco Refill Pouch',
+        price: Math.round(p.price * 1.8),
+        compareAtPrice: Math.round(p.compare * 1.8),
+        stock: Math.floor(p.stock * 0.6),
+        weight: 0.65,
       },
     });
 
-    // Create inventory entries
+    // Create inventory record
     await prisma.inventory.createMany({
       data: [
         {
           variantId: variant1.id,
-          warehouse: 'MAIN_HUB_BANGALORE',
+          warehouse: 'AYURVEDA_HERBAL_CENTRAL_HUB',
           quantity: p.stock,
           lowStockThreshold: 10,
         },
         {
           variantId: variant2.id,
-          warehouse: 'MAIN_HUB_BANGALORE',
-          quantity: Math.floor(p.stock * 0.7),
+          warehouse: 'AYURVEDA_HERBAL_CENTRAL_HUB',
+          quantity: Math.floor(p.stock * 0.6),
           lowStockThreshold: 8,
         },
       ],
     });
 
-    // Seed customer cart with first item
+    // Preload cart for customer with first item
     if (i === 0) {
       const cart = await prisma.cart.create({
-        data: {
-          userId: customer.id,
-        },
+        data: { userId: customer.id },
       });
 
       await prisma.cartItem.create({
@@ -321,31 +299,31 @@ async function main() {
     }
   }
 
-  // 4. Seed Coupons
+  // 4. Seed Ayurveda Wellness Coupons
   await prisma.coupon.createMany({
     data: [
       {
-        code: 'WELCOME500',
-        description: 'Flat ₹500 discount on first order above ₹2,000',
+        code: 'VEDA500',
+        description: 'Flat ₹500 off on Ayurvedic health orders above ₹1,999',
         discountType: CouponType.FLAT,
         discountValue: 500,
-        minOrderValue: 2000,
+        minOrderValue: 1999,
         isActive: true,
       },
       {
-        code: 'SUPERFEST20',
-        description: '20% discount up to ₹3,000 during festival sale',
+        code: 'HERBAL20',
+        description: '20% off up to ₹2,500 on all organic rasayanas & thailams',
         discountType: CouponType.PERCENTAGE,
         discountValue: 20,
-        minOrderValue: 1500,
-        maxDiscount: 3000,
+        minOrderValue: 999,
+        maxDiscount: 2500,
         isActive: true,
       },
     ],
   });
 
-  console.log('✅ Coupons created: WELCOME500, SUPERFEST20');
-  console.log('🎉 Seed completed successfully! 50 products, 10 categories, complete user roles & inventory ready.');
+  console.log('✅ Ayurveda Wellness Coupons Seeded: VEDA500, HERBAL20');
+  console.log('🎉 Seed completed successfully! 50 Certified Ayurvedic herbal remedies ready.');
 }
 
 main()

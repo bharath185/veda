@@ -42,7 +42,7 @@ export function buildInstagramCaption(params: {
   const currencySymbol = params.currency === 'USD' ? '$' : '₹';
   const discountText =
     params.compareAtPrice && params.compareAtPrice > params.price
-      ? ` 🔥 ${(Math.round(((params.compareAtPrice - params.price) / params.compareAtPrice) * 100))}% OFF (was ${currencySymbol}${params.compareAtPrice})`
+      ? ` 🌿 ${(Math.round(((params.compareAtPrice - params.price) / params.compareAtPrice) * 100))}% OFF (was ${currencySymbol}${params.compareAtPrice})`
       : '';
 
   const hashtags = (params.tags || [])
@@ -50,10 +50,13 @@ export function buildInstagramCaption(params: {
     .slice(0, 10)
     .join(' ');
 
-  return `✨ NEW DROP: ${params.productTitle} ✨\n\n` +
-    `Get yours now for only ${currencySymbol}${params.price}!${discountText}\n\n` +
-    `🛒 Tap the link in bio or visit: ${params.shortUrl}\n` +
-    `⚡ Limited stock available — Free express shipping on orders today!\n\n` +
-    `🏷️ Tag a friend who needs this!\n\n` +
-    `${hashtags || '#shopflow #trending #deals #musthave'}`;
+  return `🌿 PURE AYURVEDA WELLNESS: ${params.productTitle} 🌿\n\n` +
+    `100% Authentic, Lab-Tested Classical Formulation.\n` +
+    `Available now for only ${currencySymbol}${params.price}!${discountText}\n\n` +
+    `✅ Non-Pharma Herbal Formulation\n` +
+    `✅ AYUSH Premium Certified · Zero Heavy Metals\n` +
+    `✅ Clinically Backed Botanicals\n\n` +
+    `🛒 Tap the link in bio or order directly: ${params.shortUrl}\n` +
+    `⚡ Free Express Delivery on orders above ₹999\n\n` +
+    `${hashtags || '#ayurveda #herbalremedy #holisticwellness #doshabalance #pureherbs'}`;
 }
