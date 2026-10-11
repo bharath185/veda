@@ -2,19 +2,31 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Search, Bell, Sparkles, Download, Star, Plus, Leaf, ShieldCheck } from 'lucide-react';
+import {
+  Search,
+  Bell,
+  Sparkles,
+  Camera,
+  Mic,
+  MapPin,
+  Star,
+  ShoppingCart,
+  ChevronRight,
+  Clock,
+  ShieldCheck,
+} from 'lucide-react';
 import { MobileBottomNav } from './MobileBottomNav';
 import { useCartStore } from '../../store/useCartStore';
 
-const mobileAyurvedaCategories = [
+const mobileCategories = [
   { name: 'Rasayana', icon: '🍯', slug: 'classical-rasayanas' },
-  { name: 'Shilajit', icon: '⛰️', slug: 'herbal-supplements' },
+  { name: 'Shilajit', icon: '⚡', slug: 'herbal-supplements' },
   { name: 'Ashwagandha', icon: '🌿', slug: 'herbal-supplements' },
-  { name: 'Thailam', icon: '🪔', slug: 'ayurvedic-thailams' },
+  { name: 'Pain Oils', icon: '🧴', slug: 'ayurvedic-thailams' },
   { name: 'Kumkumadi', icon: '✨', slug: 'botanical-skincare' },
-  { name: 'Triphala', icon: '🍃', slug: 'churnas-kwath' },
-  { name: 'Gut Tonic', icon: '🌱', slug: 'digestive-gut-health' },
-  { name: 'Herbal Tea', icon: '🍵', slug: 'wellness-herbal-teas' },
+  { name: 'Triphala', icon: '🥣', slug: 'churnas-kwath' },
+  { name: 'Gut Care', icon: '🩺', slug: 'digestive-gut-health' },
+  { name: 'Kadhas', icon: '🍵', slug: 'immunity-kadhas' },
 ];
 
 const mobileProducts = [
@@ -24,7 +36,9 @@ const mobileProducts = [
     slug: 'swarna-bhasma-chyawanprash-1kg',
     price: 1499,
     compareAtPrice: 1799,
-    rating: 4.95,
+    discountPct: 17,
+    rating: 4.8,
+    reviews: 1420,
     image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=500&auto=format&fit=crop&q=80',
   },
   {
@@ -33,7 +47,9 @@ const mobileProducts = [
     slug: 'pure-himalayan-shilajit-resin-20g',
     price: 1299,
     compareAtPrice: 1699,
-    rating: 4.98,
+    discountPct: 23,
+    rating: 4.9,
+    reviews: 2180,
     image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&auto=format&fit=crop&q=80',
   },
   {
@@ -42,7 +58,9 @@ const mobileProducts = [
     slug: 'ksm66-organic-ashwagandha-capsules',
     price: 799,
     compareAtPrice: 999,
-    rating: 4.9,
+    discountPct: 20,
+    rating: 4.7,
+    reviews: 954,
     image: 'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=500&auto=format&fit=crop&q=80',
   },
   {
@@ -51,169 +69,195 @@ const mobileProducts = [
     slug: 'kashmiri-saffron-kumkumadi-night-oil',
     price: 1299,
     compareAtPrice: 1699,
-    rating: 4.92,
+    discountPct: 23,
+    rating: 4.8,
+    reviews: 840,
     image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=500&auto=format&fit=crop&q=80',
   },
 ];
 
 export function MobileHome() {
-  const [showPwaBanner, setShowPwaBanner] = useState(true);
+  const [search, setSearch] = useState('');
   const { addItem } = useCartStore();
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] pb-24 flex flex-col text-slate-800">
-      {/* Mobile Sticky Top Header */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-emerald-100 px-4 py-3 space-y-2.5">
+    <div className="min-h-screen bg-[#f1f2f4] pb-20 flex flex-col text-slate-800 font-sans">
+      {/* Flipkart Mobile Sticky Top Header */}
+      <header className="sticky top-0 z-40 bg-[#2874f0] text-white p-3 space-y-2.5 shadow-sm">
+        {/* Brand & Notifications Row */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-black">
-              <Leaf className="w-4 h-4 text-amber-200" />
-            </div>
-            <div>
-              <span className="font-black text-lg text-slate-900 tracking-tight">VedaFlow</span>
-              <span className="block text-[9px] font-extrabold text-emerald-700 tracking-wider uppercase">Ayurveda Pure</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="p-2 rounded-full hover:bg-emerald-50 text-slate-600">
-              <Bell className="w-4 h-4 text-emerald-800" />
-            </button>
+          <Link href="/" className="flex items-center gap-1">
+            <span className="font-black italic text-lg tracking-tight">
+              Veda<span className="text-[#ffe500]">Flow</span>
+            </span>
+            <span className="text-[9px] bg-[#ffe500] text-[#2874f0] font-black px-1 rounded-xs uppercase">
+              AYUSH
+            </span>
+          </Link>
+
+          <div className="flex items-center gap-3">
+            <Link href="/login" className="text-xs font-bold bg-white text-[#2874f0] px-3 py-1 rounded-xs shadow-xs">
+              Login
+            </Link>
+            <Bell className="w-5 h-5 text-white" />
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative">
-          <Search className="w-4 h-4 text-emerald-600 absolute left-3 top-1/2 -translate-y-1/2" />
+        {/* Flipkart Search Bar with Mic & Camera */}
+        <div className="relative flex items-center bg-white rounded-xs px-3 py-2 text-slate-800 shadow-inner">
+          <Search className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
           <input
             type="text"
-            placeholder="Search Ashwagandha, Shilajit, Chyawanprash..."
-            className="w-full bg-slate-50 border border-emerald-100 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+            placeholder="Search Ayurvedic medicines & brands"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full text-xs font-medium focus:outline-none bg-transparent placeholder:text-slate-500"
           />
+          <Mic className="w-4 h-4 text-[#2874f0] ml-2 shrink-0 cursor-pointer" />
+          <Camera className="w-4 h-4 text-[#2874f0] ml-2 shrink-0 cursor-pointer" />
+        </div>
+
+        {/* Delivery Pin Strip */}
+        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-blue-100">
+          <MapPin className="w-3.5 h-3.5 text-[#ffe500]" />
+          <span>Deliver to Priya - Bengaluru 560001</span>
+          <ChevronRight className="w-3 h-3 ml-auto text-blue-200" />
         </div>
       </header>
 
-      {/* AYUSH Certified Banner */}
-      {showPwaBanner && (
-        <div className="bg-gradient-to-r from-emerald-800 to-teal-800 text-white px-4 py-2.5 flex items-center justify-between text-xs shadow-sm">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
-            <span>100% Non-Pharma Herbal Medicine · AYUSH Premium Certified</span>
-          </div>
-          <button
-            onClick={() => setShowPwaBanner(false)}
-            className="text-white/80 hover:text-white font-bold ml-2 text-xs"
-          >
-            ✕
-          </button>
-        </div>
-      )}
-
-      {/* Category Pills (Horizontal Scroll) */}
-      <div className="overflow-x-auto no-scrollbar py-3 px-4 flex gap-3 bg-white border-b border-emerald-50">
-        {mobileAyurvedaCategories.map((c) => (
+      {/* Circle Categories Horizontal Scroller */}
+      <div className="bg-white py-3 px-2 border-b border-slate-200 overflow-x-auto flex gap-4 scrollbar-none">
+        {mobileCategories.map((c) => (
           <Link
             key={c.name}
-            href={`/categories/${c.slug}`}
-            className="flex flex-col items-center gap-1 min-w-[64px] active:scale-95 transition-transform"
+            href="/"
+            className="flex flex-col items-center shrink-0 w-16 text-center"
           >
-            <div className="w-13 h-13 rounded-2xl bg-emerald-50/80 flex items-center justify-center text-xl shadow-xs border border-emerald-100/60">
+            <div className="w-12 h-12 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-xl shadow-xs">
               {c.icon}
             </div>
-            <span className="text-[11px] font-bold text-slate-700 tracking-tight">{c.name}</span>
+            <span className="text-[10px] font-bold text-slate-800 mt-1 whitespace-nowrap">
+              {c.name}
+            </span>
           </Link>
         ))}
       </div>
 
-      {/* Featured Botanical Hero Card */}
-      <div className="p-4">
-        <div className="bg-gradient-to-br from-emerald-950 to-teal-900 rounded-3xl p-5 text-white relative overflow-hidden shadow-lg">
-          <div className="space-y-2 z-10 relative">
-            <span className="inline-flex items-center gap-1 bg-emerald-500/30 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
-              <Leaf className="w-3 h-3 text-amber-300" /> Rasayana of Kings
-            </span>
-            <h2 className="text-xl font-black">Swarna Chyawanprash</h2>
-            <p className="text-xs text-stone-300">Wild forest Amla with 24K Gold Bhasma</p>
-            <Link
-              href="/products/swarna-bhasma-chyawanprash-1kg"
-              className="inline-block mt-2 bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl active:bg-emerald-700 shadow"
-            >
-              Order Classical Formula
-            </Link>
+      {/* Flipkart SuperCoin Banner */}
+      <div className="mx-2 mt-2 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-900 rounded-xs p-2.5 flex items-center justify-between shadow-xs">
+        <div className="flex items-center gap-2">
+          <span className="text-xl">🪙</span>
+          <div>
+            <div className="text-xs font-black">140 Veda SuperCoins Available</div>
+            <div className="text-[10px] font-semibold">Redeem coins for extra discounts on Rasayanas</div>
           </div>
-          <img
-            src="https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=400&auto=format&fit=crop&q=80"
-            alt="Hero Herbal"
-            className="absolute -right-4 -bottom-4 w-36 h-36 object-cover rounded-2xl opacity-60"
-          />
         </div>
+        <button className="bg-white text-slate-900 text-[10px] font-black px-2.5 py-1 rounded-xs uppercase shadow-xs">
+          View
+        </button>
       </div>
 
-      {/* 2-Column Mobile Product Grid */}
-      <div className="px-4 space-y-3">
+      {/* Deal of the Day Banner Carousel */}
+      <div className="mx-2 mt-2 bg-[#2874f0] text-white p-4 rounded-xs shadow-xs space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="font-extrabold text-sm text-slate-900">Classical Formulations</h3>
-          <span className="text-xs font-bold text-emerald-700">View All</span>
+          <span className="bg-[#ffe500] text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded-2xs uppercase">
+            Limited Time
+          </span>
+          <div className="flex items-center gap-1 text-[11px] font-bold font-mono">
+            <Clock className="w-3 h-3 text-[#ffe500]" />
+            <span>19h : 42m Left</span>
+          </div>
+        </div>
+        <h3 className="text-base font-black leading-tight">
+          Grand Ayurvedic Wellness Sale — Up to 50% Off
+        </h3>
+        <p className="text-[11px] text-blue-100">
+          Charaka Samhita verified classical non-pharma herbal medicines.
+        </p>
+      </div>
+
+      {/* Flipkart Product Grid */}
+      <div className="p-2 space-y-2">
+        <div className="flex items-center justify-between px-1">
+          <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">
+            Today's Ayurvedic Deals
+          </h4>
+          <span className="text-xs font-bold text-[#2874f0]">View All</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          {mobileProducts.map((p) => {
-            const discount = p.compareAtPrice
-              ? Math.round(((p.compareAtPrice - p.price) / p.compareAtPrice) * 100)
-              : 0;
+        <div className="grid grid-cols-2 gap-2">
+          {mobileProducts.map((p) => (
+            <div
+              key={p.id}
+              className="bg-white border border-slate-200 rounded-xs p-2.5 flex flex-col justify-between shadow-xs"
+            >
+              <Link href={`/products/${p.slug}`} className="h-32 flex items-center justify-center mb-1">
+                <img src={p.image} alt={p.title} className="max-h-full object-contain" />
+              </Link>
 
-            return (
-              <div
-                key={p.id}
-                className="bg-white rounded-3xl border border-emerald-100 overflow-hidden shadow-xs flex flex-col justify-between"
-              >
-                <div className="relative aspect-square bg-emerald-50/50">
-                  <img src={p.image} alt={p.title} className="w-full h-full object-cover" />
-                  {discount > 0 && (
-                    <span className="absolute top-2 left-2 bg-emerald-700 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">
-                      {discount}% OFF
-                    </span>
-                  )}
-                </div>
+              <div className="space-y-1">
+                <Link
+                  href={`/products/${p.slug}`}
+                  className="text-xs font-bold text-slate-800 line-clamp-2 leading-tight block h-7"
+                >
+                  {p.title}
+                </Link>
 
-                <div className="p-3 space-y-1.5">
-                  <Link href={`/products/${p.slug}`} className="font-bold text-xs text-slate-900 line-clamp-1">
-                    {p.title}
-                  </Link>
-
-                  <div className="flex items-center gap-1 text-[11px] text-amber-500 font-semibold">
-                    <Star className="w-3 h-3 fill-amber-400 stroke-amber-400" />
+                <div className="flex items-center gap-1">
+                  <span className="bg-[#388e3c] text-white text-[9px] font-black px-1 py-0.5 rounded-2xs flex items-center gap-0.5">
                     <span>{p.rating}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-1">
-                    <div>
-                      <div className="text-xs font-black text-slate-900">₹{p.price.toLocaleString('en-IN')}</div>
-                    </div>
-                    <button
-                      onClick={() =>
-                        addItem({
-                          id: `cart-${p.id}`,
-                          variantId: `var-${p.id}`,
-                          productId: p.id,
-                          title: p.title,
-                          sku: `VD-${p.slug.toUpperCase().slice(0, 8)}`,
-                          price: p.price,
-                          quantity: 1,
-                          image: p.image,
-                        })
-                      }
-                      className="w-7 h-7 rounded-xl bg-emerald-700 text-white flex items-center justify-center active:scale-90 transition-transform shadow-sm"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </div>
+                    <Star className="w-2 h-2 fill-white" />
+                  </span>
+                  <span className="text-[9px] text-slate-400">({p.reviews})</span>
+                  <span className="ml-auto text-[8px] bg-[#2874f0] text-white font-black italic px-0.5 rounded-2xs">
+                    Veda<span className="text-[#ffe500]">✓</span>
+                  </span>
                 </div>
+
+                <div className="flex items-baseline gap-1.5 pt-0.5">
+                  <span className="text-xs font-black text-slate-900">
+                    ₹{p.price.toLocaleString('en-IN')}
+                  </span>
+                  <span className="text-[10px] text-slate-400 line-through">
+                    ₹{p.compareAtPrice.toLocaleString('en-IN')}
+                  </span>
+                  <span className="text-[10px] font-bold text-[#388e3c]">
+                    {p.discountPct}% off
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    addItem({
+                      id: p.id,
+                      productId: p.id,
+                      title: p.title,
+                      price: p.price,
+                      image: p.image,
+                      quantity: 1,
+                    })
+                  }
+                  className="w-full bg-[#ff9f00] hover:bg-[#f39700] text-white text-[10px] font-black py-1.5 rounded-2xs uppercase tracking-wider mt-1"
+                >
+                  Add To Cart
+                </button>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
 
+      {/* Flipkart Trust Banner */}
+      <div className="mx-2 my-2 bg-white p-3 rounded-xs border border-slate-200 flex items-center justify-around text-center text-[10px] font-bold text-slate-600">
+        <div>🌿 100% Non-Pharma</div>
+        <div>·</div>
+        <div>🏆 AYUSH Certified</div>
+        <div>·</div>
+        <div>⚡ Express Delivery</div>
+      </div>
+
+      {/* Bottom Nav */}
       <MobileBottomNav />
     </div>
   );

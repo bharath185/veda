@@ -6,19 +6,13 @@ import { useRouter } from 'next/navigation';
 import {
   ShieldCheck,
   Mail,
-  Lock,
   User,
   Phone,
+  Lock,
   Eye,
   EyeOff,
-  ArrowRight,
-  Sparkles,
   Check,
-  Globe,
-  Smartphone,
-  Leaf,
-  Award,
-  CheckCircle2,
+  Sparkles,
 } from 'lucide-react';
 
 export default function RegisterPage() {
@@ -34,16 +28,12 @@ export default function RegisterPage() {
   const [successMessage, setSuccessMessage] = useState('');
 
   const hasLength = password.length >= 8;
-  const hasUpper = /[A-Z]/.test(password);
-  const hasLower = /[a-z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
-  const hasSpecial = /[^A-Za-z0-9]/.test(password);
-  const isPasswordValid = hasLength && hasUpper && hasLower && hasNumber && hasSpecial;
+  const isPasswordValid = hasLength;
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isPasswordValid) {
-      setErrorMessage('Please ensure your password meets all botanical security criteria below.');
+      setErrorMessage('Password must contain at least 8 characters.');
       return;
     }
 
@@ -69,7 +59,7 @@ export default function RegisterPage() {
           localStorage.setItem('shopflow_token', data.tokens?.accessToken || '');
           localStorage.setItem('shopflow_user', JSON.stringify(data.user || {}));
         }
-        setSuccessMessage('Account registered successfully! Welcome to VedaFlow...');
+        setSuccessMessage('Account registered successfully! Redirecting...');
         setTimeout(() => router.push('/'), 1200);
         return;
       }
@@ -81,7 +71,7 @@ export default function RegisterPage() {
           JSON.stringify({ name, email, role, doshaProfile: 'Tridoshic Harmony' }),
         );
       }
-      setSuccessMessage('Welcome to VedaFlow! Redirecting to the herbal apothecary...');
+      setSuccessMessage('Account created! Entering the Ayurvedic storefront...');
       setTimeout(() => router.push('/'), 1200);
     } catch {
       setErrorMessage('Failed to connect to authentication server. Please retry.');
@@ -98,259 +88,216 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBFBEE] flex flex-col justify-between text-slate-800 antialiased selection:bg-emerald-600 selection:text-white relative overflow-hidden">
-      {/* Decorative botanical background gradient orbs */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-100/40 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20" />
-
-      {/* Header Bar */}
-      <header className="relative z-10 w-full max-w-7xl mx-auto px-6 py-5 flex items-center justify-between border-b border-emerald-900/10">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-700 to-teal-800 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
-            <Leaf className="w-5 h-5 text-amber-200" />
-          </div>
-          <div>
-            <span className="text-xl font-black tracking-tight text-emerald-950 group-hover:text-emerald-700 transition-colors">
-              Veda<span className="text-emerald-600">Flow</span>
+    <div className="min-h-screen bg-[#f1f2f4] flex flex-col justify-between text-slate-800 font-sans antialiased">
+      {/* Flipkart Header */}
+      <header className="bg-[#2874f0] text-white py-3 px-6 shadow-sm">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-1 group">
+            <span className="text-xl font-black italic tracking-tight text-white">
+              Veda<span className="text-[#ffe500]">Flow</span>
             </span>
-            <span className="block text-[9px] font-extrabold text-emerald-800 tracking-wider uppercase">
-              Classical Ayurveda & Natural Health
+            <span className="text-[10px] bg-[#ffe500] text-[#2874f0] font-black px-1 rounded-sm uppercase tracking-tighter">
+              AYUSH
             </span>
-          </div>
-        </Link>
-
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-          <span>Already have an account?</span>
-          <Link
-            href="/login"
-            className="text-emerald-700 hover:text-emerald-900 font-bold hover:underline"
-          >
-            Sign in
+          </Link>
+          <Link href="/login" className="text-xs font-bold text-slate-100 hover:text-white">
+            Existing User? Log In
           </Link>
         </div>
       </header>
 
-      {/* Main Registration Container */}
-      <main className="relative z-10 w-full max-w-lg mx-auto px-6 py-6">
-        <div className="bg-white/90 backdrop-blur-md border border-emerald-900/15 rounded-3xl p-8 shadow-xl shadow-emerald-950/5 space-y-6">
-          <div className="space-y-1.5 text-center">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold mb-1">
-              <Award className="w-3.5 h-3.5 text-amber-600" /> 100% Non-Pharma Herbal Medicine
+      {/* Center Modal / Split-Card */}
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 my-6">
+        <div className="w-full max-w-4xl bg-white shadow-xl rounded-sm overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[540px]">
+          {/* LEFT PANEL: Flipkart Blue (5 cols) */}
+          <div className="md:col-span-5 bg-[#2874f0] text-white p-8 flex flex-col justify-between relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <h2 className="text-2xl font-black tracking-tight">Looks like you're new here!</h2>
+              <p className="text-sm font-medium text-blue-100 leading-relaxed">
+                Sign up with your mobile number or email to begin ordering pure classical Ayurvedic remedies.
+              </p>
             </div>
-            <h1 className="text-2xl font-black text-emerald-950 tracking-tight">
-              Create Your VedaFlow Profile
-            </h1>
-            <p className="text-xs text-slate-500 font-medium">
-              Join India's purest Ayurvedic apothecary — pure Rasayanas, herbal churnas & wildcrafted extracts.
-            </p>
+
+            {/* Graphic Icon */}
+            <div className="relative z-10 py-6 text-center">
+              <div className="w-32 h-32 mx-auto rounded-full bg-white/10 border border-white/20 flex flex-col items-center justify-center text-white backdrop-blur-sm shadow-inner">
+                <span className="text-4xl mb-1">🌿</span>
+                <span className="text-[10px] font-black tracking-widest uppercase text-[#ffe500]">
+                  Veda-Assured
+                </span>
+                <span className="text-[9px] text-blue-100 font-bold">Charaka Samhita</span>
+              </div>
+            </div>
+
+            <div className="text-[11px] text-blue-200 font-semibold relative z-10 flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-[#ffe500]" />
+              <span>100% Non-Pharma Herbal Medicine Guarantee</span>
+            </div>
+
+            {/* Decorative background circle */}
+            <div className="absolute -bottom-16 -right-16 w-52 h-52 bg-blue-600/50 rounded-full blur-2xl pointer-events-none" />
           </div>
 
-          {errorMessage && (
-            <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-800 font-medium">
-              {errorMessage}
-            </div>
-          )}
-
-          {successMessage && (
-            <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-bold flex items-center gap-2">
-              <Check className="w-4 h-4 text-emerald-600" />
-              <span>{successMessage}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleRegister} className="space-y-4">
-            {/* Account Type Selector */}
-            <div className="grid grid-cols-2 gap-2 bg-[#FAF9F2] p-1.5 rounded-2xl text-xs font-bold border border-emerald-900/10">
-              <button
-                type="button"
-                onClick={() => setRole('CUSTOMER')}
-                className={`py-2 rounded-xl transition-all ${
-                  role === 'CUSTOMER'
-                    ? 'bg-emerald-800 text-white shadow-sm'
-                    : 'text-slate-600 hover:text-emerald-900'
-                }`}
-              >
-                🌿 Holistic Patient / Shopper
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('VENDOR')}
-                className={`py-2 rounded-xl transition-all ${
-                  role === 'VENDOR'
-                    ? 'bg-emerald-800 text-white shadow-sm'
-                    : 'text-slate-600 hover:text-emerald-900'
-                }`}
-              >
-                🏥 Vaidya / Ayurvedic Clinic
-              </button>
-            </div>
-
-            {/* Name Field */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-emerald-950">Full Name</label>
-              <div className="relative">
-                <User className="w-4 h-4 text-emerald-700/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Ananya Deshmukh"
-                  className="w-full bg-[#FAF9F5] hover:bg-white focus:bg-white border border-emerald-900/20 focus:border-emerald-600 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-emerald-100 transition-all font-medium"
-                />
-              </div>
-            </div>
-
-            {/* Email Field */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-emerald-950">Email Address</label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-emerald-700/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="ananya@example.com"
-                  className="w-full bg-[#FAF9F5] hover:bg-white focus:bg-white border border-emerald-900/20 focus:border-emerald-600 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-emerald-100 transition-all font-medium"
-                />
-              </div>
-            </div>
-
-            {/* Phone Field */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-emerald-950">Mobile Number (Order Updates & Delivery OTP)</label>
-              <div className="relative">
-                <Phone className="w-4 h-4 text-emerald-700/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+91 98765 43210"
-                  className="w-full bg-[#FAF9F5] hover:bg-white focus:bg-white border border-emerald-900/20 focus:border-emerald-600 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-emerald-100 transition-all font-medium"
-                />
-              </div>
-            </div>
-
-            {/* Password Field */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-emerald-950">Create Password</label>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-emerald-700/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min. 8 characters with Aa, 1, @"
-                  className="w-full bg-[#FAF9F5] hover:bg-white focus:bg-white border border-emerald-900/20 focus:border-emerald-600 rounded-2xl pl-10 pr-10 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-emerald-100 transition-all font-medium"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-
-              {/* Password strength checklist */}
-              {password.length > 0 && (
-                <div className="p-3 bg-[#FAF9F2] rounded-2xl border border-emerald-900/15 text-[11px] space-y-1 mt-2">
-                  <div className="font-bold text-emerald-950 mb-1">Botanical Security Checklist:</div>
-                  <div className="grid grid-cols-2 gap-1 text-slate-600 font-medium">
-                    <span className={hasLength ? 'text-emerald-700 font-bold' : ''}>
-                      {hasLength ? '✓' : '○'} 8+ characters
-                    </span>
-                    <span className={hasUpper ? 'text-emerald-700 font-bold' : ''}>
-                      {hasUpper ? '✓' : '○'} Uppercase letter
-                    </span>
-                    <span className={hasLower ? 'text-emerald-700 font-bold' : ''}>
-                      {hasLower ? '✓' : '○'} Lowercase letter
-                    </span>
-                    <span className={hasNumber ? 'text-emerald-700 font-bold' : ''}>
-                      {hasNumber ? '✓' : '○'} Number
-                    </span>
-                    <span className={hasSpecial ? 'text-emerald-700 font-bold' : ''}>
-                      {hasSpecial ? '✓' : '○'} Special character
-                    </span>
-                  </div>
+          {/* RIGHT PANEL: Form Inputs (7 cols) */}
+          <div className="md:col-span-7 p-8 sm:p-10 flex flex-col justify-between space-y-6">
+            <div className="space-y-5">
+              {errorMessage && (
+                <div className="p-3 bg-red-50 border border-red-200 text-xs text-red-600 font-semibold rounded-xs">
+                  {errorMessage}
                 </div>
               )}
+
+              {successMessage && (
+                <div className="p-3 bg-emerald-50 border border-emerald-200 text-xs text-emerald-700 font-bold rounded-xs flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <span>{successMessage}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleRegister} className="space-y-4">
+                {/* Account Type Selector */}
+                <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xs text-xs font-bold">
+                  <button
+                    type="button"
+                    onClick={() => setRole('CUSTOMER')}
+                    className={`py-1.5 rounded-xs transition-all ${
+                      role === 'CUSTOMER' ? 'bg-white text-[#2874f0] shadow-xs' : 'text-slate-600'
+                    }`}
+                  >
+                    🌿 Patient / Individual
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRole('VENDOR')}
+                    className={`py-1.5 rounded-xs transition-all ${
+                      role === 'VENDOR' ? 'bg-white text-[#2874f0] shadow-xs' : 'text-slate-600'
+                    }`}
+                  >
+                    🏥 Vaidya / Ayurvedic Clinic
+                  </button>
+                </div>
+
+                {/* Name */}
+                <div className="border-b-2 border-slate-200 focus-within:border-[#2874f0] transition-colors pb-1">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">
+                    Full Name
+                  </label>
+                  <div className="flex items-center">
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Ananya Deshmukh"
+                      className="w-full text-xs text-slate-900 font-semibold focus:outline-none bg-transparent py-1"
+                    />
+                    <User className="w-4 h-4 text-slate-400 shrink-0" />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className="border-b-2 border-slate-200 focus-within:border-[#2874f0] transition-colors pb-1">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">
+                    Email Address
+                  </label>
+                  <div className="flex items-center">
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="ananya@example.com"
+                      className="w-full text-xs text-slate-900 font-semibold focus:outline-none bg-transparent py-1"
+                    />
+                    <Mail className="w-4 h-4 text-slate-400 shrink-0" />
+                  </div>
+                </div>
+
+                {/* Mobile */}
+                <div className="border-b-2 border-slate-200 focus-within:border-[#2874f0] transition-colors pb-1">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">
+                    Mobile Number (For Delivery OTP)
+                  </label>
+                  <div className="flex items-center">
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+91 98450 11223"
+                      className="w-full text-xs text-slate-900 font-semibold focus:outline-none bg-transparent py-1"
+                    />
+                    <Phone className="w-4 h-4 text-slate-400 shrink-0" />
+                  </div>
+                </div>
+
+                {/* Password */}
+                <div className="border-b-2 border-slate-200 focus-within:border-[#2874f0] transition-colors pb-1">
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">
+                    Set Password
+                  </label>
+                  <div className="flex items-center">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Min. 8 characters"
+                      className="w-full text-xs text-slate-900 font-semibold focus:outline-none bg-transparent py-1"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-slate-400 hover:text-slate-600 shrink-0"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Terms Disclaimer */}
+                <p className="text-[11px] text-slate-500 leading-normal pt-1">
+                  By continuing, you agree to VedaFlow's{' '}
+                  <span className="text-[#2874f0] font-semibold hover:underline cursor-pointer">Terms of Use</span> and{' '}
+                  <span className="text-[#2874f0] font-semibold hover:underline cursor-pointer">Privacy Policy</span>.
+                </p>
+
+                {/* Flipkart Orange CTA Button */}
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-[#fb641b] hover:bg-[#e85a14] active:scale-[0.99] text-white font-black py-3 rounded-xs text-xs uppercase tracking-wider shadow-sm transition-all disabled:opacity-50"
+                >
+                  {isLoading ? 'Creating account...' : 'CONTINUE'}
+                </button>
+              </form>
             </div>
 
-            {/* Quick Demo Pre-fill Button */}
-            <div className="pt-1">
+            {/* Quick Demo Pre-fill */}
+            <div className="space-y-3 pt-2">
               <button
                 type="button"
                 onClick={handleFillDemoRegistration}
-                className="w-full text-center text-xs font-semibold text-emerald-800 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100/70 border border-emerald-200 py-1.5 rounded-xl transition-all flex items-center justify-center gap-1.5"
+                className="w-full text-center text-xs font-semibold text-[#2874f0] bg-blue-50/60 hover:bg-blue-100/60 border border-blue-200 py-2 rounded-xs transition-colors flex items-center justify-center gap-1.5"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Auto-fill Sample Patient Details
+                <Sparkles className="w-3.5 h-3.5 text-[#2874f0]" /> Auto-fill Sample Patient Details
               </button>
-            </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-emerald-800 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold py-3 px-4 rounded-2xl shadow-lg shadow-emerald-800/20 flex items-center justify-center gap-2 text-xs transition-all disabled:opacity-50 mt-2"
-            >
-              {isLoading ? (
-                'Registering holistic profile...'
-              ) : (
-                <>
-                  <span>Complete VedaFlow Registration</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* Social Logins */}
-          <div className="space-y-3 pt-2">
-            <div className="relative flex items-center justify-center">
-              <div className="border-t border-emerald-900/10 w-full" />
-              <span className="bg-white px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider absolute">
-                Or sign up with
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <button
-                type="button"
-                className="flex items-center justify-center gap-2 border border-emerald-900/15 hover:bg-emerald-50/50 rounded-2xl py-2.5 text-xs font-bold text-slate-700 transition-colors"
-              >
-                <Globe className="w-4 h-4 text-emerald-600" />
-                <span>Google</span>
-              </button>
-              <button
-                type="button"
-                className="flex items-center justify-center gap-2 border border-emerald-900/15 hover:bg-emerald-50/50 rounded-2xl py-2.5 text-xs font-bold text-slate-700 transition-colors"
-              >
-                <Smartphone className="w-4 h-4 text-slate-700" />
-                <span>Apple ID</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Trust points */}
-          <div className="pt-2 border-t border-emerald-900/10 grid grid-cols-2 gap-2 text-[10px] font-semibold text-emerald-900/70">
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span>GMP Certified Formulation</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span>Non-Pharma 100% Herbal</span>
+              <div className="text-center border-t border-slate-100 pt-3">
+                <Link
+                  href="/login"
+                  className="w-full block bg-white hover:bg-slate-50 text-[#2874f0] border border-slate-300 font-bold py-2.5 rounded-xs text-xs uppercase tracking-wider shadow-xs transition-colors"
+                >
+                  Existing User? Log In
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 py-6 text-center text-xs text-slate-500 border-t border-emerald-900/10">
-        By joining VedaFlow, you agree to our Classical Quality Guidelines, Non-Pharma Guarantee and Privacy Policy.
+      <footer className="bg-white border-t border-slate-200 py-4 px-6 text-center text-[11px] text-slate-500">
+        © 2026 VedaFlow.com · 100% Genuine Ayurvedic Medicines & Classical Formulations
       </footer>
     </div>
   );

@@ -2,136 +2,223 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingBag, Leaf, Sparkles, ShieldCheck, Heart } from 'lucide-react';
+import {
+  Search,
+  ShoppingCart,
+  ChevronDown,
+  Sparkles,
+  User,
+  Package,
+  Heart,
+  Award,
+  HelpCircle,
+  Bell,
+  Download,
+  ShieldCheck,
+  TrendingUp,
+} from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
 
-const categories = [
-  { name: 'Classical Rasayanas & Chyawanprash', slug: 'classical-rasayanas' },
-  { name: 'Herbal Supplements & Shilajit', slug: 'herbal-supplements' },
-  { name: 'Organic Churnas & Single Herbs', slug: 'churnas-kwath' },
-  { name: 'Medicated Thailams & Pain Oils', slug: 'ayurvedic-thailams' },
-  { name: 'Ayurvedic Botanical Skincare', slug: 'botanical-skincare' },
-  { name: 'Hair Tonics & Bhringraj Care', slug: 'hair-nourishment' },
-  { name: 'Digestive & Gut Health Tonics', slug: 'digestive-gut-health' },
-  { name: 'Immunity Kadhas & Tulsi Drops', slug: 'immunity-kadhas' },
-  { name: 'Mind, Sleep & Stress Tonics', slug: 'stress-sleep-tonics' },
-  { name: 'Detox Herbal Teas & Infusions', slug: 'wellness-herbal-teas' },
+const flipkartCategories = [
+  { name: 'Classical Rasayanas', slug: 'classical-rasayanas', icon: '🍯' },
+  { name: 'Pure Shilajit & Resins', slug: 'herbal-supplements', icon: '⚡' },
+  { name: 'Ashwagandha & Vitality', slug: 'herbal-supplements', icon: '🌿' },
+  { name: 'Organic Churnas', slug: 'churnas-kwath', icon: '🥣' },
+  { name: 'Medicated Thailams', slug: 'ayurvedic-thailams', icon: '🧴' },
+  { name: 'Kumkumadi & Glow', slug: 'botanical-skincare', icon: '✨' },
+  { name: 'Bhringraj Hair Care', slug: 'hair-nourishment', icon: '💇‍♀️' },
+  { name: 'Gut & Digestion', slug: 'digestive-gut-health', icon: '🩺' },
+  { name: 'Immunity Kadhas', slug: 'immunity-kadhas', icon: '🍵' },
+  { name: 'Herbal Deals', slug: 'all-deals', icon: '🏷️' },
 ];
 
 export function DesktopHeader() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [showMegaMenu, setShowMegaMenu] = useState(false);
+  const [showLoginMenu, setShowLoginMenu] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
   const { items, setIsOpen } = useCartStore();
   const totalItemCount = items.reduce((acc, i) => acc + i.quantity, 0);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-emerald-100">
-      {/* Top Botanical Banner */}
-      <div className="bg-emerald-800 text-emerald-50 text-xs font-semibold py-1.5 px-4 text-center tracking-wide flex justify-center items-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-        <span>100% Non-Pharma Herbal Medicine · AYUSH Certified · Use coupon <strong>HERBAL20</strong> for 20% off</span>
+    <header className="sticky top-0 z-50 w-full shadow-md">
+      {/* 1. Flipkart Primary Blue Header Bar */}
+      <div className="bg-[#2874f0] text-white">
+        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
+          {/* Flipkart Style Logo + Plus */}
+          <Link href="/" className="flex flex-col items-start leading-none group shrink-0">
+            <div className="flex items-center gap-1">
+              <span className="text-xl font-black italic tracking-tight text-white">
+                Veda<span className="text-[#ffe500]">Flow</span>
+              </span>
+              <span className="text-[10px] bg-[#ffe500] text-[#2874f0] font-black px-1 rounded-sm uppercase tracking-tighter">
+                AYUSH
+              </span>
+            </div>
+            <div className="flex items-center gap-0.5 text-[11px] font-bold italic text-slate-200 hover:underline">
+              <span>Explore</span>
+              <span className="text-[#ffe500] font-black ml-0.5">Plus</span>
+              <Sparkles className="w-2.5 h-2.5 text-[#ffe500] inline fill-[#ffe500]" />
+            </div>
+          </Link>
+
+          {/* Flipkart Style Search Box */}
+          <div className="flex-1 max-w-2xl relative">
+            <div className="relative flex items-center">
+              <input
+                type="text"
+                placeholder="Search for Ayurvedic medicines, Rasayanas, Shilajit, Ashwagandha and brands..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white text-slate-900 placeholder:text-slate-500 text-xs px-4 py-2.5 rounded-sm shadow-inner focus:outline-none focus:ring-1 focus:ring-amber-300 font-medium"
+              />
+              <button
+                type="button"
+                className="absolute right-0 top-0 bottom-0 px-4 bg-white text-[#2874f0] hover:text-[#1c55b5] flex items-center justify-center rounded-r-sm transition-colors"
+                title="Search"
+              >
+                <Search className="w-4 h-4 stroke-[2.5]" />
+              </button>
+            </div>
+          </div>
+
+          {/* Right Navigation Controls */}
+          <div className="flex items-center gap-6 shrink-0 text-sm font-bold">
+            {/* Login Button with Flipkart Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setShowLoginMenu(true)}
+              onMouseLeave={() => setShowLoginMenu(false)}
+            >
+              <Link
+                href="/login"
+                className="bg-white text-[#2874f0] hover:bg-slate-50 px-7 py-1 text-xs font-black rounded-sm shadow-sm transition-colors flex items-center gap-1"
+              >
+                Login
+              </Link>
+
+              {/* Login Dropdown */}
+              {showLoginMenu && (
+                <div className="absolute top-full -left-6 w-60 bg-white text-slate-800 rounded-sm shadow-2xl border border-slate-200 py-1.5 z-50 animate-in fade-in duration-100">
+                  <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-800">New Customer?</span>
+                    <Link href="/register" className="text-xs font-black text-[#2874f0] hover:underline">
+                      Sign Up
+                    </Link>
+                  </div>
+                  <Link
+                    href="/login"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                  >
+                    <User className="w-4 h-4 text-[#2874f0]" />
+                    <span>My Ayurvedic Profile</span>
+                  </Link>
+                  <Link
+                    href="/"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                  >
+                    <Sparkles className="w-4 h-4 text-[#ffe500] fill-[#ffe500]" />
+                    <span>Veda Plus Zone</span>
+                  </Link>
+                  <Link
+                    href="/checkout"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                  >
+                    <Package className="w-4 h-4 text-[#2874f0]" />
+                    <span>Remedy Orders</span>
+                  </Link>
+                  <Link
+                    href="/"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                  >
+                    <Heart className="w-4 h-4 text-[#2874f0]" />
+                    <span>Wishlist (Herbal Remedies)</span>
+                  </Link>
+                  <Link
+                    href="http://localhost:3001"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700 border-t border-slate-100"
+                  >
+                    <Award className="w-4 h-4 text-emerald-600" />
+                    <span>Vaidya Doctor Portal</span>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Become a Seller / Ayurvedic Clinic */}
+            <Link
+              href="http://localhost:3001"
+              className="text-xs font-bold text-white hover:text-amber-200 transition-colors whitespace-nowrap"
+            >
+              Become a Seller
+            </Link>
+
+            {/* More Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setShowMoreMenu(true)}
+              onMouseLeave={() => setShowMoreMenu(false)}
+            >
+              <button className="flex items-center gap-1 text-xs font-bold text-white hover:text-amber-200 transition-colors">
+                <span>More</span>
+                <ChevronDown className="w-3.5 h-3.5" />
+              </button>
+
+              {showMoreMenu && (
+                <div className="absolute top-full -left-10 w-56 bg-white text-slate-800 rounded-sm shadow-2xl border border-slate-200 py-1.5 z-50 animate-in fade-in duration-100">
+                  <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700">
+                    <Bell className="w-4 h-4 text-[#2874f0]" />
+                    <span>Notification Preferences</span>
+                  </div>
+                  <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700">
+                    <HelpCircle className="w-4 h-4 text-[#2874f0]" />
+                    <span>24x7 Vaidya Care</span>
+                  </div>
+                  <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    <span>AYUSH Quality Certificates</span>
+                  </div>
+                  <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700">
+                    <Download className="w-4 h-4 text-[#2874f0]" />
+                    <span>Download VedaFlow App</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Cart Button with Count Badge */}
+            <button
+              onClick={() => setIsOpen(true)}
+              className="flex items-center gap-2 text-xs font-black text-white hover:text-amber-200 transition-colors relative"
+            >
+              <div className="relative">
+                <ShoppingCart className="w-4 h-4" />
+                {totalItemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#ffe500] text-[#2874f0] text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">
+                    {totalItemCount}
+                  </span>
+                )}
+              </div>
+              <span>Cart</span>
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between gap-8 py-3">
-        {/* Brand */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 flex items-center justify-center text-white shadow-md shadow-emerald-200 group-hover:scale-105 transition-transform">
-            <Leaf className="w-5 h-5 text-amber-200" />
-          </div>
-          <div>
-            <span className="text-2xl font-black tracking-tight text-slate-900 group-hover:text-emerald-700 transition-colors">
-              Veda<span className="text-emerald-600">Flow</span>
-            </span>
-            <span className="block text-[10px] uppercase font-extrabold text-emerald-700 tracking-wider">
-              Ayurveda & Herbal Wellness
-            </span>
-          </div>
-        </Link>
-
-        {/* Categories Mega Dropdown */}
-        <div
-          className="relative"
-          onMouseEnter={() => setShowMegaMenu(true)}
-          onMouseLeave={() => setShowMegaMenu(false)}
-        >
-          <button className="px-3.5 py-2 text-sm font-bold text-slate-700 hover:text-emerald-700 flex items-center gap-1.5 transition-colors rounded-xl hover:bg-emerald-50/60">
-            <span>Ayurvedic Remedies</span>
-            <span className="text-xs text-emerald-600">▾</span>
-          </button>
-
-          {showMegaMenu && (
-            <div className="absolute top-full left-0 w-88 bg-white rounded-2xl shadow-2xl border border-emerald-100 p-4 grid grid-cols-1 gap-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-              <div className="text-xs font-extrabold text-emerald-800 uppercase tracking-wider px-3 py-1 flex items-center gap-1.5">
-                <Leaf className="w-3.5 h-3.5 text-emerald-600" /> Classical Formulations
-              </div>
-              {categories.map((cat) => (
-                <Link
-                  key={cat.slug}
-                  href={`/categories/${cat.slug}`}
-                  className="px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 transition-all flex items-center justify-between"
-                >
-                  {cat.name}
-                  <span className="text-emerald-400">→</span>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Search Bar with Cmd+K */}
-        <div className="flex-1 max-w-xl relative">
-          <div className="relative">
-            <Search className="w-4 h-4 text-emerald-600 absolute left-4 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search Ashwagandha, Shilajit, Chyawanprash, Kumkumadi... (Press ⌘K)"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-50 hover:bg-white border border-emerald-200/80 focus:border-emerald-500 focus:bg-white rounded-full pl-11 pr-16 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-emerald-100 transition-all font-medium"
-            />
-            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] font-semibold bg-white border border-slate-200 text-slate-500 rounded px-1.5 py-0.5 shadow-sm">
-              ⌘K
-            </div>
-          </div>
-        </div>
-
-        {/* Right Nav Icons, Auth & Dashboards */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="text-xs font-bold text-slate-700 hover:text-emerald-700 px-3 py-2 rounded-xl hover:bg-emerald-50 transition-colors"
-          >
-            Sign In
-          </Link>
-
-          <Link
-            href="/register"
-            className="text-xs font-bold bg-emerald-700 hover:bg-emerald-600 text-white px-3.5 py-2 rounded-xl shadow-sm transition-all"
-          >
-            Register
-          </Link>
-
-          <div className="h-4 w-px bg-slate-200 mx-1" />
-
-          <Link
-            href="http://localhost:3001"
-            className="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
-          >
-            Vaidya Admin
-          </Link>
-
-          <button
-            onClick={() => setIsOpen(true)}
-            className="relative p-2.5 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 transition-colors ml-1"
-            title="Open Cart"
-          >
-            <ShoppingBag className="w-5 h-5 text-emerald-800" />
-            {totalItemCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center animate-bounce shadow">
-                {totalItemCount}
+      {/* 2. Flipkart Signature White Category Strip with Icons */}
+      <div className="bg-white border-b border-slate-200 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between overflow-x-auto py-2.5 gap-2 scrollbar-none">
+          {flipkartCategories.map((cat) => (
+            <Link
+              key={cat.name}
+              href="/"
+              className="flex flex-col items-center group text-center shrink-0 px-2 py-1 hover:text-[#2874f0] transition-colors"
+            >
+              <span className="text-xl group-hover:scale-110 transition-transform">{cat.icon}</span>
+              <span className="text-[11px] font-bold text-slate-800 group-hover:text-[#2874f0] mt-1 whitespace-nowrap">
+                {cat.name}
               </span>
-            )}
-          </button>
+            </Link>
+          ))}
         </div>
       </div>
     </header>
