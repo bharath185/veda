@@ -130,7 +130,7 @@ export function MobileHome() {
         {mobileCategories.map((c) => (
           <Link
             key={c.name}
-            href="/"
+            href={`/categories/${c.slug}`}
             className="flex flex-col items-center shrink-0 w-16 text-center"
           >
             <div className="w-12 h-12 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-xl shadow-xs">

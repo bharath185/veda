@@ -210,7 +210,7 @@ export function DesktopHeader() {
           {flipkartCategories.map((cat) => (
             <Link
               key={cat.name}
-              href="/"
+              href={`/categories/${cat.slug}`}
               className="flex flex-col items-center group text-center shrink-0 px-2 py-1 hover:text-[#2874f0] transition-colors"
             >
               <span className="text-xl group-hover:scale-110 transition-transform">{cat.icon}</span>

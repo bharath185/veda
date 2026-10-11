@@ -27,11 +27,16 @@ import {
   Printer,
   Download,
   Star,
+  Menu,
+  X,
+  PhoneCall,
+  RefreshCw,
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState<'analytics' | 'orders' | 'inventory' | 'delivery' | 'share' | 'audit'>('analytics');
   const [copiedCaption, setCopiedCaption] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Marketing Share Generator State
   const [shareProduct, setShareProduct] = useState('swarna-bhasma-chyawanprash-1kg');
@@ -64,99 +69,80 @@ export default function AdminDashboardPage() {
     { action: 'AYUSH_LICENSE_VERIFICATION', user: 'admin@vedaflow.org', entity: 'License GA/1482 Renewal Validated', ip: '103.21.244.1', time: '2 Hours ago' },
   ];
 
+  const navItems = [
+    { id: 'analytics' as const, label: 'Sales & SuperCoins', shortLabel: 'Sales', icon: TrendingUp },
+    { id: 'orders' as const, label: 'Orders & Ekart Dispatch', shortLabel: 'Orders', icon: ShoppingBag },
+    { id: 'inventory' as const, label: 'Botanical Stock & NABL', shortLabel: 'Stock', icon: Layers },
+    { id: 'delivery' as const, label: 'Logistics & EV Fleet', shortLabel: 'Fleet', icon: Truck },
+    { id: 'share' as const, label: 'Instagram Ad & Studio', shortLabel: 'Studio', icon: Share2 },
+    { id: 'audit' as const, label: 'AYUSH Compliance Audit', shortLabel: 'Audit', icon: ShieldCheck },
+  ];
+
+  const handleSelectTab = (tab: typeof activeTab) => {
+    setActiveTab(tab);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <div className="flex h-screen bg-[#F0F2F5] text-slate-800 font-sans overflow-hidden">
-      {/* 1. Flipkart Seller Hub Blue & Slate Sidebar */}
-      <aside className="w-64 bg-[#172337] text-slate-200 flex flex-col justify-between p-3 shrink-0 shadow-lg">
-        <div className="space-y-6">
-          {/* Brand */}
-          <div className="p-3 border-b border-slate-700/80">
-            <div className="flex items-center gap-1.5">
-              <span className="text-xl font-black italic tracking-tight text-white">
-                Veda<span className="text-[#ffe500]">Flow</span>
-              </span>
-              <span className="text-[9px] bg-[#2874f0] text-white font-black px-1 rounded-2xs uppercase">
-                SELLER HUB
+      {/* Mobile Drawer Overlay Backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="fixed inset-0 bg-slate-900/60 z-40 md:hidden backdrop-blur-xs transition-opacity"
+        />
+      )}
+
+      {/* 1. Flipkart Seller Hub Blue & Slate Sidebar (Desktop + Mobile Slide-out Drawer) */}
+      <aside
+        className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-[#172337] text-slate-200 flex flex-col justify-between p-3 shrink-0 shadow-xl md:shadow-lg transform transition-transform duration-200 ease-in-out ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}
+      >
+        <div className="space-y-4">
+          {/* Brand + Close button on mobile */}
+          <div className="p-3 border-b border-slate-700/80 flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xl font-black italic tracking-tight text-white">
+                  Veda<span className="text-[#ffe500]">Flow</span>
+                </span>
+                <span className="text-[9px] bg-[#2874f0] text-white font-black px-1 rounded-2xs uppercase">
+                  SELLER HUB
+                </span>
+              </div>
+              <span className="block text-[10px] font-bold text-slate-400 mt-0.5">
+                Ayurvedic Merchant Control Center
               </span>
             </div>
-            <span className="block text-[10px] font-bold text-slate-400 mt-1">
-              Ayurvedic Merchant Control Center
-            </span>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-1 rounded-xs text-slate-400 hover:text-white md:hidden"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Navigation Links */}
           <nav className="space-y-1">
-            <button
-              onClick={() => setActiveTab('analytics')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xs text-xs font-bold transition-all ${
-                activeTab === 'analytics'
-                  ? 'bg-[#2874f0] text-white shadow-sm'
-                  : 'text-slate-300 hover:bg-slate-800'
-              }`}
-            >
-              <TrendingUp className="w-4 h-4" />
-              <span>Sales & SuperCoins</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('orders')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xs text-xs font-bold transition-all ${
-                activeTab === 'orders'
-                  ? 'bg-[#2874f0] text-white shadow-sm'
-                  : 'text-slate-300 hover:bg-slate-800'
-              }`}
-            >
-              <ShoppingBag className="w-4 h-4" />
-              <span>Orders & Ekart Dispatch</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('inventory')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xs text-xs font-bold transition-all ${
-                activeTab === 'inventory'
-                  ? 'bg-[#2874f0] text-white shadow-sm'
-                  : 'text-slate-300 hover:bg-slate-800'
-              }`}
-            >
-              <Layers className="w-4 h-4" />
-              <span>Botanical Stock & NABL</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('delivery')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xs text-xs font-bold transition-all ${
-                activeTab === 'delivery'
-                  ? 'bg-[#2874f0] text-white shadow-sm'
-                  : 'text-slate-300 hover:bg-slate-800'
-              }`}
-            >
-              <Truck className="w-4 h-4" />
-              <span>Logistics & EV Fleet</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('share')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xs text-xs font-bold transition-all ${
-                activeTab === 'share'
-                  ? 'bg-[#2874f0] text-white shadow-sm'
-                  : 'text-slate-300 hover:bg-slate-800'
-              }`}
-            >
-              <Share2 className="w-4 h-4" />
-              <span>Instagram Ad & OG Studio</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('audit')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xs text-xs font-bold transition-all ${
-                activeTab === 'audit'
-                  ? 'bg-[#2874f0] text-white shadow-sm'
-                  : 'text-slate-300 hover:bg-slate-800'
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>AYUSH Compliance Audit</span>
-            </button>
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleSelectTab(item.id)}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xs text-xs font-bold transition-all text-left ${
+                    isActive
+                      ? 'bg-[#2874f0] text-white shadow-sm'
+                      : 'text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </button>
+              );
+            })}
           </nav>
         </div>
 
@@ -173,39 +159,48 @@ export default function AdminDashboardPage() {
       </aside>
 
       {/* 2. Main Executive View Area */}
-      <main className="flex-1 flex flex-col overflow-y-auto">
+      <main className="flex-1 flex flex-col overflow-y-auto pb-16 md:pb-0">
         {/* Top Header Bar */}
-        <header className="h-14 bg-white border-b border-slate-200 px-6 flex items-center justify-between shadow-xs">
+        <header className="h-14 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between shadow-xs sticky top-0 z-30">
           <div className="flex items-center gap-3">
-            <h1 className="text-base font-black text-slate-900 capitalize">
+            {/* Hamburger toggle button for Mobile App view */}
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-1.5 -ml-1 text-slate-700 hover:bg-slate-100 rounded-xs md:hidden"
+              aria-label="Open menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+
+            <h1 className="text-sm sm:text-base font-black text-slate-900 capitalize truncate">
               {activeTab} Overview
             </h1>
-            <span className="text-[11px] font-bold bg-blue-50 text-[#2874f0] border border-blue-200 px-2 py-0.5 rounded-xs flex items-center gap-1">
-              <Award className="w-3.5 h-3.5" /> AYUSH Certified Non-Pharma Platform
+            <span className="hidden sm:flex text-[11px] font-bold bg-blue-50 text-[#2874f0] border border-blue-200 px-2 py-0.5 rounded-xs items-center gap-1">
+              <Award className="w-3.5 h-3.5" /> AYUSH Certified Platform
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <a
-              href="http://localhost:3005"
+              href="https://vedaflow-theta.vercel.app"
               target="_blank"
               rel="noreferrer"
-              className="text-xs font-bold text-[#2874f0] hover:bg-blue-50 px-3 py-1.5 rounded-xs border border-blue-200 flex items-center gap-1 transition-colors"
+              className="text-xs font-bold text-[#2874f0] hover:bg-blue-50 px-2.5 sm:px-3 py-1.5 rounded-xs border border-blue-200 flex items-center gap-1 transition-colors"
             >
-              <span>Customer Storefront</span>
+              <span>Storefront</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
-            <div className="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xs">
-              Flipkart Architecture · PostgreSQL · Redis
+            <div className="hidden lg:block text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xs">
+              Flipkart Seller Architecture · NABL Verified
             </div>
           </div>
         </header>
 
         {/* Tab 1: Real-time Analytics & KPIs */}
         {activeTab === 'analytics' && (
-          <div className="p-6 space-y-6">
+          <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
             {/* KPI Cards (Flipkart Seller Hub Metric Cards) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-2 shadow-xs">
                 <div className="flex justify-between items-center text-slate-500 text-xs font-bold">
                   <span>Today's Herbal Revenue</span>
@@ -252,9 +247,9 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Visual Funnel and Acquisition Mix */}
-            <div className="grid grid-cols-12 gap-6">
+            <div className="grid grid-cols-12 gap-4 sm:gap-6">
               {/* Funnel */}
-              <div className="col-span-12 lg:col-span-7 bg-white border border-slate-200 rounded-sm p-5 space-y-4 shadow-xs">
+              <div className="col-span-12 lg:col-span-7 bg-white border border-slate-200 rounded-sm p-4 sm:p-5 space-y-4 shadow-xs">
                 <h3 className="font-bold text-sm text-slate-900">
                   Ayurvedic Remedy Conversion Funnel
                 </h3>
@@ -280,7 +275,7 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Channel Breakdown */}
-              <div className="col-span-12 lg:col-span-5 bg-white border border-slate-200 rounded-sm p-5 space-y-4 shadow-xs">
+              <div className="col-span-12 lg:col-span-5 bg-white border border-slate-200 rounded-sm p-4 sm:p-5 space-y-4 shadow-xs">
                 <h3 className="font-bold text-sm text-slate-900">
                   Revenue by Acquisition Channel
                 </h3>
@@ -310,58 +305,60 @@ export default function AdminDashboardPage() {
 
         {/* Tab 2: Orders & Dispatch */}
         {activeTab === 'orders' && (
-          <div className="p-6 space-y-4">
+          <div className="p-3 sm:p-6 space-y-4">
             <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
-                  <tr>
-                    <th className="p-3">Order ID</th>
-                    <th className="p-3">Customer</th>
-                    <th className="p-3">Amount</th>
-                    <th className="p-3">Pincode</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3">Logistics Partner</th>
-                    <th className="p-3 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 font-medium">
-                  {orders.map((o) => (
-                    <tr key={o.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="p-3 font-mono font-bold text-[#2874f0]">{o.id}</td>
-                      <td className="p-3 font-bold text-slate-900">{o.customer}</td>
-                      <td className="p-3 font-black">₹{o.amount.toLocaleString('en-IN')}</td>
-                      <td className="p-3 text-slate-600">{o.pin}</td>
-                      <td className="p-3">
-                        <span className={`px-2 py-0.5 rounded-2xs text-[10px] font-black uppercase ${
-                          o.status === 'OUT_FOR_DELIVERY' ? 'bg-amber-100 text-amber-800' :
-                          o.status === 'PAID' ? 'bg-blue-100 text-blue-800' :
-                          o.status === 'PACKED' ? 'bg-purple-100 text-purple-800' :
-                          'bg-emerald-100 text-emerald-800'
-                        }`}>
-                          {o.status.replace(/_/g, ' ')}
-                        </span>
-                      </td>
-                      <td className="p-3 text-slate-600">{o.courier}</td>
-                      <td className="p-3 text-right space-x-1">
-                        <button className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-xs text-[10px] font-bold">
-                          Packing Slip
-                        </button>
-                        <button className="bg-[#2874f0] hover:bg-[#1a5bc4] text-white px-2.5 py-1 rounded-xs text-[10px] font-bold">
-                          Dispatch
-                        </button>
-                      </td>
+              <div className="overflow-x-auto w-full">
+                <table className="w-full text-left text-xs min-w-[640px]">
+                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
+                    <tr>
+                      <th className="p-3">Order ID</th>
+                      <th className="p-3">Customer</th>
+                      <th className="p-3">Amount</th>
+                      <th className="p-3">Pincode</th>
+                      <th className="p-3">Status</th>
+                      <th className="p-3">Logistics Partner</th>
+                      <th className="p-3 text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-medium">
+                    {orders.map((o) => (
+                      <tr key={o.id} className="hover:bg-slate-50/70 transition-colors">
+                        <td className="p-3 font-mono font-bold text-[#2874f0]">{o.id}</td>
+                        <td className="p-3 font-bold text-slate-900">{o.customer}</td>
+                        <td className="p-3 font-black">₹{o.amount.toLocaleString('en-IN')}</td>
+                        <td className="p-3 text-slate-600">{o.pin}</td>
+                        <td className="p-3">
+                          <span className={`px-2 py-0.5 rounded-2xs text-[10px] font-black uppercase ${
+                            o.status === 'OUT_FOR_DELIVERY' ? 'bg-amber-100 text-amber-800' :
+                            o.status === 'PAID' ? 'bg-blue-100 text-blue-800' :
+                            o.status === 'PACKED' ? 'bg-purple-100 text-purple-800' :
+                            'bg-emerald-100 text-emerald-800'
+                          }`}>
+                            {o.status.replace(/_/g, ' ')}
+                          </span>
+                        </td>
+                        <td className="p-3 text-slate-600">{o.courier}</td>
+                        <td className="p-3 text-right space-x-1">
+                          <button className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-xs text-[10px] font-bold">
+                            Slip
+                          </button>
+                          <button className="bg-[#2874f0] hover:bg-[#1a5bc4] text-white px-2.5 py-1 rounded-xs text-[10px] font-bold">
+                            Dispatch
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
 
         {/* Tab 3: Inventory & NABL Lab Reports */}
         {activeTab === 'inventory' && (
-          <div className="p-6 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-3 sm:p-6 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {inventoryAlerts.map((item) => (
                 <div key={item.sku} className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs">
                   <div className="flex justify-between items-start">
@@ -390,8 +387,8 @@ export default function AdminDashboardPage() {
 
         {/* Tab 4: Logistics & Delivery Fleet */}
         {activeTab === 'delivery' && (
-          <div className="p-6 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-3 sm:p-6 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
               {deliveryAgents.map((agent) => (
                 <div key={agent.name} className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs">
                   <div className="flex justify-between items-center">
@@ -431,21 +428,21 @@ export default function AdminDashboardPage() {
 
         {/* Tab 5: Instagram & Social Growth Studio */}
         {activeTab === 'share' && (
-          <div className="p-6 space-y-4 max-w-4xl">
-            <div className="bg-white border border-slate-200 rounded-sm p-6 space-y-5 shadow-xs">
+          <div className="p-3 sm:p-6 space-y-4 max-w-4xl">
+            <div className="bg-white border border-slate-200 rounded-sm p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-xs">
               <div>
                 <span className="text-xs font-black uppercase text-[#2874f0] tracking-wider flex items-center gap-1.5">
                   <Leaf className="w-4 h-4" /> Herbal Growth Studio
                 </span>
-                <h3 className="text-xl font-bold text-slate-900 mt-1">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-1">
                   Instagram Share & Dynamic OG Image Generator
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Generate attribution-tracked short links + dynamic 1080x1080 & 1080x1920 SVG story cards with classical herbal benefits & AYUSH badges.
+                  Generate attribution-tracked short links + dynamic story captions with classical herbal benefits & AYUSH badges.
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                 <div>
                   <label className="block text-slate-600 font-bold mb-1">Select Ayurvedic Medicine</label>
                   <select
@@ -475,28 +472,28 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Attribution Box */}
-              <div className="bg-slate-50 rounded-xs border border-slate-200 p-4 space-y-3">
-                <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-slate-600">Short Attribution Link:</span>
+              <div className="bg-slate-50 rounded-xs border border-slate-200 p-3 sm:p-4 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs font-bold gap-1">
+                  <span className="text-slate-600">Attribution Link:</span>
                   <a
-                    href="http://localhost:4000/s/veda-swarna77"
+                    href="https://vedaflow-theta.vercel.app/products/swarna-bhasma-chyawanprash-1kg"
                     target="_blank"
                     rel="noreferrer"
-                    className="font-mono text-[#2874f0] hover:underline"
+                    className="font-mono text-[#2874f0] hover:underline break-all"
                   >
-                    http://localhost:4000/s/veda-swarna77
+                    https://vedaflow-theta.vercel.app/products/swarna-bhasma-chyawanprash-1kg
                   </a>
                 </div>
 
                 {/* Caption */}
                 <div className="bg-white rounded-xs p-3 text-xs text-slate-700 font-mono leading-relaxed whitespace-pre-line border border-slate-200">
-                  {`🌿 PURE AYURVEDA WELLNESS: Swarna Bhasma Amrit Chyawanprash (1kg) 🌿\n\n100% Authentic, Lab-Tested Classical Formulation.\nAvailable now for only ₹1,499! 🌿 17% OFF (was ₹1,799)\n\n✅ Non-Pharma Herbal Formulation\n✅ AYUSH Premium Certified · Zero Heavy Metals\n✅ Wild Forest Amla & A2 Gir Cow Cultured Ghee\n\n🛒 Tap link in bio: http://localhost:4000/s/veda-swarna77\n⚡ Free Express Delivery on all orders above ₹999!\n\n#ayurveda #holisticwellness #chyawanprash #ojas #pureherbs #ayushcertified`}
+                  {`🌿 PURE AYURVEDA WELLNESS: Swarna Bhasma Amrit Chyawanprash (1kg) 🌿\n\n100% Authentic, Lab-Tested Classical Formulation.\nAvailable now for only ₹1,499! 🌿 17% OFF (was ₹1,799)\n\n✅ Non-Pharma Herbal Formulation\n✅ AYUSH Premium Certified · Zero Heavy Metals\n✅ Wild Forest Amla & A2 Gir Cow Cultured Ghee\n\n🛒 Tap link in bio: https://vedaflow-theta.vercel.app\n⚡ Free Express Delivery on all orders above ₹999!\n\n#ayurveda #holisticwellness #chyawanprash #ojas #pureherbs #ayushcertified`}
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(`🌿 PURE AYURVEDA: Swarna Bhasma Amrit Chyawanprash (1kg) for only ₹1,499! http://localhost:4000/s/veda-swarna77 #ayurveda`);
+                      navigator.clipboard.writeText(`🌿 PURE AYURVEDA: Swarna Bhasma Amrit Chyawanprash (1kg) for only ₹1,499! https://vedaflow-theta.vercel.app #ayurveda`);
                       setCopiedCaption(true);
                       setTimeout(() => setCopiedCaption(false), 2000);
                     }}
@@ -507,13 +504,13 @@ export default function AdminDashboardPage() {
                   </button>
 
                   <a
-                    href="http://localhost:4000/share/og-image/vd-prod-1?format=square1080&discount=17"
+                    href="https://vedaflow-theta.vercel.app/products/swarna-bhasma-chyawanprash-1kg"
                     target="_blank"
                     rel="noreferrer"
-                    className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-xs text-xs flex items-center gap-1.5 transition-colors"
+                    className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-xs text-xs flex items-center justify-center gap-1.5 transition-colors"
                   >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Download 1080x1080 OG Image</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>View Live Product Card</span>
                   </a>
                 </div>
               </div>
@@ -523,34 +520,56 @@ export default function AdminDashboardPage() {
 
         {/* Tab 6: Audit Logs & Regulatory Compliance */}
         {activeTab === 'audit' && (
-          <div className="p-6 space-y-4">
+          <div className="p-3 sm:p-6 space-y-4">
             <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
-                  <tr>
-                    <th className="p-3">Action / Log</th>
-                    <th className="p-3">Operator</th>
-                    <th className="p-3">Affected Entity</th>
-                    <th className="p-3">IP Address</th>
-                    <th className="p-3 text-right">Timestamp</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 font-medium">
-                  {auditLogs.map((log, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                      <td className="p-3 font-mono font-bold text-[#2874f0]">{log.action}</td>
-                      <td className="p-3 font-semibold text-slate-900">{log.user}</td>
-                      <td className="p-3 text-slate-700">{log.entity}</td>
-                      <td className="p-3 font-mono text-slate-500">{log.ip}</td>
-                      <td className="p-3 text-slate-500 text-right">{log.time}</td>
+              <div className="overflow-x-auto w-full">
+                <table className="w-full text-left text-xs min-w-[640px]">
+                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
+                    <tr>
+                      <th className="p-3">Action / Log</th>
+                      <th className="p-3">Operator</th>
+                      <th className="p-3">Affected Entity</th>
+                      <th className="p-3">IP Address</th>
+                      <th className="p-3 text-right">Timestamp</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-medium">
+                    {auditLogs.map((log, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                        <td className="p-3 font-mono font-bold text-[#2874f0]">{log.action}</td>
+                        <td className="p-3 font-semibold text-slate-900">{log.user}</td>
+                        <td className="p-3 text-slate-700">{log.entity}</td>
+                        <td className="p-3 font-mono text-slate-500">{log.ip}</td>
+                        <td className="p-3 text-slate-500 text-right">{log.time}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
       </main>
+
+      {/* 3. Mobile Bottom Navigation Bar (Visible only on mobile devices) */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 z-30 flex items-center justify-around py-1 shadow-lg">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => handleSelectTab(item.id)}
+              className={`flex flex-col items-center py-1 px-2 transition-colors ${
+                isActive ? 'text-[#2874f0] font-black' : 'text-slate-500 font-medium hover:text-slate-800'
+              }`}
+            >
+              <Icon className={`w-4 h-4 ${isActive ? 'stroke-[2.5]' : ''}`} />
+              <span className="text-[10px] mt-0.5">{item.shortLabel}</span>
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 }

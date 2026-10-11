@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import {
   Star,
   ShieldCheck,
@@ -25,70 +25,111 @@ import { useIsMobile } from '../../../hooks/useIsMobile';
 import { DesktopHeader } from '../../../components/desktop/DesktopHeader';
 import { MobileBottomNav } from '../../../components/mobile/MobileBottomNav';
 import { useCartStore } from '../../../store/useCartStore';
-
-const productDetails = {
-  id: 'vd-prod-1',
-  title: 'Swarna Bhasma Amrit Chyawanprash with Wild Forest Amla (1kg)',
-  slug: 'swarna-bhasma-chyawanprash-1kg',
-  breadcrumb: ['Home', 'Ayurvedic Health', 'Classical Rasayanas', 'Swarna Bhasma Chyawanprash'],
-  description:
-    'Experience the pinnacle of classical Rasayana therapy. Handcrafted strictly according to Charaka Samhita classical texts using wild-harvested Indian Gooseberries (Amla), pure 24K Gold Bhasma, A2 Gir Cow Cultured Ghee, raw forest honey, and 42 therapeutic botanicals including Ashwagandha, Shatavari, and Pippali. Enhances Ojas (vitality), ignites Agni (metabolic fire), and supports deep cellular immunity. 100% Non-Pharma herbal medicine, heavy-metal screened and AYUSH certified.',
-  price: 1499,
-  compareAtPrice: 1799,
-  discountPct: 17,
-  rating: 4.8,
-  ratingsCount: 1420,
-  reviewsCount: 348,
-  images: [
-    'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=1000&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=1000&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=1000&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=1000&auto=format&fit=crop&q=80',
-  ],
-  variants: [
-    { id: 'v-1', name: '1kg Glass Jar (Family Pack)', price: 1499, compareAtPrice: 1799, discountPct: 17, sku: 'VD-CHYAWAN-1KG' },
-    { id: 'v-2', name: '500g Glass Jar (Trial Pack)', price: 849, compareAtPrice: 999, discountPct: 15, sku: 'VD-CHYAWAN-500G' },
-  ],
-  offers: [
-    { type: 'Bank Offer', text: '5% Unlimited Cashback on Flipkart Axis Bank Card', link: 'T&C' },
-    { type: 'Bank Offer', text: '10% Instant Discount up to ₹1,500 on SBI Credit Cards on orders above ₹2,000', link: 'T&C' },
-    { type: 'Special Price', text: 'Get extra 17% off on classical Rasayanas (price inclusive of discount)', link: 'T&C' },
-    { type: 'Partner Offer', text: 'Complimentary tele-consultation with Chief Vaidya Doctor on orders above ₹999', link: 'View' },
-  ],
-  highlights: [
-    '100% Non-Pharma Classical Ayurvedic Medicine',
-    'Authentic Charaka Samhita formulation with 24K Gold Bhasma',
-    'A2 Gir Cow Cultured Bilona Ghee base with Raw Forest Honey',
-    'Zero synthetic chemicals, preservatives, or refined sugar',
-    'AYUSH Premium Certified & NABL heavy-metal screened',
-    'Dosha Impact: Tridosha balancer (Vata, Pitta, Kapha harmony)',
-  ],
-  specs: [
-    { key: 'In The Box', val: '1 Glass Jar of Swarna Bhasma Amrit Chyawanprash (1kg), Measuring Spoon, AYUSH Lab Certificate' },
-    { key: 'Key Ingredients', val: 'Wild Forest Amla (Emblica officinalis), Swarna Bhasma (24K Gold), Ashwagandha, Shatavari, Pippali, Gokshura, Guduchi' },
-    { key: 'Formulation Type', val: 'Classical Herbal Lehyam / Herbal Jam Paste' },
-    { key: 'Dosage Recommendation', val: '1-2 teaspoons (10-15g) twice daily with warm A2 milk or lukewarm water' },
-    { key: 'Ideal For', val: 'All Ages (Men, Women, Elders & Children above 5 years)' },
-    { key: 'Shelf Life', val: '24 Months from manufacturing date' },
-    { key: 'NABL Certificate', val: 'Batch VD-2026-CHY-09 (Zero Lead, Arsenic, Cadmium or Mercury detected)' },
-    { key: 'Manufacturer', val: 'Kerala Veda Botanical Pharmacy & Research Institute (AYUSH License #GA/1482)' },
-  ],
-  reviews: [
-    { user: 'Dr. Anand Joshi (Ayurvedic Practitioner)', rating: 5, date: '12 days ago', title: 'Exceptional Rasayana formulation', comment: 'Authentic aroma of wild amla and pure A2 bilona ghee. Noticeable boost in patient stamina and immune resilience.' },
-    { user: 'Priya Sharma (Verified Buyer, Bangalore)', rating: 5, date: '3 weeks ago', title: 'Great taste and energy boost', comment: 'Much better than standard commercial brands. You can feel the real herbs and gold bhasma potency. Fast delivery!' },
-  ],
-};
+import { getProductBySlug, allAyurvedicProducts } from '../../../data/ayurvedaCatalog';
 
 export default function ProductDetailPage() {
   const router = useRouter();
+  const params = useParams();
   const isMobile = useIsMobile();
+  const { addItem, setIsOpen } = useCartStore();
+
+  const slug = (params?.slug as string) || '';
+
+  // Dynamic Product Resolution
+  const catalogItem = useMemo(() => {
+    return getProductBySlug(slug) || allAyurvedicProducts[0];
+  }, [slug]);
+
+  // Dynamic rich details for the PDP
+  const productDetails = useMemo(() => {
+    return {
+      id: catalogItem.id,
+      title: catalogItem.title,
+      slug: catalogItem.slug,
+      categoryName: catalogItem.categoryName,
+      categorySlug: catalogItem.categorySlug,
+      breadcrumb: ['Home', 'Ayurvedic Remedies', catalogItem.categoryName, catalogItem.title],
+      description: catalogItem.description,
+      price: catalogItem.price,
+      compareAtPrice: catalogItem.compareAtPrice,
+      discountPct: catalogItem.discountPct,
+      rating: catalogItem.rating,
+      ratingsCount: catalogItem.reviews * 3 + 240,
+      reviewsCount: catalogItem.reviews,
+      images: [
+        catalogItem.image,
+        'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=1000&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=1000&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=1000&auto=format&fit=crop&q=80',
+      ],
+      variants: [
+        {
+          id: `${catalogItem.id}-v1`,
+          name: 'Standard Therapeutic Pack',
+          price: catalogItem.price,
+          compareAtPrice: catalogItem.compareAtPrice,
+          discountPct: catalogItem.discountPct,
+          sku: `${catalogItem.id.toUpperCase()}-STD`,
+        },
+        {
+          id: `${catalogItem.id}-v2`,
+          name: 'Economy Duo Pack (2x Course)',
+          price: Math.round(catalogItem.price * 1.85),
+          compareAtPrice: Math.round(catalogItem.compareAtPrice * 1.9),
+          discountPct: catalogItem.discountPct + 5,
+          sku: `${catalogItem.id.toUpperCase()}-DUO`,
+        },
+      ],
+      offers: [
+        { type: 'Bank Offer', text: '5% Unlimited Cashback on Flipkart Axis Bank Card', link: 'T&C' },
+        { type: 'Bank Offer', text: '10% Instant Discount on SBI Cards on Ayurvedic remedies above ₹1,499', link: 'T&C' },
+        { type: 'Special Price', text: `Get extra ${catalogItem.discountPct}% off on classical formulations`, link: 'T&C' },
+        { type: 'Vaidya Consult', text: 'Free 15-minute tele-consultation with registered Ayurvedic doctor', link: 'Book' },
+      ],
+      highlights: [
+        '100% Non-Pharma Classical Ayurvedic Medicine',
+        `Formulated strictly per: ${catalogItem.classicalText}`,
+        `Formulation Type: ${catalogItem.formulationType}`,
+        'Zero synthetic colors, artificial binders, or chemical preservatives',
+        'AYUSH Certified & NABL heavy-metal screened',
+        `Prescribed Dosage: ${catalogItem.dosage}`,
+      ],
+      specs: [
+        { key: 'In The Box', val: `1 Container of ${catalogItem.title}, Measuring Cap/Spoon, AYUSH Lab Certificate` },
+        { key: 'Classical Text Reference', val: catalogItem.classicalText },
+        { key: 'Herbal Ingredients / Tags', val: catalogItem.tags.join(', ') },
+        { key: 'Formulation Category', val: `${catalogItem.categoryName} (${catalogItem.formulationType})` },
+        { key: 'Recommended Dosage', val: catalogItem.dosage },
+        { key: 'Target Dosha Harmony', val: 'Vata-Pitta-Kapha equilibrium support' },
+        { key: 'NABL Lab Testing', val: 'Batch VD-2026-AYUR-PASS (Zero Lead, Mercury, Arsenic or Cadmium)' },
+        { key: 'Shelf Life', val: '24 Months from manufacturing date' },
+        { key: 'Manufacturer', val: 'Kerala Veda Botanical Pharmacy & Research Institute (AYUSH License #GA/1482)' },
+      ],
+      reviews: [
+        {
+          user: 'Dr. Anand Joshi (Ayurvedic Practitioner)',
+          rating: 5,
+          date: '10 days ago',
+          title: 'Authentic classical potency',
+          comment: `Remarkable herbal purity adhering to ${catalogItem.classicalText}. Noticeable therapeutic relief and zero unwanted after-effects.`,
+        },
+        {
+          user: 'Priya Sharma (Verified Buyer, Bangalore)',
+          rating: 5,
+          date: '2 weeks ago',
+          title: 'High quality and fast delivery',
+          comment: 'Very pleased with the packaging and purity. Arrived in under 24 hours with NABL batch certification.',
+        },
+      ],
+    };
+  }, [catalogItem]);
+
   const [selectedVariant, setSelectedVariant] = useState(productDetails.variants[0]);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [pincode, setPincode] = useState('560001');
   const [pincodeChecked, setPincodeChecked] = useState(true);
   const [copiedShare, setCopiedShare] = useState(false);
-  const { addItem, setIsOpen } = useCartStore();
 
   const handleAddToCart = () => {
     addItem({
@@ -112,20 +153,8 @@ export default function ProductDetailPage() {
 
   const handleShare = async () => {
     try {
-      const res = await fetch('http://localhost:4000/share/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: productDetails.id, platform: 'instagram' }),
-      }).catch(() => null);
-
-      if (res && res.ok) {
-        const data = await res.json();
-        await navigator.clipboard.writeText(data.readyCaption);
-      } else {
-        await navigator.clipboard.writeText(
-          `🌿 PURE AYURVEDA: ${productDetails.title} for only ₹${selectedVariant.price.toLocaleString('en-IN')}! 🌿 100% Non-Pharma AYUSH certified. Check it out at: http://localhost:3005/products/${productDetails.slug} #ayurveda #pureherbs`,
-        );
-      }
+      const textToCopy = `🌿 PURE AYURVEDA: ${productDetails.title} for only ₹${selectedVariant.price.toLocaleString('en-IN')}! 🌿 100% Non-Pharma AYUSH certified. Check it out at: ${typeof window !== 'undefined' ? window.location.href : `/products/${productDetails.slug}`} #ayurveda #pureherbs #nonpharmamedicine`;
+      await navigator.clipboard.writeText(textToCopy);
       setCopiedShare(true);
       setTimeout(() => setCopiedShare(false), 2500);
     } catch {
@@ -164,7 +193,7 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* Big Main Image Container */}
-                <div className="flex-1 h-96 border border-slate-100 rounded-sm p-4 relative flex items-center justify-center group overflow-hidden bg-white">
+                <div className="flex-1 h-80 sm:h-96 border border-slate-100 rounded-sm p-4 relative flex items-center justify-center group overflow-hidden bg-white">
                   <button
                     type="button"
                     onClick={() => setIsWishlisted(!isWishlisted)}
@@ -176,7 +205,7 @@ export default function ProductDetailPage() {
                   <img
                     src={productDetails.images[selectedImage]}
                     alt={productDetails.title}
-                    className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-300"
+                    className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
               </div>
@@ -202,7 +231,7 @@ export default function ProductDetailPage() {
                 </button>
               </div>
 
-              {/* Instagram Share Link Button */}
+              {/* Instagram & Social Share Button */}
               <button
                 type="button"
                 onClick={handleShare}
@@ -211,12 +240,12 @@ export default function ProductDetailPage() {
                 {copiedShare ? (
                   <>
                     <Check className="w-4 h-4 text-emerald-600" />
-                    <span className="text-emerald-700">Instagram Caption & Link Copied!</span>
+                    <span className="text-emerald-700 font-bold">Ayurvedic Share Caption & Link Copied!</span>
                   </>
                 ) : (
                   <>
                     <Share2 className="w-4 h-4 text-[#2874f0]" />
-                    <span>Generate Instagram Share Link & Story Caption</span>
+                    <span>Copy Share Caption for WhatsApp & Instagram</span>
                   </>
                 )}
               </button>
@@ -226,10 +255,10 @@ export default function ProductDetailPage() {
           {/* RIGHT COLUMN: Details, Offers, Specs, Reviews (7 cols) */}
           <div className="lg:col-span-7 space-y-4">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium overflow-x-auto whitespace-nowrap">
               {productDetails.breadcrumb.map((crumb, idx) => (
                 <React.Fragment key={idx}>
-                  {idx > 0 && <ChevronRight className="w-3 h-3 text-slate-400" />}
+                  {idx > 0 && <ChevronRight className="w-3 h-3 text-slate-400 shrink-0" />}
                   <span className={idx === productDetails.breadcrumb.length - 1 ? 'text-slate-800 font-bold' : 'hover:underline cursor-pointer'}>
                     {crumb}
                   </span>
@@ -278,7 +307,7 @@ export default function ProductDetailPage() {
             {/* Pack Size / Variant Selector */}
             <div className="space-y-2 pt-2 border-t border-slate-100">
               <label className="block text-xs font-bold text-slate-600">Select Packaging:</label>
-              <div className="flex gap-2.5">
+              <div className="flex flex-wrap gap-2.5">
                 {productDetails.variants.map((v) => (
                   <button
                     key={v.id}
@@ -295,6 +324,17 @@ export default function ProductDetailPage() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Product Classical Description */}
+            <div className="p-3 bg-amber-50/50 border border-amber-200/60 rounded-xs space-y-1">
+              <div className="text-[11px] font-black text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+                <Leaf className="w-3.5 h-3.5 text-amber-700" />
+                <span>Classical Ayurvedic Formulation Summary</span>
+              </div>
+              <p className="text-xs text-slate-700 leading-relaxed">
+                {productDetails.description}
+              </p>
             </div>
 
             {/* Flipkart Available Offers */}
@@ -328,7 +368,7 @@ export default function ProductDetailPage() {
                     type="text"
                     value={pincode}
                     onChange={(e) => setPincode(e.target.value)}
-                    placeholder="Enter Delivery Pincode"
+                    placeholder="Enter Pincode"
                     className="text-xs font-bold text-slate-900 focus:outline-none w-28 bg-transparent"
                   />
                   <button
@@ -407,11 +447,11 @@ export default function ProductDetailPage() {
 
                 <div className="flex-1 space-y-1 text-xs">
                   {[
-                    { stars: 5, pct: '78%' },
-                    { stars: 4, pct: '16%' },
-                    { stars: 3, pct: '4%' },
+                    { stars: 5, pct: '82%' },
+                    { stars: 4, pct: '14%' },
+                    { stars: 3, pct: '3%' },
                     { stars: 2, pct: '1%' },
-                    { stars: 1, pct: '1%' },
+                    { stars: 1, pct: '0%' },
                   ].map((row) => (
                     <div key={row.stars} className="flex items-center gap-2">
                       <span className="w-3 text-slate-600 font-bold">{row.stars}★</span>

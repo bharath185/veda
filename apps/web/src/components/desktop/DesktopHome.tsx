@@ -383,7 +383,7 @@ export function DesktopHome() {
           <div className="bg-white p-4 rounded-sm shadow-sm border border-slate-200 space-y-3">
             <div className="flex justify-between items-center border-b border-slate-100 pb-2">
               <h4 className="font-bold text-sm text-slate-900">Classical Rasayanas</h4>
-              <span className="text-xs font-bold text-[#2874f0] cursor-pointer hover:underline">View All</span>
+              <Link href="/categories/classical-rasayanas" className="text-xs font-bold text-[#2874f0] hover:underline">View All</Link>
             </div>
             <div className="grid grid-cols-2 gap-2 text-center text-xs">
               <div className="p-2 border border-slate-100 hover:shadow-xs transition-shadow">
@@ -413,7 +413,7 @@ export function DesktopHome() {
           <div className="bg-white p-4 rounded-sm shadow-sm border border-slate-200 space-y-3">
             <div className="flex justify-between items-center border-b border-slate-100 pb-2">
               <h4 className="font-bold text-sm text-slate-900">Pure Shilajit & Minerals</h4>
-              <span className="text-xs font-bold text-[#2874f0] cursor-pointer hover:underline">View All</span>
+              <Link href="/categories/herbal-supplements" className="text-xs font-bold text-[#2874f0] hover:underline">View All</Link>
             </div>
             <div className="grid grid-cols-2 gap-2 text-center text-xs">
               <div className="p-2 border border-slate-100 hover:shadow-xs transition-shadow">
@@ -443,7 +443,7 @@ export function DesktopHome() {
           <div className="bg-white p-4 rounded-sm shadow-sm border border-slate-200 space-y-3">
             <div className="flex justify-between items-center border-b border-slate-100 pb-2">
               <h4 className="font-bold text-sm text-slate-900">Classical Pain Oils</h4>
-              <span className="text-xs font-bold text-[#2874f0] cursor-pointer hover:underline">View All</span>
+              <Link href="/categories/ayurvedic-thailams" className="text-xs font-bold text-[#2874f0] hover:underline">View All</Link>
             </div>
             <div className="grid grid-cols-2 gap-2 text-center text-xs">
               <div className="p-2 border border-slate-100 hover:shadow-xs transition-shadow">
@@ -473,7 +473,7 @@ export function DesktopHome() {
           <div className="bg-white p-4 rounded-sm shadow-sm border border-slate-200 space-y-3">
             <div className="flex justify-between items-center border-b border-slate-100 pb-2">
               <h4 className="font-bold text-sm text-slate-900">Ayurvedic Skincare & Hair</h4>
-              <span className="text-xs font-bold text-[#2874f0] cursor-pointer hover:underline">View All</span>
+              <Link href="/categories/botanical-skincare" className="text-xs font-bold text-[#2874f0] hover:underline">View All</Link>
             </div>
             <div className="grid grid-cols-2 gap-2 text-center text-xs">
               <div className="p-2 border border-slate-100 hover:shadow-xs transition-shadow">
