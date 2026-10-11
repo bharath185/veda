@@ -232,6 +232,8 @@ export function MobileHome() {
                     addItem({
                       id: p.id,
                       productId: p.id,
+                      variantId: p.id,
+                      sku: p.id,
                       title: p.title,
                       price: p.price,
                       image: p.image,

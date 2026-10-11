@@ -346,6 +346,8 @@ export function DesktopHome() {
                       addItem({
                         id: product.id,
                         productId: product.id,
+                        variantId: product.id,
+                        sku: product.id,
                         title: product.title,
                         price: product.price,
                         image: product.image,
