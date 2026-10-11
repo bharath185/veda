@@ -165,10 +165,10 @@ export default function AdminDashboardPage() {
 
           <div className="flex items-center gap-4">
             <a
-              href="http://localhost:3000"
+              href="http://localhost:3005"
               target="_blank"
               rel="noreferrer"
-              className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5"
+              className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 bg-indigo-500/10 px-3 py-1.5 rounded-lg border border-indigo-500/20 transition-colors"
             >
               <span>View Customer Storefront</span>
               <ExternalLink className="w-3.5 h-3.5" />

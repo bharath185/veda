@@ -89,24 +89,34 @@ export function DesktopHeader() {
           </div>
         </div>
 
-        {/* Right Nav Icons & Dashboards */}
-        <div className="flex items-center gap-4">
+        {/* Right Nav Icons, Auth & Dashboards */}
+        <div className="flex items-center gap-3">
+          <Link
+            href="/login"
+            className="text-xs font-bold text-slate-700 hover:text-indigo-600 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+          >
+            Sign In
+          </Link>
+
+          <Link
+            href="/register"
+            className="text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2 rounded-xl shadow-sm transition-all"
+          >
+            Register
+          </Link>
+
+          <div className="h-4 w-px bg-slate-200 mx-1" />
+
           <Link
             href="http://localhost:3001"
-            className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+            className="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
           >
-            Admin Portal
-          </Link>
-          <Link
-            href="http://localhost:3002"
-            className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
-          >
-            Delivery App
+            Admin
           </Link>
 
           <button
             onClick={() => setIsOpen(true)}
-            className="relative p-2.5 rounded-xl hover:bg-slate-100 text-slate-700 hover:text-indigo-600 transition-colors"
+            className="relative p-2.5 rounded-xl hover:bg-slate-100 text-slate-700 hover:text-indigo-600 transition-colors ml-1"
             title="Open Cart"
           >
             <ShoppingBag className="w-5 h-5" />

@@ -198,12 +198,20 @@ export class ProductsService {
       throw new BadRequestException(`Product with slug "${input.slug}" already exists`);
     }
 
-    const { variants, ...productData } = input;
-    return this.prisma.product.create({
+    return (this.prisma.product as any).create({
       data: {
-        ...productData,
+        title: input.title,
+        slug: input.slug,
+        description: input.description,
+        images: input.images,
+        tags: input.tags,
+        metaTitle: input.metaTitle,
+        metaDescription: input.metaDescription,
+        isPublished: input.isPublished,
+        featured: input.featured,
+        categoryId: input.categoryId,
         variants: {
-          create: variants.map((v) => ({
+          create: input.variants.map((v) => ({
             sku: v.sku,
             size: v.size,
             color: v.color,
