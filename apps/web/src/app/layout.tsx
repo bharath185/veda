@@ -1,21 +1,22 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { CartDrawer } from '../components/desktop/CartDrawer';
 
 export const metadata: Metadata = {
-  title: 'ShopFlow | Modern Enterprise Multi-Vendor E-Commerce Platform',
+  title: 'VedaFlow | Classical Ayurvedic Medicines & AYUSH Formulations',
   description:
-    'ShopFlow is a next-generation e-commerce platform featuring same-day express delivery, genuine multi-vendor catalog, Razorpay/Stripe payments, and Instagram share attribution.',
-  metadataBase: new URL('http://localhost:3000'),
+    '100% Genuine, NABL Lab Tested Classical Ayurvedic Medicines, Rasayanas, Pure Himalayan Shilajit, and Herbal Formulations. AYUSH Certified E-Commerce.',
+  metadataBase: new URL('https://vedaflow-theta.vercel.app'),
   openGraph: {
-    title: 'ShopFlow | Premium E-Commerce Experience',
-    description: 'Shop top electronics, computing, fashion and wearables with express delivery.',
-    images: ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=630'],
+    title: 'VedaFlow | Classical Ayurvedic Medicines & AYUSH Formulations',
+    description: 'Shop genuine classical Rasayanas, Shilajit, Ashwagandha and herbal medicines with fast delivery.',
+    images: ['https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=1200&h=630'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ShopFlow | Premium E-Commerce Experience',
-    description: 'Shop top electronics, computing, fashion and wearables with express delivery.',
-    images: ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=630'],
+    title: 'VedaFlow | Classical Ayurvedic Medicines',
+    description: 'Shop genuine classical Rasayanas, Shilajit, Ashwagandha and herbal medicines with fast delivery.',
+    images: ['https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=1200&h=630'],
   },
   manifest: '/manifest.json',
 };
@@ -28,10 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="theme-color" content="#4F46E5" />
+        <meta name="theme-color" content="#2874f0" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <CartDrawer />
+      </body>
     </html>
   );
 }
