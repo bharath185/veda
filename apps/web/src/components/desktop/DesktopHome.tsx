@@ -133,7 +133,7 @@ const flipkartBanners = [
     title: 'WINTER IMMUNITY & AYURVEDIC TONICS',
     subtitle: 'Swarna Bhasma Formulations & Tulsi Kadhas | Same-Day Eco Dispatch',
     bgGradient: 'from-[#0b6623] via-[#1b4332] to-[#2d6a4f]',
-    badge: 'Doctor Recommended AYUSH Formulations',
+    badge: 'Classical Authentic AYUSH Formulations',
     btnText: 'Order Immunity Pack',
   },
 ];
@@ -434,7 +434,7 @@ export function DesktopHome() {
               <div className="p-2 border border-slate-100 hover:shadow-xs transition-shadow">
                 <span className="text-2xl">🔬</span>
                 <div className="font-bold text-slate-800 mt-1">Lab Tested 75% Fulvic</div>
-                <div className="text-[10px] text-[#388e3c] font-bold">Doctor Pick</div>
+                <div className="text-[10px] text-[#388e3c] font-bold">Top Pick</div>
               </div>
             </div>
           </div>
@@ -583,9 +583,9 @@ export function DesktopHome() {
             <h6 className="font-bold text-[11px] text-slate-400 uppercase tracking-wider">SOCIAL & COMMUNITY</h6>
             <ul className="space-y-1.5 text-slate-300">
               <li><Link href="/" className="hover:underline">Instagram (@vedaflow.ayur)</Link></li>
-              <li><Link href="/" className="hover:underline">YouTube (Doctor Podcasts)</Link></li>
+              <li><Link href="/" className="hover:underline">YouTube (Herbal Wellness Channel)</Link></li>
               <li><Link href="/" className="hover:underline">Twitter / X Wellness</Link></li>
-              <li><Link href="/" className="hover:underline">WhatsApp Vaidya Broadcast</Link></li>
+              <li><Link href="/" className="hover:underline">WhatsApp Community Updates</Link></li>
             </ul>
           </div>
 

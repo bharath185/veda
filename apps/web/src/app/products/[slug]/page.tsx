@@ -84,7 +84,7 @@ export default function ProductDetailPage() {
         { type: 'Bank Offer', text: '5% Unlimited Cashback on Flipkart Axis Bank Card', link: 'T&C' },
         { type: 'Bank Offer', text: '10% Instant Discount on SBI Cards on Ayurvedic remedies above ₹1,499', link: 'T&C' },
         { type: 'Special Price', text: `Get extra ${catalogItem.discountPct}% off on classical formulations`, link: 'T&C' },
-        { type: 'Vaidya Consult', text: 'Free 15-minute tele-consultation with registered Ayurvedic doctor', link: 'Book' },
+        { type: 'Herbal Guide', text: 'Complimentary authentic Ayurvedic usage and storage guide with order', link: 'View' },
       ],
       highlights: [
         '100% Non-Pharma Classical Ayurvedic Medicine',
@@ -107,7 +107,7 @@ export default function ProductDetailPage() {
       ],
       reviews: [
         {
-          user: 'Dr. Anand Joshi (Ayurvedic Practitioner)',
+          user: 'Anand Joshi (Verified Buyer, Pune)',
           rating: 5,
           date: '10 days ago',
           title: 'Authentic classical potency',

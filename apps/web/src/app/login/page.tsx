@@ -16,6 +16,7 @@ import {
   EyeOff,
   UserCheck,
 } from 'lucide-react';
+import { useAuthStore } from '../../store/useAuthStore';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -125,21 +126,17 @@ export default function LoginPage() {
       const userObj = {
         phone: `+91 ${mobileNumber}`,
         name: isAdminNumber ? 'Vaidya R. K. Sharma' : 'Priya Sharma',
-        role: isAdminNumber ? 'ADMIN' : 'CUSTOMER',
+        role: (isAdminNumber ? 'ADMIN' : 'CUSTOMER') as 'ADMIN' | 'CUSTOMER',
         doshaProfile: 'Tridoshic Harmony',
-        isVerified: true,
       };
 
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('shopflow_token', 'veda-demo-token-jwt');
-        localStorage.setItem('shopflow_user', JSON.stringify(userObj));
-      }
+      useAuthStore.getState().login(userObj, 'veda-demo-token-jwt');
 
       setSuccessMessage('✓ Mobile OTP Verified! Logging into VedaFlow...');
       setTimeout(() => {
         router.push('/');
-      }, 900);
-    }, 700);
+      }, 700);
+    }, 600);
   };
 
   // Quick Demo Auto-Fill helper
@@ -169,15 +166,12 @@ export default function LoginPage() {
       const userObj = {
         email: emailOrPhone,
         name: isAdmin ? 'Vaidya R. K. Sharma' : 'Priya Sharma',
-        role: isAdmin ? 'ADMIN' : 'CUSTOMER',
+        role: (isAdmin ? 'ADMIN' : 'CUSTOMER') as 'ADMIN' | 'CUSTOMER',
         doshaProfile: 'Tridoshic Harmony',
       };
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('shopflow_token', 'veda-demo-token-jwt');
-        localStorage.setItem('shopflow_user', JSON.stringify(userObj));
-      }
+      useAuthStore.getState().login(userObj, 'veda-demo-token-jwt');
       setSuccessMessage('✓ Authenticated successfully! Redirecting...');
-      setTimeout(() => router.push('/'), 900);
+      setTimeout(() => router.push('/'), 700);
     }, 600);
   };
 
@@ -208,7 +202,7 @@ export default function LoginPage() {
             <div className="space-y-3 relative z-10">
               <h2 className="text-2xl font-black tracking-tight">Login</h2>
               <p className="text-sm font-medium text-blue-100 leading-relaxed">
-                Get access to your Orders, Wishlist, Classical Dosha Consultations and NABL Heavy-Metal Reports.
+                Get access to your Orders, Wishlist, Ayurvedic Formulations, SuperCoins and NABL Lab Reports.
               </p>
             </div>
 
@@ -476,7 +470,7 @@ export default function LoginPage() {
                     onClick={() => handleFillDemoPhone('customer')}
                     className="bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-bold py-1.5 px-2 rounded-xs text-[11px] text-left transition-colors flex items-center justify-between"
                   >
-                    <span>🌿 Patient Demo</span>
+                    <span>🌿 Customer Demo</span>
                     <span className="text-[9px] text-slate-400 font-mono">98765..</span>
                   </button>
                   <button

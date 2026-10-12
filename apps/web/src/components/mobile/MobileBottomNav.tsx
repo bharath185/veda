@@ -13,7 +13,7 @@ export function MobileBottomNav() {
 
   const navItems = [
     { label: 'Home', href: '/', icon: Home },
-    { label: 'Categories', href: '/', icon: Grid },
+    { label: 'Categories', href: '/categories', icon: Grid },
     { label: 'Notifications', href: '/', icon: Bell },
     { label: 'Account', href: '/login', icon: User },
     { label: 'Cart', href: '/checkout', icon: ShoppingCart, badge: count },

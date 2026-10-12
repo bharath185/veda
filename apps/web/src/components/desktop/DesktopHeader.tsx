@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Search,
   ShoppingCart,
@@ -16,8 +17,12 @@ import {
   Download,
   ShieldCheck,
   TrendingUp,
+  LogOut,
+  Tag,
+  Coins,
 } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
+import { useAuthStore } from '../../store/useAuthStore';
 
 const flipkartCategories = [
   { name: 'Classical Rasayanas', slug: 'classical-rasayanas', icon: '🍯' },
@@ -33,11 +38,42 @@ const flipkartCategories = [
 ];
 
 export function DesktopHeader() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [showLoginMenu, setShowLoginMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+
   const { items, setIsOpen } = useCartStore();
+  const { user, isLoggedIn, checkAuth, logout } = useAuthStore();
   const totalItemCount = items.reduce((acc, i) => acc + i.quantity, 0);
+
+  // Sync auth state on mount and listen to storage events
+  useEffect(() => {
+    checkAuth();
+    const handleAuthChange = () => checkAuth();
+    window.addEventListener('storage', handleAuthChange);
+    window.addEventListener('shopflow_auth_change', handleAuthChange);
+    return () => {
+      window.removeEventListener('storage', handleAuthChange);
+      window.removeEventListener('shopflow_auth_change', handleAuthChange);
+    };
+  }, [checkAuth]);
+
+  const handleLogout = () => {
+    logout();
+    setShowUserMenu(false);
+    router.refresh();
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/categories?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  // Get user display name (first name)
+  const displayName = user?.name ? user.name.split(' ')[0] : 'My Account';
 
   return (
     <header className="sticky top-0 z-50 w-full shadow-md">
@@ -62,7 +98,7 @@ export function DesktopHeader() {
           </Link>
 
           {/* Flipkart Style Search Box */}
-          <div className="flex-1 max-w-2xl relative">
+          <form onSubmit={handleSearchSubmit} className="flex-1 max-w-2xl relative">
             <div className="relative flex items-center">
               <input
                 type="text"
@@ -72,85 +108,160 @@ export function DesktopHeader() {
                 className="w-full bg-white text-slate-900 placeholder:text-slate-500 text-xs px-4 py-2.5 rounded-sm shadow-inner focus:outline-none focus:ring-1 focus:ring-amber-300 font-medium"
               />
               <button
-                type="button"
+                type="submit"
                 className="absolute right-0 top-0 bottom-0 px-4 bg-white text-[#2874f0] hover:text-[#1c55b5] flex items-center justify-center rounded-r-sm transition-colors"
                 title="Search"
               >
                 <Search className="w-4 h-4 stroke-[2.5]" />
               </button>
             </div>
-          </div>
+          </form>
 
           {/* Right Navigation Controls */}
           <div className="flex items-center gap-6 shrink-0 text-sm font-bold">
-            {/* Login Button with Flipkart Dropdown */}
+            {/* User Account / Login Button */}
             <div
               className="relative"
-              onMouseEnter={() => setShowLoginMenu(true)}
-              onMouseLeave={() => setShowLoginMenu(false)}
+              onMouseEnter={() => setShowUserMenu(true)}
+              onMouseLeave={() => setShowUserMenu(false)}
             >
-              <Link
-                href="/login"
-                className="bg-white text-[#2874f0] hover:bg-slate-50 px-7 py-1 text-xs font-black rounded-sm shadow-sm transition-colors flex items-center gap-1"
-              >
-                Login
-              </Link>
+              {isLoggedIn ? (
+                /* Authenticated User Pill (Flipkart style: Name with down arrow) */
+                <button
+                  type="button"
+                  className="flex items-center gap-1.5 text-xs font-black text-white hover:text-amber-200 transition-colors py-1 px-2 rounded-xs"
+                >
+                  <User className="w-4 h-4 fill-white text-white" />
+                  <span>{displayName}</span>
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                /* Unauthenticated Login Button (Flipkart style: White button) */
+                <Link
+                  href="/login"
+                  className="bg-white text-[#2874f0] hover:bg-slate-50 px-7 py-1 text-xs font-black rounded-sm shadow-sm transition-colors flex items-center gap-1"
+                >
+                  Login
+                </Link>
+              )}
 
-              {/* Login Dropdown */}
-              {showLoginMenu && (
-                <div className="absolute top-full -left-6 w-60 bg-white text-slate-800 rounded-sm shadow-2xl border border-slate-200 py-1.5 z-50 animate-in fade-in duration-100">
-                  <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-800">New Customer?</span>
-                    <Link href="/register" className="text-xs font-black text-[#2874f0] hover:underline">
-                      Sign Up
-                    </Link>
-                  </div>
-                  <Link
-                    href="/login"
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
-                  >
-                    <User className="w-4 h-4 text-[#2874f0]" />
-                    <span>My Ayurvedic Profile</span>
-                  </Link>
-                  <Link
-                    href="/"
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
-                  >
-                    <Sparkles className="w-4 h-4 text-[#ffe500] fill-[#ffe500]" />
-                    <span>Veda Plus Zone</span>
-                  </Link>
-                  <Link
-                    href="/checkout"
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
-                  >
-                    <Package className="w-4 h-4 text-[#2874f0]" />
-                    <span>Remedy Orders</span>
-                  </Link>
-                  <Link
-                    href="/"
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
-                  >
-                    <Heart className="w-4 h-4 text-[#2874f0]" />
-                    <span>Wishlist (Herbal Remedies)</span>
-                  </Link>
-                  <Link
-                    href="http://localhost:3001"
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700 border-t border-slate-100"
-                  >
-                    <Award className="w-4 h-4 text-emerald-600" />
-                    <span>Vaidya Doctor Portal</span>
-                  </Link>
+              {/* Account / Login Dropdown Menu */}
+              {showUserMenu && (
+                <div className="absolute top-full -left-10 w-64 bg-white text-slate-800 rounded-sm shadow-2xl border border-slate-200 py-1.5 z-50 animate-in fade-in duration-100">
+                  {isLoggedIn ? (
+                    <>
+                      {/* Customer Greeting Header */}
+                      <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/70">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                          Signed in as Customer
+                        </div>
+                        <div className="text-xs font-black text-slate-900 truncate">
+                          {user?.name || 'Customer'}
+                        </div>
+                        <div className="text-[11px] font-medium text-slate-500 truncate">
+                          {user?.phone || user?.email || '+91 98765 43210'}
+                        </div>
+                      </div>
+
+                      {/* Menu Links */}
+                      <Link
+                        href="/checkout"
+                        onClick={() => setShowUserMenu(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                      >
+                        <Package className="w-4 h-4 text-[#2874f0]" />
+                        <span>My Orders</span>
+                      </Link>
+
+                      <Link
+                        href="/categories"
+                        onClick={() => setShowUserMenu(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                      >
+                        <Sparkles className="w-4 h-4 text-[#ffe500] fill-[#ffe500]" />
+                        <span>SuperCoins Zone (150 Coins)</span>
+                      </Link>
+
+                      <Link
+                        href="/categories"
+                        onClick={() => setShowUserMenu(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                      >
+                        <Heart className="w-4 h-4 text-[#2874f0]" />
+                        <span>Wishlist</span>
+                      </Link>
+
+                      <Link
+                        href="/categories"
+                        onClick={() => setShowUserMenu(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                      >
+                        <Tag className="w-4 h-4 text-[#388e3c]" />
+                        <span>My Coupons</span>
+                      </Link>
+
+                      {/* Logout Action */}
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-xs font-bold text-red-600 border-t border-slate-100 text-left transition-colors"
+                      >
+                        <LogOut className="w-4 h-4 text-red-500" />
+                        <span>Logout</span>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      {/* Logged Out View */}
+                      <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-800">New Customer?</span>
+                        <Link href="/register" className="text-xs font-black text-[#2874f0] hover:underline">
+                          Sign Up
+                        </Link>
+                      </div>
+                      <Link
+                        href="/login"
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                      >
+                        <User className="w-4 h-4 text-[#2874f0]" />
+                        <span>My Profile</span>
+                      </Link>
+                      <Link
+                        href="/categories"
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                      >
+                        <Sparkles className="w-4 h-4 text-[#ffe500] fill-[#ffe500]" />
+                        <span>Flipkart Plus Zone</span>
+                      </Link>
+                      <Link
+                        href="/checkout"
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                      >
+                        <Package className="w-4 h-4 text-[#2874f0]" />
+                        <span>Orders</span>
+                      </Link>
+                      <Link
+                        href="/categories"
+                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700"
+                      >
+                        <Heart className="w-4 h-4 text-[#2874f0]" />
+                        <span>Wishlist</span>
+                      </Link>
+                    </>
+                  )}
                 </div>
               )}
             </div>
 
-            {/* Become a Seller / Ayurvedic Clinic */}
-            <Link
+            {/* Become a Seller */}
+            <a
               href="http://localhost:3001"
+              target="_blank"
+              rel="noreferrer"
               className="text-xs font-bold text-white hover:text-amber-200 transition-colors whitespace-nowrap"
             >
               Become a Seller
-            </Link>
+            </a>
 
             {/* More Dropdown */}
             <div
@@ -171,7 +282,7 @@ export function DesktopHeader() {
                   </div>
                   <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700">
                     <HelpCircle className="w-4 h-4 text-[#2874f0]" />
-                    <span>24x7 Vaidya Care</span>
+                    <span>24x7 Customer Care</span>
                   </div>
                   <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700">
                     <ShieldCheck className="w-4 h-4 text-emerald-600" />
@@ -179,7 +290,7 @@ export function DesktopHeader() {
                   </div>
                   <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 text-xs font-semibold text-slate-700">
                     <Download className="w-4 h-4 text-[#2874f0]" />
-                    <span>Download VedaFlow App</span>
+                    <span>Download App</span>
                   </div>
                 </div>
               )}

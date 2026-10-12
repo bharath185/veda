@@ -284,7 +284,7 @@ export default function AdminDashboardPage() {
                     { name: 'VedaFlow Storefront Direct', rev: '₹82,000', share: '44%' },
                     { name: 'Instagram Herbal Story Attribution', rev: '₹54,000', share: '29%' },
                     { name: 'Natural Wellness Search (SEO)', rev: '₹31,000', share: '17%' },
-                    { name: 'Vaidya Clinic Consultations', rev: '₹17,400', share: '10%' },
+                    { name: 'Affiliate & Herbal Partnerships', rev: '₹17,400', share: '10%' },
                   ].map((ch) => (
                     <div key={ch.name} className="flex items-center justify-between border-b border-slate-100 pb-2.5 last:border-none">
                       <div>

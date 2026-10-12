@@ -14,9 +14,11 @@ import {
   ChevronRight,
   Clock,
   ShieldCheck,
+  User,
 } from 'lucide-react';
 import { MobileBottomNav } from './MobileBottomNav';
 import { useCartStore } from '../../store/useCartStore';
+import { useAuthStore } from '../../store/useAuthStore';
 
 const mobileCategories = [
   { name: 'Rasayana', icon: '🍯', slug: 'classical-rasayanas' },
@@ -79,6 +81,13 @@ const mobileProducts = [
 export function MobileHome() {
   const [search, setSearch] = useState('');
   const { addItem } = useCartStore();
+  const { user, isLoggedIn, checkAuth } = useAuthStore();
+
+  React.useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  const displayName = user?.name ? user.name.split(' ')[0] : 'Customer';
 
   return (
     <div className="min-h-screen bg-[#f1f2f4] pb-20 flex flex-col text-slate-800 font-sans">
@@ -96,9 +105,16 @@ export function MobileHome() {
           </Link>
 
           <div className="flex items-center gap-3">
-            <Link href="/login" className="text-xs font-bold bg-white text-[#2874f0] px-3 py-1 rounded-xs shadow-xs">
-              Login
-            </Link>
+            {isLoggedIn ? (
+              <div className="flex items-center gap-1.5 text-xs font-black bg-white/20 text-white px-2.5 py-1 rounded-xs border border-white/30 backdrop-blur-xs">
+                <User className="w-3.5 h-3.5" />
+                <span>{displayName}</span>
+              </div>
+            ) : (
+              <Link href="/login" className="text-xs font-bold bg-white text-[#2874f0] px-3 py-1 rounded-xs shadow-xs">
+                Login
+              </Link>
+            )}
             <Bell className="w-5 h-5 text-white" />
           </div>
         </div>
