@@ -25,6 +25,7 @@ import { useIsMobile } from '../../../hooks/useIsMobile';
 import { DesktopHeader } from '../../../components/desktop/DesktopHeader';
 import { MobileBottomNav } from '../../../components/mobile/MobileBottomNav';
 import { useCartStore } from '../../../store/useCartStore';
+import { useCatalogStore } from '../../../store/useCatalogStore';
 import { getProductBySlug, allAyurvedicProducts } from '../../../data/ayurvedaCatalog';
 
 export default function ProductDetailPage() {
@@ -32,13 +33,19 @@ export default function ProductDetailPage() {
   const params = useParams();
   const isMobile = useIsMobile();
   const { addItem, setIsOpen } = useCartStore();
+  const { products } = useCatalogStore();
 
   const slug = (params?.slug as string) || '';
 
-  // Dynamic Product Resolution
+  // Dynamic Product Resolution - checks live catalog store first, then fallback
   const catalogItem = useMemo(() => {
-    return getProductBySlug(slug) || allAyurvedicProducts[0];
-  }, [slug]);
+    return (
+      products.find((p) => p.slug === slug || p.id === slug) ||
+      getProductBySlug(slug) ||
+      products[0] ||
+      allAyurvedicProducts[0]
+    );
+  }, [products, slug]);
 
   // Dynamic rich details for the PDP
   const productDetails = useMemo(() => {

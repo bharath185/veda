@@ -23,139 +23,36 @@ import {
 } from 'lucide-react';
 import { DesktopHeader } from './DesktopHeader';
 import { useCartStore } from '../../store/useCartStore';
-
-const mockAyurvedaCatalog = [
-  {
-    id: 'vd-prod-1',
-    title: 'Swarna Bhasma Amrit Chyawanprash (Wild Forest Amla & A2 Ghee 1kg)',
-    slug: 'swarna-bhasma-chyawanprash-1kg',
-    category: 'Classical Rasayanas',
-    price: 1499,
-    compareAtPrice: 1799,
-    discountPct: 17,
-    rating: 4.8,
-    reviews: 1420,
-    image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&auto=format&fit=crop&q=80',
-    tags: ['Gold Bhasma', 'Immunity Booster', 'Ojas'],
-    assured: true,
-  },
-  {
-    id: 'vd-prod-2',
-    title: 'Pure Himalayan Shilajit Resin (Gold Grade · 75% Fulvic Acid 20g)',
-    slug: 'pure-himalayan-shilajit-resin-20g',
-    category: 'Herbal Supplements',
-    price: 1299,
-    compareAtPrice: 1699,
-    discountPct: 23,
-    rating: 4.9,
-    reviews: 2180,
-    image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop&q=80',
-    tags: ['NABL Lab Tested', 'Stamina', '84+ Minerals'],
-    assured: true,
-  },
-  {
-    id: 'vd-prod-3',
-    title: 'KSM-66 Organic Ashwagandha Root Extract 600mg (60 Veg Capsules)',
-    slug: 'ksm66-organic-ashwagandha-capsules',
-    category: 'Herbal Supplements',
-    price: 799,
-    compareAtPrice: 999,
-    discountPct: 20,
-    rating: 4.7,
-    reviews: 954,
-    image: 'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=800&auto=format&fit=crop&q=80',
-    tags: ['Cortisol Reduction', 'Deep Sleep', 'Calm'],
-    assured: true,
-  },
-  {
-    id: 'vd-prod-4',
-    title: 'Kashmiri Saffron 26-Herb Kumkumadi Miraculous Night Glow Oil (30ml)',
-    slug: 'kashmiri-saffron-kumkumadi-night-oil',
-    category: 'Botanical Skincare',
-    price: 1299,
-    compareAtPrice: 1699,
-    discountPct: 23,
-    rating: 4.8,
-    reviews: 840,
-    image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=800&auto=format&fit=crop&q=80',
-    tags: ['Kashmiri Saffron', 'Pigmentation', 'Radiance'],
-    assured: true,
-  },
-  {
-    id: 'vd-prod-5',
-    title: 'Mahanarayan Taila Classical 21-Day Medicated Joint Pain Oil (200ml)',
-    slug: 'mahanarayan-taila-joint-pain-oil',
-    category: 'Medicated Thailams',
-    price: 499,
-    compareAtPrice: 650,
-    discountPct: 23,
-    rating: 4.6,
-    reviews: 612,
-    image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=800&auto=format&fit=crop&q=80',
-    tags: ['Vata Dosha', 'Joint Mobility', 'Traditional'],
-    assured: true,
-  },
-  {
-    id: 'vd-prod-6',
-    title: 'Stone-Ground Organic Triphala Churna Digestive Colon Detox (250g)',
-    slug: 'organic-triphala-churna-digestive-detox',
-    category: 'Organic Churnas',
-    price: 299,
-    compareAtPrice: 399,
-    discountPct: 25,
-    rating: 4.7,
-    reviews: 1105,
-    image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop&q=80',
-    tags: ['Gut Cleanse', 'Constipation Relief', 'Tridoshic'],
-    assured: true,
-  },
-];
-
-const flipkartBanners = [
-  {
-    id: 1,
-    title: 'GRAND AYURVEDIC WELLNESS FESTIVAL',
-    subtitle: 'Up to 50% Off Classical Rasayanas, Chyawanprash & Shilajit | Plus Members Extra 10% Off',
-    bgGradient: 'from-[#0057b7] via-[#2874f0] to-[#0a84ff]',
-    badge: 'AYUSH Certified Non-Pharma Platform',
-    btnText: 'Shop Classical Medicines',
-  },
-  {
-    id: 2,
-    title: 'PURE HIMALAYAN RESINS & GOLD SHILAJIT',
-    subtitle: 'NABL Certified Zero Heavy Metals · High Fulvic Acid · Direct from 16,000+ ft Altitude',
-    bgGradient: 'from-[#144272] via-[#0A2647] to-[#205295]',
-    badge: '100% Authentic Botanical Medicine',
-    btnText: 'Explore Lab Reports',
-  },
-  {
-    id: 3,
-    title: 'WINTER IMMUNITY & AYURVEDIC TONICS',
-    subtitle: 'Swarna Bhasma Formulations & Tulsi Kadhas | Same-Day Eco Dispatch',
-    bgGradient: 'from-[#0b6623] via-[#1b4332] to-[#2d6a4f]',
-    badge: 'Classical Authentic AYUSH Formulations',
-    btnText: 'Order Immunity Pack',
-  },
-];
+import { useCatalogStore } from '../../store/useCatalogStore';
+import { AyurvedicProduct } from '../../data/ayurvedaCatalog';
 
 export function DesktopHome() {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [wishlisted, setWishlisted] = useState<Record<string, boolean>>({});
-  const { addItem, isOpen, setIsOpen, items, removeItem, updateQuantity, getSubtotal, getGrandTotal } = useCartStore();
+  const { addItem } = useCartStore();
+  const { products, banners, init } = useCatalogStore();
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   useEffect(() => {
+    init();
+  }, [init]);
+
+  const activeBanners = banners.filter((b) => b.active);
+  const currentBannerCount = activeBanners.length > 0 ? activeBanners.length : 1;
+
+  useEffect(() => {
+    if (currentBannerCount <= 1) return;
     const timer = setInterval(() => {
-      setCurrentBanner((prev) => (prev + 1) % flipkartBanners.length);
+      setCurrentBanner((prev) => (prev + 1) % currentBannerCount);
     }, 4500);
     return () => clearInterval(timer);
-  }, []);
+  }, [currentBannerCount]);
 
   const toggleWishlist = (id: string) => {
     setWishlisted((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleShare = async (product: typeof mockAyurvedaCatalog[0]) => {
+  const handleShare = async (product: AyurvedicProduct) => {
     try {
       const res = await fetch('http://localhost:4000/share/generate', {
         method: 'POST',
@@ -187,27 +84,39 @@ export function DesktopHome() {
       <main className="max-w-7xl mx-auto w-full px-2 sm:px-4 py-3 space-y-3">
         {/* 2. Flipkart Hero Carousel Banner */}
         <div className="relative w-full h-72 rounded-sm overflow-hidden shadow-sm group">
-          {flipkartBanners.map((b, idx) => (
+          {activeBanners.map((b, idx) => (
             <div
               key={b.id}
-              className={`absolute inset-0 bg-gradient-to-r ${b.bgGradient} text-white flex flex-col justify-center px-12 transition-opacity duration-700 ${
-                idx === currentBanner ? 'opacity-100 z-10' : 'opacity-0 z-0'
-              }`}
+              className={`absolute inset-0 text-white flex flex-col justify-center px-8 sm:px-12 transition-opacity duration-700 ${
+                idx === currentBanner ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+              } ${b.imageUrl ? 'bg-slate-900' : `bg-gradient-to-r ${b.bgGradient}`}`}
             >
-              <div className="max-w-2xl space-y-3">
+              {/* Optional Background Image */}
+              {b.imageUrl && (
+                <img
+                  src={b.imageUrl}
+                  alt={b.title}
+                  className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
+                />
+              )}
+
+              <div className="max-w-2xl space-y-3 relative z-10">
                 <span className="inline-block bg-[#ffe500] text-slate-900 text-[11px] font-black uppercase px-2.5 py-0.5 rounded-sm shadow-sm tracking-wide">
                   {b.badge}
                 </span>
-                <h2 className="text-3xl font-black tracking-tight leading-tight drop-shadow-sm">
+                <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight drop-shadow-sm">
                   {b.title}
                 </h2>
-                <p className="text-sm font-medium text-slate-100 drop-shadow-sm">
+                <p className="text-xs sm:text-sm font-medium text-slate-100 drop-shadow-sm line-clamp-2">
                   {b.subtitle}
                 </p>
                 <div className="pt-2">
-                  <button className="bg-white hover:bg-slate-100 text-[#2874f0] font-black px-6 py-2.5 text-xs rounded-sm shadow-md transition-transform active:scale-95 uppercase tracking-wider">
-                    {b.btnText}
-                  </button>
+                  <Link
+                    href={b.link || '/categories'}
+                    className="inline-block bg-white hover:bg-slate-100 text-[#2874f0] font-black px-6 py-2.5 text-xs rounded-sm shadow-md transition-transform active:scale-95 uppercase tracking-wider"
+                  >
+                    {b.btnText || 'Explore Formulations'}
+                  </Link>
                 </div>
               </div>
             </div>
@@ -215,13 +124,13 @@ export function DesktopHome() {
 
           {/* Carousel Arrows */}
           <button
-            onClick={() => setCurrentBanner((prev) => (prev - 1 + flipkartBanners.length) % flipkartBanners.length)}
+            onClick={() => setCurrentBanner((prev) => (prev - 1 + currentBannerCount) % currentBannerCount)}
             className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-20 bg-white/70 hover:bg-white text-slate-800 flex items-center justify-center rounded-r-sm shadow-md z-20 transition-all opacity-0 group-hover:opacity-100"
           >
             <ChevronLeft className="w-6 h-6 stroke-[3]" />
           </button>
           <button
-            onClick={() => setCurrentBanner((prev) => (prev + 1) % flipkartBanners.length)}
+            onClick={() => setCurrentBanner((prev) => (prev + 1) % currentBannerCount)}
             className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-20 bg-white/70 hover:bg-white text-slate-800 flex items-center justify-center rounded-l-sm shadow-md z-20 transition-all opacity-0 group-hover:opacity-100"
           >
             <ChevronRight className="w-6 h-6 stroke-[3]" />
@@ -229,7 +138,7 @@ export function DesktopHome() {
 
           {/* Dots Indicator */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
-            {flipkartBanners.map((_, i) => (
+            {activeBanners.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrentBanner(i)}
@@ -253,16 +162,16 @@ export function DesktopHome() {
               </div>
             </div>
             <Link
-              href="/"
+              href="/categories"
               className="bg-[#2874f0] hover:bg-[#1a5bc4] text-white text-xs font-bold px-4 py-2 rounded-sm shadow-sm uppercase tracking-wider transition-colors"
             >
-              View All
+              View All ({products.length} Products)
             </Link>
           </div>
 
           {/* Horizontal Product Grid */}
           <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            {mockAyurvedaCatalog.map((product) => (
+            {products.slice(0, 12).map((product) => (
               <div
                 key={product.id}
                 className="group relative bg-white border border-slate-100 hover:border-slate-300 rounded-sm p-3 flex flex-col justify-between hover:shadow-md transition-all"

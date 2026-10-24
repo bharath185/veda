@@ -1,15 +1,33 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowRight, ChevronRight, Award, ShieldCheck, Leaf } from 'lucide-react';
 import { DesktopHeader } from '../../components/desktop/DesktopHeader';
 import { MobileBottomNav } from '../../components/mobile/MobileBottomNav';
 import { ayurvedaCategories } from '../../data/ayurvedaCatalog';
 
+function SearchQueryHandler() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const q = searchParams?.get('q');
+
+  useEffect(() => {
+    if (q) {
+      router.replace(`/categories/all?q=${encodeURIComponent(q)}`);
+    }
+  }, [q, router]);
+
+  return null;
+}
+
 export default function AllCategoriesPage() {
   return (
     <div className="min-h-screen bg-[#f1f2f4] text-slate-800 font-sans flex flex-col justify-between">
+      <Suspense fallback={null}>
+        <SearchQueryHandler />
+      </Suspense>
       <DesktopHeader />
 
       <main className="max-w-7xl mx-auto w-full px-2 sm:px-4 py-4 space-y-4">

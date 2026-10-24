@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import {
   Star,
   ShoppingCart,
@@ -19,37 +19,53 @@ import {
 import { DesktopHeader } from '../../../components/desktop/DesktopHeader';
 import { MobileBottomNav } from '../../../components/mobile/MobileBottomNav';
 import { useCartStore } from '../../../store/useCartStore';
+import { useCatalogStore } from '../../../store/useCatalogStore';
 import {
-  allAyurvedicProducts,
   ayurvedaCategories,
-  getProductsByCategory,
   AyurvedicProduct,
 } from '../../../data/ayurvedaCatalog';
 
-export default function CategoryPage() {
+function CategoryPageContent() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const slug = (params?.slug as string) || 'classical-rasayanas';
+  const queryParam = searchParams?.get('q') || '';
+
+  const { products, categories } = useCatalogStore();
 
   const category = useMemo(() => {
     return (
-      ayurvedaCategories.find((c) => c.slug === slug) || {
-        name: 'Classical Ayurvedic Remedies',
+      categories.find((c) => c.slug === slug) || {
+        name: queryParam ? `Search: "${queryParam}"` : 'Classical Ayurvedic Remedies',
         slug: 'all',
         icon: '🌿',
         description: 'Authentic Charaka Samhita verified classical Ayurvedic formulations, pure extracts, and health supplements.',
-        count: allAyurvedicProducts.length,
+        count: products.length,
         bannerGradient: 'from-[#0057b7] via-[#2874f0] to-[#0a84ff]',
       }
     );
-  }, [slug]);
+  }, [slug, categories, products.length, queryParam]);
 
   const rawProducts = useMemo(() => {
-    if (slug === 'all' || slug === 'all-deals') {
-      return allAyurvedicProducts;
+    let list = products;
+    if (slug && slug !== 'all' && slug !== 'all-deals') {
+      const filtered = list.filter((p) => p.categorySlug === slug);
+      if (filtered.length > 0) {
+        list = filtered;
+      }
     }
-    const filtered = getProductsByCategory(slug);
-    return filtered.length > 0 ? filtered : allAyurvedicProducts;
-  }, [slug]);
+    if (queryParam.trim()) {
+      const q = queryParam.toLowerCase().trim();
+      list = list.filter((p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.categoryName.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q) ||
+        (p as any).classicalText?.toLowerCase().includes(q) ||
+        (p as any).classicalReference?.toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }, [products, slug, queryParam]);
 
   const [sortBy, setSortBy] = useState<'popular' | 'price-asc' | 'price-desc' | 'rating'>('popular');
   const [minRating, setMinRating] = useState<number>(0);
@@ -451,5 +467,19 @@ export default function CategoryPage() {
       {/* Bottom Nav on Mobile */}
       <MobileBottomNav />
     </div>
+  );
+}
+
+export default function CategoryPage() {
+  return (
+    <React.Suspense
+      fallback={
+        <div className="min-h-screen bg-[#f1f2f4] flex items-center justify-center font-bold text-slate-500">
+          Loading Ayurvedic Remedies...
+        </div>
+      }
+    >
+      <CategoryPageContent />
+    </React.Suspense>
   );
 }

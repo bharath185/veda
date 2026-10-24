@@ -20,6 +20,61 @@ export interface AyurvedicProduct {
   assured: boolean;
 }
 
+export interface HeroBanner {
+  id: string;
+  title: string;
+  subtitle: string;
+  badge: string;
+  btnText: string;
+  link: string;
+  bgGradient: string;
+  imageUrl?: string;
+  active: boolean;
+}
+
+export const defaultBanners: HeroBanner[] = [
+  {
+    id: 'ban-1',
+    title: 'AUTHENTIC CLASSICAL AYURVEDA RASAYANAS',
+    subtitle: 'Charaka Samhita Formulations · 100% Non-Pharma Herbal Medicine · NABL Heavy-Metal Screened',
+    badge: 'AYUSH Certified Non-Pharma Platform',
+    btnText: 'Shop Classical Medicines',
+    link: '/categories/classical-rasayanas',
+    bgGradient: 'from-[#1e3a8a] via-[#172554] to-[#0f172a]',
+    active: true,
+  },
+  {
+    id: 'ban-2',
+    title: 'PURE HIMALAYAN RESINS & GOLD SHILAJIT',
+    subtitle: 'NABL Certified Zero Heavy Metals · High Fulvic Acid · Direct from 16,000+ ft Altitude',
+    badge: '100% Authentic Botanical Medicine',
+    btnText: 'Explore Lab Reports',
+    link: '/categories/herbal-supplements',
+    bgGradient: 'from-[#144272] via-[#0A2647] to-[#205295]',
+    active: true,
+  },
+  {
+    id: 'ban-3',
+    title: 'WINTER IMMUNITY & AYURVEDIC TONICS',
+    subtitle: 'Swarna Bhasma Formulations & Tulsi Kadhas | Same-Day Eco Dispatch',
+    badge: 'Classical Authentic AYUSH Formulations',
+    btnText: 'Order Immunity Pack',
+    link: '/categories/immunity-kadhas',
+    bgGradient: 'from-[#0b6623] via-[#1b4332] to-[#2d6a4f]',
+    active: true,
+  },
+  {
+    id: 'ban-4',
+    title: 'KASHMIRI SAFFRON KUMKUMADI GLOW RITUAL',
+    subtitle: 'Authentic 26-Herb Classical Tailam with Pure Mongra Saffron for Radiant Complexion',
+    badge: 'Veda-Assured Beauty',
+    btnText: 'Shop Kumkumadi Oil',
+    link: '/categories/botanical-skincare',
+    bgGradient: 'from-[#7c2d12] via-[#451a03] to-[#1c1917]',
+    active: true,
+  },
+];
+
 export interface AyurvedicCategory {
   name: string;
   slug: string;
@@ -655,18 +710,80 @@ export const allAyurvedicProducts: AyurvedicProduct[] = [
   },
 ];
 
+export const CATALOG_STORAGE_KEY = 'vedaflow_catalog_v2';
+export const BANNERS_STORAGE_KEY = 'vedaflow_banners_v2';
+
+export function getLiveProducts(): AyurvedicProduct[] {
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem(CATALOG_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to load stored catalog, using defaults', e);
+    }
+  }
+  return allAyurvedicProducts;
+}
+
+export function saveLiveProducts(products: AyurvedicProduct[]): void {
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem(CATALOG_STORAGE_KEY, JSON.stringify(products));
+      window.dispatchEvent(new Event('vedaflow_catalog_change'));
+    } catch (e) {
+      console.error('Failed to save products', e);
+    }
+  }
+}
+
+export function getLiveBanners(): HeroBanner[] {
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem(BANNERS_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to load stored banners, using defaults', e);
+    }
+  }
+  return defaultBanners;
+}
+
+export function saveLiveBanners(banners: HeroBanner[]): void {
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem(BANNERS_STORAGE_KEY, JSON.stringify(banners));
+      window.dispatchEvent(new Event('vedaflow_banners_change'));
+    } catch (e) {
+      console.error('Failed to save banners', e);
+    }
+  }
+}
+
 export function getProductsByCategory(categorySlug: string): AyurvedicProduct[] {
-  return allAyurvedicProducts.filter((p) => p.categorySlug === categorySlug);
+  const products = getLiveProducts();
+  return products.filter((p) => p.categorySlug === categorySlug);
 }
 
 export function getProductBySlug(slug: string): AyurvedicProduct | undefined {
-  return allAyurvedicProducts.find((p) => p.slug === slug);
+  const products = getLiveProducts();
+  return products.find((p) => p.slug === slug);
 }
 
 export function searchAyurvedicCatalog(query: string): AyurvedicProduct[] {
   const q = query.toLowerCase().trim();
-  if (!q) return allAyurvedicProducts;
-  return allAyurvedicProducts.filter(
+  const products = getLiveProducts();
+  if (!q) return products;
+  return products.filter(
     (p) =>
       p.title.toLowerCase().includes(q) ||
       p.categoryName.toLowerCase().includes(q) ||
