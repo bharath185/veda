@@ -55,7 +55,7 @@ export function buildInstagramCaption(params: {
     `Available now for only ${currencySymbol}${params.price}!${discountText}\n\n` +
     `✅ Non-Pharma Herbal Formulation\n` +
     `✅ AYUSH Premium Certified · Zero Heavy Metals\n` +
-    `✅ Clinically Backed Botanicals\n\n` +
+    `✅ Scientifically Backed Classical Botanicals\n\n` +
     `🛒 Tap the link in bio or order directly: ${params.shortUrl}\n` +
     `⚡ Free Express Delivery on orders above ₹999\n\n` +
     `${hashtags || '#ayurveda #herbalremedy #holisticwellness #doshabalance #pureherbs'}`;

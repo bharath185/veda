@@ -20,9 +20,13 @@ import {
   LogOut,
   Tag,
   Coins,
+  Camera,
+  FileText,
+  Percent,
 } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
 import { useAuthStore } from '../../store/useAuthStore';
+import { UploadPrescriptionModal } from '../prescription/UploadPrescriptionModal';
 
 const flipkartCategories = [
   { name: 'Classical Rasayanas', slug: 'classical-rasayanas', icon: '🍯' },
@@ -42,6 +46,7 @@ export function DesktopHeader() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [isRxModalOpen, setIsRxModalOpen] = useState(false);
 
   const { items, setIsOpen } = useCartStore();
   const { user, isLoggedIn, checkAuth, logout } = useAuthStore();
@@ -77,39 +82,60 @@ export function DesktopHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full shadow-md">
-      {/* 1. Flipkart Primary Blue Header Bar */}
-      <div className="bg-[#2874f0] text-white">
-        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
-          {/* Flipkart Style Logo + Plus */}
+      {/* 0. Truemeds Style Signature Top Savings Ribbon */}
+      <div className="bg-[#0b5c57] text-white text-[11px] font-bold py-1.5 px-4 border-b border-teal-800">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="bg-[#ffe500] text-slate-900 text-[9px] font-black uppercase px-1.5 py-0.2 rounded-2xs tracking-wider">
+              TRUEMEDS SMART SAVINGS
+            </span>
+            <span className="truncate">
+              ⚡ Save up to 51% on genuine medicines with Triple-Check Quality Guarantee | Flat 25% OFF with code <strong className="text-[#ffe500]">FIRST25</strong>
+            </span>
+          </div>
+          <div className="hidden lg:flex items-center gap-4 text-[10px] text-teal-100 shrink-0">
+            <span>🚚 Free Delivery &gt; ₹499</span>
+            <span>•</span>
+            <span>🛡️ 100% NABL Lab Tested</span>
+            <span>•</span>
+            <span>🩺 Pharmacist Verified</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 1. Primary Header Bar */}
+      <div className="bg-[#128983] text-white">
+        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-3 sm:gap-4">
+          {/* Logo with Truemeds Savings tagline */}
           <Link href="/" className="flex flex-col items-start leading-none group shrink-0">
             <div className="flex items-center gap-1">
               <span className="text-xl font-black italic tracking-tight text-white">
                 Veda<span className="text-[#ffe500]">Flow</span>
               </span>
-              <span className="text-[10px] bg-[#ffe500] text-[#2874f0] font-black px-1 rounded-sm uppercase tracking-tighter">
-                AYUSH
+              <span className="text-[9px] bg-[#0b5c57] text-[#ffe500] border border-teal-400/30 font-black px-1 rounded-sm uppercase tracking-tighter">
+                E-PHARMACY
               </span>
             </div>
-            <div className="flex items-center gap-0.5 text-[11px] font-bold italic text-slate-200 hover:underline">
-              <span>Explore</span>
-              <span className="text-[#ffe500] font-black ml-0.5">Plus</span>
+            <div className="flex items-center gap-0.5 text-[10px] font-bold text-teal-100 hover:text-white mt-0.5">
+              <span>Save up to</span>
+              <span className="text-[#ffe500] font-black ml-0.5">51% on Rx</span>
               <Sparkles className="w-2.5 h-2.5 text-[#ffe500] inline fill-[#ffe500]" />
             </div>
           </Link>
 
-          {/* Flipkart Style Search Box */}
-          <form onSubmit={handleSearchSubmit} className="flex-1 max-w-2xl relative">
+          {/* Truemeds Style Smart Search Box */}
+          <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl relative">
             <div className="relative flex items-center">
               <input
                 type="text"
-                placeholder="Search for Ayurvedic medicines, Rasayanas, Shilajit, Ashwagandha and brands..."
+                placeholder="Search by Medicine Name, Salt / Composition, or Herbal Extract..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white text-slate-900 placeholder:text-slate-500 text-xs px-4 py-2.5 rounded-sm shadow-inner focus:outline-none focus:ring-1 focus:ring-amber-300 font-medium"
+                className="w-full bg-white text-slate-900 placeholder:text-slate-500 text-xs pl-3.5 pr-9 py-2 rounded-sm shadow-inner focus:outline-none focus:ring-2 focus:ring-[#ffe500] font-medium"
               />
               <button
                 type="submit"
-                className="absolute right-0 top-0 bottom-0 px-4 bg-white text-[#2874f0] hover:text-[#1c55b5] flex items-center justify-center rounded-r-sm transition-colors"
+                className="absolute right-0 top-0 bottom-0 px-3 bg-white text-[#128983] hover:text-[#0b5c57] flex items-center justify-center rounded-r-sm transition-colors"
                 title="Search"
               >
                 <Search className="w-4 h-4 stroke-[2.5]" />
@@ -117,8 +143,22 @@ export function DesktopHeader() {
             </div>
           </form>
 
+          {/* Truemeds Signature "Upload Rx" Button */}
+          <button
+            type="button"
+            onClick={() => setIsRxModalOpen(true)}
+            className="hidden md:flex items-center gap-1.5 bg-[#ffe500] hover:bg-[#edd400] text-slate-900 font-black px-3 py-1.5 text-xs rounded-sm shadow-sm transition-transform active:scale-95 shrink-0"
+            title="Upload Prescription & Save up to 51%"
+          >
+            <Camera className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>Upload Rx</span>
+            <span className="bg-[#0b5c57] text-[#ffe500] text-[9px] font-black px-1 rounded-2xs">
+              51% OFF
+            </span>
+          </button>
+
           {/* Right Navigation Controls */}
-          <div className="flex items-center gap-6 shrink-0 text-sm font-bold">
+          <div className="flex items-center gap-4 sm:gap-6 shrink-0 text-sm font-bold">
             {/* User Account / Login Button */}
             <div
               className="relative"
@@ -332,6 +372,12 @@ export function DesktopHeader() {
           ))}
         </div>
       </div>
+
+      {/* Prescription Upload Modal */}
+      <UploadPrescriptionModal
+        isOpen={isRxModalOpen}
+        onClose={() => setIsRxModalOpen(false)}
+      />
     </header>
   );
 }

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Grid, ShoppingCart, Bell, User } from 'lucide-react';
+import { Home, Grid, ShoppingCart, Camera, User, FileText } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
 
 export function MobileBottomNav() {
@@ -14,13 +14,13 @@ export function MobileBottomNav() {
   const navItems = [
     { label: 'Home', href: '/', icon: Home },
     { label: 'Categories', href: '/categories', icon: Grid },
-    { label: 'Notifications', href: '/', icon: Bell },
+    { label: 'Upload Rx', href: '/upload-prescription', icon: Camera, highlightBadge: '51%' },
     { label: 'Account', href: '/login', icon: User },
     { label: 'Cart', href: '/checkout', icon: ShoppingCart, badge: count },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 px-3 py-1.5 flex items-center justify-around shadow-md">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 px-2 py-1.5 flex items-center justify-around shadow-lg">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = pathname === item.href;
@@ -29,15 +29,20 @@ export function MobileBottomNav() {
           <Link
             key={item.label}
             href={item.href}
-            className={`flex flex-col items-center justify-center py-1 px-3 relative transition-all active:scale-95 ${
-              isActive ? 'text-[#2874f0] font-black' : 'text-slate-600 font-bold'
+            className={`flex flex-col items-center justify-center py-0.5 px-2.5 relative transition-all active:scale-95 ${
+              isActive ? 'text-[#128983] font-black' : 'text-slate-600 font-bold'
             }`}
           >
             <div className="relative">
               <Icon className="w-5 h-5 stroke-[2.2]" />
               {item.badge !== undefined && item.badge > 0 && (
-                <span className="absolute -top-1.5 -right-2.5 bg-[#ffe500] text-[#2874f0] text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">
+                <span className="absolute -top-1.5 -right-2.5 bg-[#ffe500] text-[#128983] text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">
                   {item.badge}
+                </span>
+              )}
+              {item.highlightBadge && (
+                <span className="absolute -top-2 -right-3.5 bg-emerald-600 text-white text-[8px] font-black px-1 rounded-full shadow">
+                  {item.highlightBadge}
                 </span>
               )}
             </div>
