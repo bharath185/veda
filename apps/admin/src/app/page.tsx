@@ -41,6 +41,11 @@ import {
   ToggleLeft,
   ToggleRight,
   Percent,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  FileCheck,
+  Send,
 } from 'lucide-react';
 
 interface AdminProduct {
@@ -56,7 +61,7 @@ interface AdminProduct {
   rating: number;
   reviews: number;
   inStock: boolean;
-  stockCount?: number;
+  stockCount: number;
   image: string;
   classicalReference?: string;
   badges: string[];
@@ -75,6 +80,43 @@ interface AdminBanner {
   bgGradient: string;
   imageUrl?: string;
   active: boolean;
+}
+
+interface AdminOrder {
+  id: string;
+  customer: string;
+  phone: string;
+  amount: number;
+  status: 'PAID' | 'PACKED' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'CANCELLED';
+  itemsCount: number;
+  itemsSummary: string;
+  date: string;
+  courier: string;
+  pin: string;
+  paymentMethod: 'RAZORPAY_UPI' | 'RAZORPAY_CARD' | 'COD';
+}
+
+interface AdminPrescription {
+  id: string;
+  patientName: string;
+  phone: string;
+  pin: string;
+  uploadedAt: string;
+  imageUrl: string;
+  status: 'PENDING_REVIEW' | 'SUBSTITUTE_RECOMMENDED' | 'APPROVED' | 'REJECTED';
+  preference: 'substitute' | 'exact';
+  prescribedDrug: string;
+  recommendedHerbal: string;
+  savingsEstimated: number;
+}
+
+interface AdminCoupon {
+  code: string;
+  discountPct: number;
+  minOrder: number;
+  active: boolean;
+  usedCount: number;
+  description: string;
 }
 
 const CATALOG_KEY = 'vedaflow_catalog_v2';
@@ -245,6 +287,110 @@ const initialDefaultBanners: AdminBanner[] = [
   },
 ];
 
+const initialDefaultOrders: AdminOrder[] = [
+  {
+    id: 'OD-VEDA-8421098',
+    customer: 'Priya Sharma',
+    phone: '+91 98765 43210',
+    amount: 1499,
+    status: 'OUT_FOR_DELIVERY',
+    itemsCount: 1,
+    itemsSummary: 'Pure Himalayan Shilajit Resin (20g)',
+    date: '12 Mins ago',
+    courier: 'Ekart / Ramesh (EV Scooter)',
+    pin: '560001',
+    paymentMethod: 'RAZORPAY_UPI',
+  },
+  {
+    id: 'OD-VEDA-7319401',
+    customer: 'Dr. Anand Joshi',
+    phone: '+91 98765 43211',
+    amount: 2598,
+    status: 'PAID',
+    itemsCount: 3,
+    itemsSummary: 'Swarna Chyawanprash (1kg) + KSM-66 Ashwagandha',
+    date: '28 Mins ago',
+    courier: 'Ekart Logistics Central Hub',
+    pin: '400001',
+    paymentMethod: 'RAZORPAY_CARD',
+  },
+  {
+    id: 'OD-VEDA-6104882',
+    customer: 'Sneha Patel',
+    phone: '+91 98765 43212',
+    amount: 3797,
+    status: 'PACKED',
+    itemsCount: 2,
+    itemsSummary: 'Kashmiri Kumkumadi Oil (30ml) + Triphala Churna',
+    date: '1 Hour ago',
+    courier: 'Ekart Express Dispatch',
+    pin: '380015',
+    paymentMethod: 'RAZORPAY_UPI',
+  },
+  {
+    id: 'OD-VEDA-5822190',
+    customer: 'Meera Nambiar',
+    phone: '+91 98765 43213',
+    amount: 1299,
+    status: 'DELIVERED',
+    itemsCount: 1,
+    itemsSummary: 'Classical Bringadi Intensive Hair Oil (200ml)',
+    date: '3 Hours ago',
+    courier: 'Ekart / Ramesh (EV Scooter)',
+    pin: '682001',
+    paymentMethod: 'COD',
+  },
+];
+
+const initialDefaultPrescriptions: AdminPrescription[] = [
+  {
+    id: 'RX-VEDA-901842',
+    patientName: 'Rajesh Malhotra',
+    phone: '+91 98112 34567',
+    pin: '110001',
+    uploadedAt: '15 Mins ago',
+    imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=600&auto=format&fit=crop&q=80',
+    status: 'PENDING_REVIEW',
+    preference: 'substitute',
+    prescribedDrug: 'Synthetic Glimepiride + Metformin 500mg',
+    recommendedHerbal: 'Gurmar & Jamun Seed Classical Churna + Shilajit',
+    savingsEstimated: 51,
+  },
+  {
+    id: 'RX-VEDA-841920',
+    patientName: 'Ananya Deshmukh',
+    phone: '+91 97234 56789',
+    pin: '411001',
+    uploadedAt: '45 Mins ago',
+    imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=600&auto=format&fit=crop&q=80',
+    status: 'SUBSTITUTE_RECOMMENDED',
+    preference: 'substitute',
+    prescribedDrug: 'Commercial Multivitamin & Pain Relief Gel',
+    recommendedHerbal: 'Swarna Chyawanprash + Mahanarayan Thailam',
+    savingsEstimated: 50,
+  },
+  {
+    id: 'RX-VEDA-732019',
+    patientName: 'Vikramaditya Sengupta',
+    phone: '+91 99001 23456',
+    pin: '700001',
+    uploadedAt: '2 Hours ago',
+    imageUrl: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=600&auto=format&fit=crop&q=80',
+    status: 'APPROVED',
+    preference: 'exact',
+    prescribedDrug: 'Classical Ksheerabala 101 Tailam (Exact Brand)',
+    recommendedHerbal: 'Ksheerabala 101 Tailam (Direct Pharmacopoeia Batch)',
+    savingsEstimated: 35,
+  },
+];
+
+const initialDefaultCoupons: AdminCoupon[] = [
+  { code: 'FIRST25', discountPct: 25, minOrder: 499, active: true, usedCount: 1420, description: 'Flat 25% Off on First Medicine Order' },
+  { code: 'WELCOME500', discountPct: 20, minOrder: 999, active: true, usedCount: 890, description: 'Save ₹500 on Classical Rasayanas above ₹999' },
+  { code: 'HERBAL20', discountPct: 20, minOrder: 599, active: true, usedCount: 610, description: '20% Off on Shodhita Resins & Herbal Churnas' },
+  { code: 'AYUSH50', discountPct: 50, minOrder: 1999, active: false, usedCount: 340, description: 'Festival Clearance BOGO Classical Offer' },
+];
+
 const imagePresets = [
   { label: 'Gold Shilajit', url: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600&auto=format&fit=crop&q=80' },
   { label: 'Chyawanprash', url: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&auto=format&fit=crop&q=80' },
@@ -256,7 +402,7 @@ const imagePresets = [
 
 const gradientPresets = [
   { label: 'Sapphire Blue (Flipkart)', value: 'from-[#0057b7] via-[#2874f0] to-[#0a84ff]' },
-  { label: 'Forest Emerald (Ayush)', value: 'from-[#0b3d20] via-[#1b5e20] to-[#2e7d32]' },
+  { label: 'Forest Emerald (Truemeds)', value: 'from-[#0d6e68] via-[#128983] to-[#1bb5ac]' },
   { label: 'Sunset Saffron (Veda)', value: 'from-[#b76e00] via-[#e65100] to-[#ff9800]' },
   { label: 'Deep Crimson Herbal', value: 'from-[#880e4f] via-[#b71c1c] to-[#c2185b]' },
   { label: 'Royal Midnight Slate', value: 'from-[#172337] via-[#263238] to-[#37474f]' },
@@ -264,19 +410,20 @@ const gradientPresets = [
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState<
-    'analytics' | 'products' | 'banners' | 'orders' | 'inventory' | 'delivery' | 'share' | 'audit'
+    'products' | 'prescriptions' | 'banners' | 'orders' | 'inventory' | 'coupons' | 'delivery' | 'share' | 'analytics' | 'audit'
   >('products');
-  const [copiedCaption, setCopiedCaption] = useState(false);
+
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Products Management State
+  // Products State
   const [products, setProducts] = useState<AdminProduct[]>(initialDefaultProducts);
   const [productSearch, setProductSearch] = useState('');
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
 
-  // Product Form State
+  // Product Form
   const [productForm, setProductForm] = useState({
     title: '',
     hindiName: '',
@@ -288,35 +435,58 @@ export default function AdminDashboardPage() {
     inStock: true,
     stockCount: 50,
     image: imagePresets[0].url,
-    classicalReference: 'Charaka Samhita',
+    classicalReference: 'Charaka Samhita Chikitsa Sthana',
     badgesText: 'AYUSH Certified, NABL Tested, 100% Herbal',
     keyBenefitsText: 'Immunity, Vitality, Digestion',
     nablCertified: true,
-    description: '',
+    description: 'Handcrafted classical Ayurvedic medicine formulated per ancient authentic Ayurvedic Pharmacopoeia of India standards.',
   });
 
-  // Banners Management State
+  // Banners State
   const [banners, setBanners] = useState<AdminBanner[]>(initialDefaultBanners);
   const [isBannerModalOpen, setIsBannerModalOpen] = useState(false);
   const [editingBannerId, setEditingBannerId] = useState<string | null>(null);
-
-  // Banner Form State
   const [bannerForm, setBannerForm] = useState({
     title: '',
     subtitle: '',
     tag: 'FESTIVAL SPECIAL',
     ctaText: 'Shop Now',
     ctaLink: '/categories/classical-rasayanas',
-    bgGradient: gradientPresets[0].value,
+    bgGradient: gradientPresets[1].value,
     imageUrl: imagePresets[0].url,
     active: true,
   });
 
+  // Orders State
+  const [orders, setOrders] = useState<AdminOrder[]>(initialDefaultOrders);
+  const [orderStatusFilter, setOrderStatusFilter] = useState('ALL');
+  const [printingOrder, setPrintingOrder] = useState<AdminOrder | null>(null);
+
+  // Prescriptions State (Truemeds Pharmacist Audit)
+  const [prescriptions, setPrescriptions] = useState<AdminPrescription[]>(initialDefaultPrescriptions);
+  const [viewingRx, setViewingRx] = useState<AdminPrescription | null>(null);
+
+  // Coupons State
+  const [coupons, setCoupons] = useState<AdminCoupon[]>(initialDefaultCoupons);
+  const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
+  const [couponForm, setCouponForm] = useState({
+    code: '',
+    discountPct: 20,
+    minOrder: 499,
+    description: '',
+  });
+
   // Marketing Share Generator State
   const [shareProduct, setShareProduct] = useState('swarna-bhasma-chyawanprash-1kg');
-  const [sharePlatform, setSharePlatform] = useState('instagram');
+  const [copiedCaption, setCopiedCaption] = useState(false);
 
-  // Load live data from localStorage / API on mount
+  // Show Toast Alert helper
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  // Sync with LocalStorage & Server API on mount
   useEffect(() => {
     try {
       if (typeof window !== 'undefined') {
@@ -340,26 +510,23 @@ export default function AdminDashboardPage() {
     }
   }, []);
 
-  // Save products helper
   const persistProducts = (updated: AdminProduct[]) => {
     setProducts(updated);
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem(CATALOG_KEY, JSON.stringify(updated));
         window.dispatchEvent(new Event('vedaflow_catalog_change'));
-        // Sync via Next.js REST API
         fetch('/api/products', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updated[0]),
         }).catch(() => {});
       } catch (err) {
-        console.error('Failed saving products to storage', err);
+        console.error('Failed saving products', err);
       }
     }
   };
 
-  // Save banners helper
   const persistBanners = (updated: AdminBanner[]) => {
     setBanners(updated);
     if (typeof window !== 'undefined') {
@@ -372,12 +539,12 @@ export default function AdminDashboardPage() {
           body: JSON.stringify(updated[0]),
         }).catch(() => {});
       } catch (err) {
-        console.error('Failed saving banners to storage', err);
+        console.error('Failed saving banners', err);
       }
     }
   };
 
-  // Open modal for new product
+  // Product Actions
   const handleOpenAddProduct = () => {
     setEditingProductId(null);
     setProductForm({
@@ -395,12 +562,11 @@ export default function AdminDashboardPage() {
       badgesText: 'AYUSH Certified, NABL Tested, 100% Herbal',
       keyBenefitsText: 'Immunity, Vitality, Digestion',
       nablCertified: true,
-      description: 'Handcrafted classical Ayurvedic medicine formulated strictly per ancient authentic Ayurvedic Pharmacopoeia of India (API) standards.',
+      description: 'Handcrafted classical Ayurvedic medicine formulated strictly per ancient authentic Ayurvedic Pharmacopoeia of India standards.',
     });
     setIsProductModalOpen(true);
   };
 
-  // Open modal for editing product
   const handleOpenEditProduct = (prod: AdminProduct) => {
     setEditingProductId(prod.id);
     setProductForm({
@@ -423,16 +589,13 @@ export default function AdminDashboardPage() {
     setIsProductModalOpen(true);
   };
 
-  // Submit product form
   const handleSaveProduct = (e: React.FormEvent) => {
     e.preventDefault();
     if (!productForm.title.trim()) return;
 
     const discount =
       productForm.compareAtPrice > productForm.price
-        ? Math.round(
-            ((productForm.compareAtPrice - productForm.price) / productForm.compareAtPrice) * 100
-          )
+        ? Math.round(((productForm.compareAtPrice - productForm.price) / productForm.compareAtPrice) * 100)
         : 0;
 
     const generatedSlug =
@@ -442,18 +605,10 @@ export default function AdminDashboardPage() {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
 
-    const badges = productForm.badgesText
-      .split(',')
-      .map((b) => b.trim())
-      .filter(Boolean);
-
-    const keyBenefits = productForm.keyBenefitsText
-      .split(',')
-      .map((b) => b.trim())
-      .filter(Boolean);
+    const badges = productForm.badgesText.split(',').map((b) => b.trim()).filter(Boolean);
+    const keyBenefits = productForm.keyBenefitsText.split(',').map((b) => b.trim()).filter(Boolean);
 
     if (editingProductId) {
-      // Update existing
       const updated = products.map((p) => {
         if (p.id === editingProductId) {
           return {
@@ -479,8 +634,8 @@ export default function AdminDashboardPage() {
         return p;
       });
       persistProducts(updated);
+      showToast('Product updated successfully!');
     } else {
-      // Add new
       const newProd: AdminProduct = {
         id: `prod-${Date.now()}`,
         title: productForm.title,
@@ -503,12 +658,12 @@ export default function AdminDashboardPage() {
         description: productForm.description,
       };
       persistProducts([newProd, ...products]);
+      showToast('New product published to live storefront!');
     }
 
     setIsProductModalOpen(false);
   };
 
-  // Toggle product in-stock
   const handleToggleStock = (id: string) => {
     const updated = products.map((p) => {
       if (p.id === id) {
@@ -517,183 +672,216 @@ export default function AdminDashboardPage() {
       return p;
     });
     persistProducts(updated);
+    showToast('Stock availability toggled!');
   };
 
-  // Delete product
   const handleDeleteProduct = (id: string) => {
-    if (confirm('Are you sure you want to delete this Ayurvedic remedy from the catalog?')) {
+    if (confirm('Delete this product from catalog?')) {
       const updated = products.filter((p) => p.id !== id);
       persistProducts(updated);
+      showToast('Product deleted from catalog');
     }
   };
 
-  // Open modal for new banner
+  // Banner Actions
   const handleOpenAddBanner = () => {
     setEditingBannerId(null);
     setBannerForm({
       title: '',
       subtitle: '',
-      tag: 'NEW EXCLUSIVE',
-      ctaText: 'Explore Remedies',
+      tag: 'TRUEMEDS SPECIAL',
+      ctaText: 'Shop Now',
       ctaLink: '/categories/classical-rasayanas',
-      bgGradient: gradientPresets[0].value,
+      bgGradient: gradientPresets[1].value,
       imageUrl: imagePresets[0].url,
       active: true,
     });
     setIsBannerModalOpen(true);
   };
 
-  // Open modal for editing banner
-  const handleOpenEditBanner = (banner: AdminBanner) => {
-    setEditingBannerId(banner.id);
+  const handleOpenEditBanner = (b: AdminBanner) => {
+    setEditingBannerId(b.id);
     setBannerForm({
-      title: banner.title,
-      subtitle: banner.subtitle,
-      tag: banner.tag,
-      ctaText: banner.ctaText,
-      ctaLink: banner.ctaLink,
-      bgGradient: banner.bgGradient,
-      imageUrl: banner.imageUrl || imagePresets[0].url,
-      active: banner.active,
+      title: b.title,
+      subtitle: b.subtitle,
+      tag: b.tag,
+      ctaText: b.ctaText,
+      ctaLink: b.ctaLink,
+      bgGradient: b.bgGradient,
+      imageUrl: b.imageUrl || imagePresets[0].url,
+      active: b.active,
     });
     setIsBannerModalOpen(true);
   };
 
-  // Submit banner form
   const handleSaveBanner = (e: React.FormEvent) => {
     e.preventDefault();
     if (!bannerForm.title.trim()) return;
 
     if (editingBannerId) {
-      const updated = banners.map((b) => {
-        if (b.id === editingBannerId) {
-          return {
-            ...b,
-            ...bannerForm,
-          };
-        }
-        return b;
-      });
+      const updated = banners.map((b) => (b.id === editingBannerId ? { ...b, ...bannerForm } : b));
       persistBanners(updated);
+      showToast('Banner updated successfully!');
     } else {
-      const newBanner: AdminBanner = {
-        id: `banner-${Date.now()}`,
-        ...bannerForm,
-      };
+      const newBanner: AdminBanner = { id: `banner-${Date.now()}`, ...bannerForm };
       persistBanners([newBanner, ...banners]);
+      showToast('Promotional banner published to homepage carousel!');
     }
     setIsBannerModalOpen(false);
   };
 
-  // Toggle banner active status
   const handleToggleBanner = (id: string) => {
-    const updated = banners.map((b) => {
-      if (b.id === id) {
-        return { ...b, active: !b.active };
-      }
-      return b;
-    });
+    const updated = banners.map((b) => (b.id === id ? { ...b, active: !b.active } : b));
     persistBanners(updated);
+    showToast('Banner visibility toggled');
   };
 
-  // Delete banner
   const handleDeleteBanner = (id: string) => {
-    if (confirm('Delete this banner from homepage carousel?')) {
+    if (confirm('Delete this banner from homepage?')) {
       const updated = banners.filter((b) => b.id !== id);
       persistBanners(updated);
+      showToast('Banner removed');
     }
   };
 
-  // Filtered products list
+  // Order Actions
+  const handleUpdateOrderStatus = (orderId: string, newStatus: AdminOrder['status']) => {
+    setOrders((prev) =>
+      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+    );
+    showToast(`Order ${orderId} updated to ${newStatus}`);
+  };
+
+  // Prescription Review Actions (Truemeds)
+  const handleUpdateRxStatus = (
+    rxId: string,
+    newStatus: AdminPrescription['status'],
+    recommendedRemedy?: string
+  ) => {
+    setPrescriptions((prev) =>
+      prev.map((rx) => {
+        if (rx.id === rxId) {
+          return {
+            ...rx,
+            status: newStatus,
+            recommendedHerbal: recommendedRemedy || rx.recommendedHerbal,
+          };
+        }
+        return rx;
+      })
+    );
+    setViewingRx(null);
+    showToast(`Prescription ${rxId} updated to ${newStatus}`);
+  };
+
+  // Coupon Actions
+  const handleToggleCoupon = (code: string) => {
+    setCoupons((prev) =>
+      prev.map((c) => (c.code === code ? { ...c, active: !c.active } : c))
+    );
+    showToast(`Coupon ${code} status toggled`);
+  };
+
+  const handleSaveCoupon = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!couponForm.code.trim()) return;
+    const newCoupon: AdminCoupon = {
+      code: couponForm.code.toUpperCase().trim(),
+      discountPct: Number(couponForm.discountPct),
+      minOrder: Number(couponForm.minOrder),
+      active: true,
+      usedCount: 0,
+      description: couponForm.description,
+    };
+    setCoupons([newCoupon, ...coupons]);
+    setIsCouponModalOpen(false);
+    showToast(`Coupon ${newCoupon.code} created and live!`);
+  };
+
+  // Inventory Quick Stock Adjust
+  const handleAdjustStock = (sku: string, delta: number) => {
+    setProducts((prev) =>
+      prev.map((p) => {
+        if (p.id === sku) {
+          const nextStock = Math.max(0, p.stockCount + delta);
+          return { ...p, stockCount: nextStock, inStock: nextStock > 0 };
+        }
+        return p;
+      })
+    );
+    showToast(`Adjusted inventory for ${sku}`);
+  };
+
+  // Filtered Products
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
       const matchesSearch =
         p.title.toLowerCase().includes(productSearch.toLowerCase()) ||
         p.categoryName.toLowerCase().includes(productSearch.toLowerCase()) ||
         (p.hindiName && p.hindiName.includes(productSearch));
-
       const matchesCategory =
         productCategoryFilter === 'all' || p.categorySlug === productCategoryFilter;
-
       return matchesSearch && matchesCategory;
     });
   }, [products, productSearch, productCategoryFilter]);
 
-  // Operational mock data
-  const orders = [
-    { id: 'OD-VEDA-8421098', customer: 'Priya Sharma', amount: 1499, status: 'OUT_FOR_DELIVERY', items: 1, date: '12 Mins ago', courier: 'Ekart / Ramesh (EV Scooter)', pin: '560001' },
-    { id: 'OD-VEDA-7319401', customer: 'Dr. Anand Joshi', amount: 2598, status: 'PAID', items: 3, date: '28 Mins ago', courier: 'Ready to Dispatch', pin: '400001' },
-    { id: 'OD-VEDA-6104882', customer: 'Sneha Patel', amount: 3797, status: 'PACKED', items: 2, date: '1 Hour ago', courier: 'Ekart Logistics', pin: '380015' },
-    { id: 'OD-VEDA-5822190', customer: 'Meera Nambiar', amount: 1299, status: 'DELIVERED', items: 1, date: '3 Hours ago', courier: 'Ekart / Ramesh (EV Scooter)', pin: '682001' },
-  ];
-
-  const inventoryAlerts = [
-    { sku: 'VD-SHILAJIT-GOLD', title: 'Pure Himalayan Shilajit Resin 20g', stock: 4, threshold: 10, status: 'CRITICAL', supplier: 'Himalayan High-Altitude Foragers', batch: 'VD-2026-SHI-14' },
-    { sku: 'VD-ASHWA-KSM66', title: 'KSM-66 Organic Ashwagandha 600mg', stock: 8, threshold: 15, status: 'LOW_STOCK', supplier: 'Ixoreal Biomed Extracts', batch: 'VD-2026-ASH-08' },
-    { sku: 'VD-KUMKUMADI-30', title: 'Kashmiri Saffron Kumkumadi Night Oil 30ml', stock: 6, threshold: 12, status: 'LOW_STOCK', supplier: 'Pampore Saffron Cooperatives', batch: 'VD-2026-KUM-03' },
-    { sku: 'VD-SWARNA-1KG', title: 'Swarna Bhasma Amrit Chyawanprash 1kg', stock: 7, threshold: 10, status: 'REORDER_SOON', supplier: 'Kerala Veda Botanical Pharmacy', batch: 'VD-2026-CHY-09' },
-  ];
-
-  const deliveryAgents = [
-    { name: 'Ramesh Kumar', vehicle: 'EV Scooter (KA-01-EQ-9988)', activeOrders: 2, rating: 4.96, status: 'ON_ROUTE', hub: 'Bangalore South Hub' },
-    { name: 'Vikas Singh', vehicle: 'Eco Bike (KA-05-MK-3312)', activeOrders: 0, rating: 4.88, status: 'AVAILABLE', hub: 'Bangalore Central Hub' },
-    { name: 'Sanjay Dutt', vehicle: 'EV Cargo (KA-02-EL-7744)', activeOrders: 1, rating: 4.92, status: 'ON_ROUTE', hub: 'Bangalore North Hub' },
-  ];
-
-  const auditLogs = [
-    { action: 'NABL_HEAVY_METAL_CoA_PASS', user: 'admin@vedaflow.org', entity: 'Batch #VD-2026-CHY-09 (Zero Lead/Mercury)', ip: '103.21.244.1', time: '10 Mins ago' },
-    { action: 'CATALOG_PRODUCT_UPDATE', user: 'admin@vedaflow.org', entity: 'Dynamic Product Inventory Sync Verified', ip: '103.21.244.1', time: '15 Mins ago' },
-    { action: 'UPDATE_ORDER_DISPATCH', user: 'admin@vedaflow.org', entity: 'Order OD-VEDA-8421098 Assigned to Ekart', ip: '103.21.244.1', time: '18 Mins ago' },
-    { action: 'COUPON_ACTIVATE_HERBAL20', user: 'admin@vedaflow.org', entity: 'Coupon HERBAL20 (20% Off Rasayanas)', ip: '103.21.244.1', time: '1 Hour ago' },
-    { action: 'AYUSH_LICENSE_VERIFICATION', user: 'admin@vedaflow.org', entity: 'License GA/1482 Renewal Validated', ip: '103.21.244.1', time: '2 Hours ago' },
-  ];
+  // Filtered Orders
+  const filteredOrders = useMemo(() => {
+    if (orderStatusFilter === 'ALL') return orders;
+    return orders.filter((o) => o.status === orderStatusFilter);
+  }, [orders, orderStatusFilter]);
 
   const navItems = [
-    { id: 'products' as const, label: 'Products & Live Catalog', shortLabel: 'Products', icon: Package },
+    { id: 'products' as const, label: 'Products & Live Catalog', shortLabel: 'Products', icon: Package, badge: `${products.length}` },
+    { id: 'prescriptions' as const, label: 'Prescriptions & Substitutes', shortLabel: 'Rx Queue', icon: FileCheck, badge: `${prescriptions.filter((r) => r.status === 'PENDING_REVIEW').length} Pending` },
+    { id: 'orders' as const, label: 'Orders & Ekart Pipeline', shortLabel: 'Orders', icon: ShoppingBag, badge: `${orders.length}` },
     { id: 'banners' as const, label: 'Hero Banners & Promotions', shortLabel: 'Banners', icon: Sparkles },
-    { id: 'analytics' as const, label: 'Sales & SuperCoins', shortLabel: 'Sales', icon: TrendingUp },
-    { id: 'orders' as const, label: 'Orders & Ekart Dispatch', shortLabel: 'Orders', icon: ShoppingBag },
     { id: 'inventory' as const, label: 'Botanical Stock & NABL', shortLabel: 'Stock', icon: Layers },
+    { id: 'coupons' as const, label: 'Coupons & Discount Codes', shortLabel: 'Coupons', icon: Percent },
     { id: 'delivery' as const, label: 'Logistics & EV Fleet', shortLabel: 'Fleet', icon: Truck },
     { id: 'share' as const, label: 'Instagram Ad & Studio', shortLabel: 'Studio', icon: Share2 },
+    { id: 'analytics' as const, label: 'Sales & SuperCoins', shortLabel: 'Analytics', icon: TrendingUp },
     { id: 'audit' as const, label: 'AYUSH Compliance Audit', shortLabel: 'Audit', icon: ShieldCheck },
   ];
 
-  const handleSelectTab = (tab: typeof activeTab) => {
-    setActiveTab(tab);
-    setIsMobileMenuOpen(false);
-  };
-
   return (
     <div className="flex h-screen bg-[#F0F2F5] text-slate-800 font-sans overflow-hidden">
-      {/* Mobile Drawer Overlay Backdrop */}
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-4 right-4 z-50 bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-sm shadow-xl flex items-center gap-2 animate-in slide-in-from-top duration-200">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Mobile Drawer Overlay */}
       {isMobileMenuOpen && (
         <div
           onClick={() => setIsMobileMenuOpen(false)}
-          className="fixed inset-0 bg-slate-900/60 z-40 md:hidden backdrop-blur-xs transition-opacity"
+          className="fixed inset-0 bg-slate-900/60 z-40 md:hidden backdrop-blur-xs"
         />
       )}
 
-      {/* 1. Flipkart Seller Hub Blue & Slate Sidebar */}
+      {/* 1. Flipkart & Truemeds Seller Hub Sidebar */}
       <aside
         className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-[#172337] text-slate-200 flex flex-col justify-between p-3 shrink-0 shadow-xl md:shadow-lg transform transition-transform duration-200 ease-in-out ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
-        <div className="space-y-4">
-          {/* Brand + Close button on mobile */}
+        <div className="space-y-3">
+          {/* Brand */}
           <div className="p-3 border-b border-slate-700/80 flex items-center justify-between">
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-xl font-black italic tracking-tight text-white">
                   Veda<span className="text-[#ffe500]">Flow</span>
                 </span>
-                <span className="text-[9px] bg-[#2874f0] text-white font-black px-1 rounded-2xs uppercase">
-                  SELLER HUB
+                <span className="text-[9px] bg-[#128983] text-white font-black px-1 rounded-2xs uppercase">
+                  ENTERPRISE
                 </span>
               </div>
               <span className="block text-[10px] font-bold text-slate-400 mt-0.5">
-                Ayurvedic Merchant Control Center
+                Merchant &amp; Pharmacist Control Center
               </span>
             </div>
             <button
@@ -705,22 +893,38 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Navigation Links */}
-          <nav className="space-y-1">
+          <nav className="space-y-0.5 overflow-y-auto max-h-[calc(100vh-160px)] scrollbar-thin">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
               return (
                 <button
                   key={item.id}
-                  onClick={() => handleSelectTab(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xs text-xs font-bold transition-all text-left ${
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xs text-xs font-bold transition-all text-left ${
                     isActive
-                      ? 'bg-[#2874f0] text-white shadow-sm'
+                      ? 'bg-[#128983] text-white shadow-sm'
                       : 'text-slate-300 hover:bg-slate-800'
                   }`}
                 >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span className="truncate">{item.label}</span>
+                  <div className="flex items-center gap-2.5 truncate">
+                    <Icon className="w-4 h-4 shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span
+                      className={`text-[9px] font-black px-1.5 py-0.2 rounded-full ${
+                        isActive
+                          ? 'bg-white text-[#128983]'
+                          : 'bg-slate-800 text-slate-300'
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -728,13 +932,13 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Seller Info Card */}
-        <div className="border-t border-slate-700/80 pt-3 p-2 bg-slate-900/60 rounded-xs">
+        <div className="border-t border-slate-700/80 pt-2 p-2 bg-slate-900/60 rounded-xs">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-xs font-black text-white">Vaidya R. K. Sharma</div>
-              <div className="text-[10px] text-[#ffe500] font-bold">Tier: Gold Seller (99.4% SLA)</div>
+              <div className="text-[10px] text-[#ffe500] font-bold">Role: Chief Pharmacist (Gold Tier)</div>
             </div>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" title="Connected to Ekart Hub" />
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" title="System Live &amp; Connected" />
           </div>
         </div>
       </aside>
@@ -747,7 +951,6 @@ export default function AdminDashboardPage() {
             <button
               onClick={() => setIsMobileMenuOpen(true)}
               className="p-1.5 -ml-1 text-slate-700 hover:bg-slate-100 rounded-xs md:hidden"
-              aria-label="Open menu"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -755,12 +958,21 @@ export default function AdminDashboardPage() {
             <h1 className="text-sm sm:text-base font-black text-slate-900 capitalize truncate">
               {activeTab === 'products'
                 ? 'Products & Live Catalog'
+                : activeTab === 'prescriptions'
+                ? 'Prescription (Rx) Review & Substitute Matching'
                 : activeTab === 'banners'
                 ? 'Hero Banners & Promotions'
+                : activeTab === 'orders'
+                ? 'Orders & Ekart Fulfillment Pipeline'
+                : activeTab === 'inventory'
+                ? 'Botanical Stock & NABL Batch Verification'
+                : activeTab === 'coupons'
+                ? 'Coupons & Promotional Discounts'
                 : `${activeTab} Overview`}
             </h1>
-            <span className="hidden sm:flex text-[11px] font-bold bg-blue-50 text-[#2874f0] border border-blue-200 px-2 py-0.5 rounded-xs items-center gap-1">
-              <Award className="w-3.5 h-3.5" /> AYUSH Certified Platform
+
+            <span className="hidden sm:flex text-[11px] font-bold bg-teal-50 text-[#128983] border border-teal-200 px-2 py-0.5 rounded-xs items-center gap-1">
+              <Award className="w-3.5 h-3.5" /> AYUSH Certified · Truemeds Architecture
             </span>
           </div>
 
@@ -769,42 +981,41 @@ export default function AdminDashboardPage() {
               href="/"
               target="_blank"
               rel="noreferrer"
-              className="text-xs font-bold text-[#2874f0] hover:bg-blue-50 px-2.5 sm:px-3 py-1.5 rounded-xs border border-blue-200 flex items-center gap-1 transition-colors"
+              className="text-xs font-bold text-[#128983] hover:bg-teal-50 px-2.5 sm:px-3 py-1.5 rounded-xs border border-teal-200 flex items-center gap-1 transition-colors"
             >
               <span>View Storefront</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
             <div className="hidden lg:block text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xs">
-              Flipkart Seller Architecture · Real-time Catalog
+              Live Gateway: Razorpay Active · Ekart EV
             </div>
           </div>
         </header>
 
-        {/* TAB: PRODUCTS & CATALOG MANAGEMENT */}
+        {/* TAB 1: PRODUCTS & LIVE CATALOG */}
         {activeTab === 'products' && (
           <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
-            {/* Action Bar & Quick Stats */}
             <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <h2 className="text-base sm:text-lg font-black text-slate-900">
-                    Ayurvedic Remedies & Live Inventory
+                    Live Herbal Formulations &amp; Medicines
                   </h2>
-                  <span className="bg-blue-100 text-[#2874f0] text-xs font-bold px-2 py-0.5 rounded-full">
+                  <span className="bg-teal-100 text-[#128983] text-xs font-bold px-2 py-0.5 rounded-full">
                     {products.length} Products Live
                   </span>
                 </div>
                 <p className="text-xs text-slate-500">
-                  Add, edit, toggle stock, or sell any Ayurvedic formulation. Changes immediately sync across the storefront, category listings, search, and cart.
+                  Any product added here immediately displays on the storefront, PDPs, search, and cart.
                 </p>
               </div>
 
               <button
                 onClick={handleOpenAddProduct}
-                className="bg-[#2874f0] hover:bg-[#1a5bc4] text-white font-bold text-xs px-4 py-2.5 rounded-xs flex items-center justify-center gap-2 shadow-sm transition-colors shrink-0"
+                className="bg-[#128983] hover:bg-[#0d6e68] text-white font-bold text-xs px-4 py-2.5 rounded-xs flex items-center justify-center gap-2 shadow-sm transition-colors shrink-0"
               >
                 <Plus className="w-4 h-4" />
-                <span>Add New Product / Medicine</span>
+                <span>Add New Medicine / Formulation</span>
               </button>
             </div>
 
@@ -814,10 +1025,10 @@ export default function AdminDashboardPage() {
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 <input
                   type="text"
-                  placeholder="Search products by title, Hindi, or category..."
+                  placeholder="Search products by name, Hindi, or category..."
                   value={productSearch}
                   onChange={(e) => setProductSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded-xs text-xs focus:outline-hidden focus:border-[#2874f0]"
+                  className="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded-xs text-xs focus:outline-none focus:border-[#128983]"
                 />
               </div>
 
@@ -826,19 +1037,19 @@ export default function AdminDashboardPage() {
                 <select
                   value={productCategoryFilter}
                   onChange={(e) => setProductCategoryFilter(e.target.value)}
-                  className="w-full sm:w-auto text-xs font-bold border border-slate-300 rounded-xs px-2.5 py-1.5 bg-white text-slate-700 focus:outline-hidden focus:border-[#2874f0]"
+                  className="w-full sm:w-auto text-xs font-bold border border-slate-300 rounded-xs px-2.5 py-1.5 bg-white text-slate-700 focus:outline-none focus:border-[#128983]"
                 >
-                  <option value="all">All Formulations</option>
+                  <option value="all">All Categories</option>
                   <option value="classical-rasayanas">Classical Rasayanas</option>
                   <option value="pure-shilajit">Pure Shilajit</option>
-                  <option value="herbal-oils">Medicated Thailams & Hair Oils</option>
-                  <option value="churnas-single-herbs">Churnas & Single Herbs</option>
-                  <option value="herbal-infusions-teas">Herbal Infusions & Teas</option>
+                  <option value="herbal-oils">Medicated Thailams &amp; Hair Oils</option>
+                  <option value="churnas-single-herbs">Churnas &amp; Single Herbs</option>
+                  <option value="herbal-infusions-teas">Herbal Infusions &amp; Teas</option>
                 </select>
               </div>
             </div>
 
-            {/* Products Table */}
+            {/* Table */}
             <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs min-w-[760px]">
@@ -846,8 +1057,8 @@ export default function AdminDashboardPage() {
                     <tr>
                       <th className="p-3">Product / Remedy</th>
                       <th className="p-3">Category</th>
-                      <th className="p-3">Price & MRP</th>
-                      <th className="p-3">Stock Status</th>
+                      <th className="p-3">Selling Price &amp; MRP</th>
+                      <th className="p-3">Stock Units</th>
                       <th className="p-3">Compliance</th>
                       <th className="p-3 text-right">Actions</th>
                     </tr>
@@ -878,7 +1089,7 @@ export default function AdminDashboardPage() {
                           </div>
                         </td>
                         <td className="p-3">
-                          <span className="bg-blue-50 text-[#2874f0] font-bold px-2 py-0.5 rounded-2xs text-[11px]">
+                          <span className="bg-teal-50 text-[#128983] font-bold px-2 py-0.5 rounded-2xs text-[11px]">
                             {p.categoryName}
                           </span>
                         </td>
@@ -898,28 +1109,32 @@ export default function AdminDashboardPage() {
                           </div>
                         </td>
                         <td className="p-3">
-                          <button
-                            onClick={() => handleToggleStock(p.id)}
-                            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xs font-bold text-[11px] transition-colors ${
-                              p.inStock
-                                ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
-                                : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
-                            }`}
-                            title="Click to toggle stock availability"
-                          >
-                            <span
-                              className={`w-2 h-2 rounded-full ${
-                                p.inStock ? 'bg-emerald-500' : 'bg-red-500'
+                          <div className="space-y-1">
+                            <button
+                              onClick={() => handleToggleStock(p.id)}
+                              className={`flex items-center gap-1.5 px-2 py-0.5 rounded-xs font-bold text-[10px] transition-colors ${
+                                p.inStock
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  : 'bg-red-50 text-red-700 border border-red-200'
                               }`}
-                            />
-                            <span>{p.inStock ? 'In Stock' : 'Out of Stock'}</span>
-                          </button>
+                            >
+                              <span
+                                className={`w-1.5 h-1.5 rounded-full ${
+                                  p.inStock ? 'bg-emerald-500' : 'bg-red-500'
+                                }`}
+                              />
+                              <span>{p.inStock ? 'In Stock' : 'Out of Stock'}</span>
+                            </button>
+                            <div className="text-[10px] text-slate-500">
+                              {p.stockCount} units available
+                            </div>
+                          </div>
                         </td>
                         <td className="p-3">
                           <div className="flex flex-col gap-1">
                             {p.nablCertified ? (
                               <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-2xs border border-emerald-200 w-fit">
-                                <ShieldCheck className="w-3 h-3 text-emerald-600" /> NABL Heavy Metal Pass
+                                <ShieldCheck className="w-3 h-3 text-emerald-600" /> NABL Passed
                               </span>
                             ) : (
                               <span className="text-[10px] text-slate-400">Standard</span>
@@ -936,15 +1151,15 @@ export default function AdminDashboardPage() {
                               href={`/products/${p.slug}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="p-1.5 text-slate-500 hover:text-[#2874f0] hover:bg-slate-100 rounded-xs transition-colors"
+                              className="p-1.5 text-slate-500 hover:text-[#128983] hover:bg-slate-100 rounded-xs transition-colors"
                               title="View on Storefront"
                             >
                               <Eye className="w-4 h-4" />
                             </a>
                             <button
                               onClick={() => handleOpenEditProduct(p)}
-                              className="p-1.5 text-slate-600 hover:text-[#2874f0] hover:bg-slate-100 rounded-xs transition-colors"
-                              title="Edit formulation details"
+                              className="p-1.5 text-slate-600 hover:text-[#128983] hover:bg-slate-100 rounded-xs transition-colors"
+                              title="Edit product"
                             >
                               <Edit2 className="w-4 h-4" />
                             </button>
@@ -966,54 +1181,282 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* TAB: BANNERS & PROMOTIONS MANAGEMENT */}
-        {activeTab === 'banners' && (
+        {/* TAB 2: PRESCRIPTION (RX) REVIEW & SUBSTITUTE MATCHING (TRUEMEDS) */}
+        {activeTab === 'prescriptions' && (
           <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
-            {/* Banner Header */}
             <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <h2 className="text-base sm:text-lg font-black text-slate-900">
-                    Storefront Hero Carousel & Promotional Banners
+                    Truemeds Prescription Audit Queue
+                  </h2>
+                  <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full">
+                    {prescriptions.filter((r) => r.status === 'PENDING_REVIEW').length} Pending Pharmacist Review
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500">
+                  Review uploaded doctor prescriptions, identify active chemical salts, and approve 51% cheaper classical Ayurvedic substitutes.
+                </p>
+              </div>
+
+              <div className="text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-3 py-1.5 rounded-xs">
+                Pharmacist On-Duty: Vaidya R. K. Sharma (GA/1482)
+              </div>
+            </div>
+
+            {/* Prescriptions Table */}
+            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs min-w-[760px]">
+                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
+                    <tr>
+                      <th className="p-3">Rx ID &amp; Date</th>
+                      <th className="p-3">Customer Contact</th>
+                      <th className="p-3">Prescription Slip</th>
+                      <th className="p-3">Customer Preference</th>
+                      <th className="p-3">Recommended Classical Substitute</th>
+                      <th className="p-3">Status</th>
+                      <th className="p-3 text-right">Review Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-medium">
+                    {prescriptions.map((rx) => (
+                      <tr key={rx.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="p-3">
+                          <div className="font-mono font-bold text-[#128983]">{rx.id}</div>
+                          <div className="text-[10px] text-slate-400">{rx.uploadedAt}</div>
+                        </td>
+                        <td className="p-3">
+                          <div className="font-bold text-slate-900">{rx.patientName}</div>
+                          <div className="text-[11px] text-slate-500 font-mono">{rx.phone}</div>
+                          <div className="text-[10px] text-slate-400">PIN: {rx.pin}</div>
+                        </td>
+                        <td className="p-3">
+                          <button
+                            onClick={() => setViewingRx(rx)}
+                            className="group relative block w-14 h-14 rounded-xs overflow-hidden border border-slate-300 hover:border-[#128983] shadow-xs"
+                          >
+                            <img
+                              src={rx.imageUrl}
+                              alt="Rx"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            />
+                            <div className="absolute inset-0 bg-slate-900/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Eye className="w-4 h-4" />
+                            </div>
+                          </button>
+                        </td>
+                        <td className="p-3">
+                          {rx.preference === 'substitute' ? (
+                            <span className="bg-emerald-50 text-emerald-800 font-black px-2 py-0.5 rounded-2xs text-[10px] border border-emerald-200">
+                              Recommend 51% Cheaper Substitute
+                            </span>
+                          ) : (
+                            <span className="bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded-2xs text-[10px]">
+                              Exact Brands Only
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-3 max-w-xs">
+                          <div className="text-[11px] text-slate-500 line-clamp-1">
+                            Prescribed: <span className="font-bold text-slate-800">{rx.prescribedDrug}</span>
+                          </div>
+                          <div className="text-[11px] text-[#128983] font-bold line-clamp-1">
+                            Substitute: {rx.recommendedHerbal}
+                          </div>
+                          <div className="text-[10px] text-emerald-700 font-black">
+                            Saves Customer ~{rx.savingsEstimated}%
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <span
+                            className={`px-2 py-0.5 rounded-2xs text-[10px] font-black uppercase ${
+                              rx.status === 'PENDING_REVIEW'
+                                ? 'bg-amber-100 text-amber-800'
+                                : rx.status === 'SUBSTITUTE_RECOMMENDED'
+                                ? 'bg-blue-100 text-blue-800'
+                                : rx.status === 'APPROVED'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-red-100 text-red-800'
+                            }`}
+                          >
+                            {rx.status.replace(/_/g, ' ')}
+                          </span>
+                        </td>
+                        <td className="p-3 text-right">
+                          <button
+                            onClick={() => setViewingRx(rx)}
+                            className="bg-[#128983] hover:bg-[#0d6e68] text-white font-bold text-[11px] px-3 py-1.5 rounded-xs transition-colors shadow-xs"
+                          >
+                            Review &amp; Approve
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: ORDERS & EKART FULFILLMENT PIPELINE */}
+        {activeTab === 'orders' && (
+          <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
+            <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-base sm:text-lg font-black text-slate-900">
+                    Ekart Dispatch &amp; Order Pipeline
                   </h2>
                   <span className="bg-blue-100 text-[#2874f0] text-xs font-bold px-2 py-0.5 rounded-full">
+                    {orders.length} Live Orders
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500">
+                  Update dispatch status, assign EV couriers, or print GST invoices.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-500">Filter Status:</span>
+                <select
+                  value={orderStatusFilter}
+                  onChange={(e) => setOrderStatusFilter(e.target.value)}
+                  className="text-xs font-bold border border-slate-300 rounded-xs px-2.5 py-1.5 bg-white text-slate-700"
+                >
+                  <option value="ALL">All Statuses</option>
+                  <option value="PAID">PAID</option>
+                  <option value="PACKED">PACKED</option>
+                  <option value="OUT_FOR_DELIVERY">OUT FOR DELIVERY</option>
+                  <option value="DELIVERED">DELIVERED</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Orders Table */}
+            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs min-w-[760px]">
+                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
+                    <tr>
+                      <th className="p-3">Order ID &amp; Time</th>
+                      <th className="p-3">Customer</th>
+                      <th className="p-3">Items Summary</th>
+                      <th className="p-3">Total Amount</th>
+                      <th className="p-3">Courier Logistics</th>
+                      <th className="p-3">Status</th>
+                      <th className="p-3 text-right">Fulfillment Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-medium">
+                    {filteredOrders.map((order) => (
+                      <tr key={order.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="p-3">
+                          <div className="font-mono font-bold text-[#128983]">{order.id}</div>
+                          <div className="text-[10px] text-slate-400">{order.date}</div>
+                        </td>
+                        <td className="p-3">
+                          <div className="font-bold text-slate-900">{order.customer}</div>
+                          <div className="text-[10px] text-slate-400">PIN: {order.pin} · {order.phone}</div>
+                        </td>
+                        <td className="p-3 max-w-xs">
+                          <div className="text-slate-800 line-clamp-1">{order.itemsSummary}</div>
+                          <div className="text-[10px] text-slate-400">{order.itemsCount} formulation unit(s)</div>
+                        </td>
+                        <td className="p-3">
+                          <div className="font-black text-slate-900 text-sm">₹{order.amount}</div>
+                          <div className="text-[10px] text-emerald-700 font-bold">
+                            {order.paymentMethod.replace('_', ' ')}
+                          </div>
+                        </td>
+                        <td className="p-3 text-slate-600">{order.courier}</td>
+                        <td className="p-3">
+                          <select
+                            value={order.status}
+                            onChange={(e) =>
+                              handleUpdateOrderStatus(order.id, e.target.value as AdminOrder['status'])
+                            }
+                            className={`text-[10px] font-black uppercase px-2 py-1 rounded-xs border cursor-pointer ${
+                              order.status === 'OUT_FOR_DELIVERY'
+                                ? 'bg-amber-100 text-amber-800 border-amber-300'
+                                : order.status === 'PAID'
+                                ? 'bg-blue-100 text-blue-800 border-blue-300'
+                                : order.status === 'PACKED'
+                                ? 'bg-purple-100 text-purple-800 border-purple-300'
+                                : order.status === 'DELIVERED'
+                                ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                                : 'bg-red-100 text-red-800 border-red-300'
+                            }`}
+                          >
+                            <option value="PAID">PAID</option>
+                            <option value="PACKED">PACKED</option>
+                            <option value="OUT_FOR_DELIVERY">OUT FOR DELIVERY</option>
+                            <option value="DELIVERED">DELIVERED</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                          </select>
+                        </td>
+                        <td className="p-3 text-right">
+                          <button
+                            onClick={() => setPrintingOrder(order)}
+                            className="p-1.5 text-slate-600 hover:text-[#128983] hover:bg-slate-100 rounded-xs transition-colors inline-flex items-center gap-1 font-bold"
+                            title="Print GST Invoice"
+                          >
+                            <Printer className="w-4 h-4" />
+                            <span>Invoice</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: HERO BANNERS & PROMOTIONS */}
+        {activeTab === 'banners' && (
+          <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
+            <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-base sm:text-lg font-black text-slate-900">
+                    Homepage Carousel &amp; Offers
+                  </h2>
+                  <span className="bg-teal-100 text-[#128983] text-xs font-bold px-2 py-0.5 rounded-full">
                     {banners.filter((b) => b.active).length} Active Banners
                   </span>
                 </div>
                 <p className="text-xs text-slate-500">
-                  Control the hero banners displayed on the homepage slider. Customize background gradients, headlines, badges, call-to-action buttons, and featured imagery.
+                  Manage rotating banners displayed on the customer homepage.
                 </p>
               </div>
 
               <button
                 onClick={handleOpenAddBanner}
-                className="bg-[#2874f0] hover:bg-[#1a5bc4] text-white font-bold text-xs px-4 py-2.5 rounded-xs flex items-center justify-center gap-2 shadow-sm transition-colors shrink-0"
+                className="bg-[#128983] hover:bg-[#0d6e68] text-white font-bold text-xs px-4 py-2.5 rounded-xs flex items-center justify-center gap-2 shadow-sm transition-colors shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>Create New Banner</span>
               </button>
             </div>
 
-            {/* Banners Grid Preview */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {banners.map((banner) => (
                 <div
                   key={banner.id}
                   className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs flex flex-col justify-between"
                 >
-                  {/* Banner Card Visual Preview */}
                   <div
-                    className={`relative p-5 sm:p-6 bg-gradient-to-r ${banner.bgGradient} text-white min-h-[160px] flex flex-col justify-between overflow-hidden`}
+                    className={`relative p-5 bg-gradient-to-r ${banner.bgGradient} text-white min-h-[160px] flex flex-col justify-between overflow-hidden`}
                   >
-                    {/* Background glow or subtle decoration */}
-                    <div className="absolute right-0 top-0 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none" />
-
                     <div className="relative z-10 flex items-start justify-between gap-4">
-                      <div className="space-y-2 max-w-[70%]">
-                        <span className="inline-block bg-[#ffe500] text-slate-900 text-[10px] font-black uppercase px-2 py-0.5 rounded-2xs shadow-xs">
+                      <div className="space-y-1.5 max-w-[70%]">
+                        <span className="inline-block bg-[#ffe500] text-slate-900 text-[9px] font-black uppercase px-2 py-0.5 rounded-2xs">
                           {banner.tag}
                         </span>
-                        <h3 className="text-lg sm:text-xl font-black leading-tight drop-shadow-xs">
+                        <h3 className="text-base sm:text-lg font-black leading-tight drop-shadow-xs">
                           {banner.title}
                         </h3>
                         <p className="text-xs text-white/90 line-clamp-2">
@@ -1022,7 +1465,7 @@ export default function AdminDashboardPage() {
                       </div>
 
                       {banner.imageUrl && (
-                        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xs overflow-hidden border border-white/20 shadow-md shrink-0 bg-white/10">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xs overflow-hidden border border-white/20 shadow-md shrink-0 bg-white/10">
                           <img
                             src={banner.imageUrl}
                             alt={banner.title}
@@ -1032,8 +1475,8 @@ export default function AdminDashboardPage() {
                       )}
                     </div>
 
-                    <div className="relative z-10 pt-4 flex items-center justify-between">
-                      <span className="inline-block bg-white text-[#2874f0] font-black text-xs px-3.5 py-1.5 rounded-xs shadow-sm">
+                    <div className="relative z-10 pt-3 flex items-center justify-between">
+                      <span className="inline-block bg-white text-[#128983] font-black text-xs px-3 py-1 rounded-xs shadow-sm">
                         {banner.ctaText} →
                       </span>
                       <span className="text-[10px] font-mono text-white/70 truncate max-w-[150px]">
@@ -1042,37 +1485,28 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  {/* Banner Controls */}
                   <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs font-bold">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleToggleBanner(banner.id)}
-                        className={`flex items-center gap-1.5 px-2 py-1 rounded-xs transition-colors ${
-                          banner.active
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-slate-200 text-slate-600'
-                        }`}
-                      >
-                        <span
-                          className={`w-2 h-2 rounded-full ${
-                            banner.active ? 'bg-emerald-500' : 'bg-slate-400'
-                          }`}
-                        />
-                        <span>{banner.active ? 'Active on Carousel' : 'Hidden / Paused'}</span>
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handleToggleBanner(banner.id)}
+                      className={`flex items-center gap-1.5 px-2 py-1 rounded-xs transition-colors ${
+                        banner.active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      <span className={`w-2 h-2 rounded-full ${banner.active ? 'bg-emerald-500' : 'bg-slate-400'}`} />
+                      <span>{banner.active ? 'Active on Carousel' : 'Hidden'}</span>
+                    </button>
 
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleOpenEditBanner(banner)}
-                        className="px-2.5 py-1 text-slate-700 hover:text-[#2874f0] hover:bg-slate-200 rounded-xs flex items-center gap-1 transition-colors"
+                        className="px-2 py-1 text-slate-700 hover:text-[#128983] rounded-xs flex items-center gap-1"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                         <span>Edit</span>
                       </button>
                       <button
                         onClick={() => handleDeleteBanner(banner.id)}
-                        className="px-2.5 py-1 text-red-600 hover:bg-red-50 rounded-xs flex items-center gap-1 transition-colors"
+                        className="px-2 py-1 text-red-600 hover:bg-red-50 rounded-xs flex items-center gap-1"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         <span>Delete</span>
@@ -1085,14 +1519,287 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* Tab 1: Real-time Analytics & KPIs */}
+        {/* TAB 5: BOTANICAL STOCK & INVENTORY */}
+        {activeTab === 'inventory' && (
+          <div className="p-3 sm:p-6 space-y-4">
+            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
+              <div className="p-4 border-b border-slate-200 bg-amber-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-amber-600" />
+                  <div>
+                    <h2 className="text-sm font-black text-slate-900">
+                      Live Botanical Inventory &amp; Batch Thresholds
+                    </h2>
+                    <span className="text-xs text-slate-500">
+                      Quickly adjust stock units or trigger botanical batch restocks.
+                    </span>
+                  </div>
+                </div>
+                <div className="text-xs font-bold text-amber-900 bg-amber-200 px-2.5 py-1 rounded-xs">
+                  GMP Shodhita Standards Verified
+                </div>
+              </div>
+
+              <div className="overflow-x-auto w-full">
+                <table className="w-full text-left text-xs min-w-[700px]">
+                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
+                    <tr>
+                      <th className="p-3">SKU / Remedy</th>
+                      <th className="p-3">Current Stock</th>
+                      <th className="p-3">Quick Adjust</th>
+                      <th className="p-3">NABL Heavy Metal Clearance</th>
+                      <th className="p-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-medium">
+                    {products.map((p) => (
+                      <tr key={p.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="p-3">
+                          <div className="font-bold text-slate-900">{p.title}</div>
+                          <div className="font-mono text-[10px] text-slate-400">ID: {p.id}</div>
+                        </td>
+                        <td className="p-3">
+                          <span className="font-black text-sm text-slate-900">{p.stockCount}</span> units
+                        </td>
+                        <td className="p-3">
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              onClick={() => handleAdjustStock(p.id, -5)}
+                              className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black rounded-xs text-[10px]"
+                            >
+                              -5
+                            </button>
+                            <button
+                              onClick={() => handleAdjustStock(p.id, 10)}
+                              className="px-2 py-1 bg-teal-50 hover:bg-teal-100 text-[#128983] font-black rounded-xs text-[10px]"
+                            >
+                              +10
+                            </button>
+                            <button
+                              onClick={() => handleAdjustStock(p.id, 50)}
+                              className="px-2 py-1 bg-teal-100 hover:bg-teal-200 text-[#128983] font-black rounded-xs text-[10px]"
+                            >
+                              +50
+                            </button>
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-2xs border border-emerald-200">
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Zero Lead/Mercury Pass</span>
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <span
+                            className={`px-2 py-0.5 rounded-2xs text-[10px] font-black uppercase ${
+                              p.stockCount > 15
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : p.stockCount > 0
+                                ? 'bg-amber-100 text-amber-800'
+                                : 'bg-red-100 text-red-800'
+                            }`}
+                          >
+                            {p.stockCount > 15 ? 'OPTIMAL' : p.stockCount > 0 ? 'LOW STOCK' : 'OUT OF STOCK'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 6: COUPONS & DISCOUNTS */}
+        {activeTab === 'coupons' && (
+          <div className="p-3 sm:p-6 space-y-4">
+            <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <h2 className="text-base sm:text-lg font-black text-slate-900">
+                  Promotional Coupons &amp; Discount Vouchers
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Create and manage discount codes for Truemeds &amp; VedaFlow customers.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsCouponModalOpen(true)}
+                className="bg-[#128983] hover:bg-[#0d6e68] text-white font-bold text-xs px-4 py-2 rounded-xs flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Create New Coupon</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {coupons.map((coupon) => (
+                <div
+                  key={coupon.code}
+                  className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs relative overflow-hidden"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-black text-sm bg-teal-50 text-[#128983] border border-teal-200 px-2 py-1 rounded-xs">
+                      {coupon.code}
+                    </span>
+                    <button
+                      onClick={() => handleToggleCoupon(coupon.code)}
+                      className={`text-[10px] font-black px-2 py-0.5 rounded-2xs ${
+                        coupon.active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      {coupon.active ? 'ACTIVE' : 'PAUSED'}
+                    </button>
+                  </div>
+
+                  <div className="space-y-1 text-xs">
+                    <div className="font-bold text-slate-900 text-base">{coupon.discountPct}% OFF</div>
+                    <p className="text-slate-500 text-[11px]">{coupon.description}</p>
+                    <div className="text-[10px] text-slate-400">Min Cart: ₹{coupon.minOrder}</div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-600">
+                    <span>Used {coupon.usedCount.toLocaleString('en-IN')} times</span>
+                    <span className="text-[#128983]">Valid</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 7: LOGISTICS & EV FLEET */}
+        {activeTab === 'delivery' && (
+          <div className="p-3 sm:p-6 space-y-4">
+            <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs">
+              <h2 className="text-base font-black text-slate-900 mb-1">
+                Ekart EV Logistics &amp; Pincode Hubs
+              </h2>
+              <p className="text-xs text-slate-500">
+                19,000+ Pincodes serviced with eco-friendly zero-emission electric vehicles.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <div className="font-black text-slate-900 text-sm">Ramesh Kumar</div>
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-2xs bg-amber-100 text-amber-800">
+                    ON ROUTE
+                  </span>
+                </div>
+                <div className="space-y-1 text-xs text-slate-600">
+                  <div>Vehicle: <span className="font-bold text-slate-900">EV Scooter (KA-01-EQ-9988)</span></div>
+                  <div>Dispatch Hub: <span className="font-medium text-slate-700">Bangalore South Hub</span></div>
+                  <div>Active Dispatches: <span className="font-bold text-slate-900">2 Orders</span></div>
+                  <div>Customer Rating: <span className="font-bold text-emerald-700">★ 4.96 / 5.0</span></div>
+                </div>
+              </div>
+
+              <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <div className="font-black text-slate-900 text-sm">Vikas Singh</div>
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-2xs bg-emerald-100 text-emerald-800">
+                    AVAILABLE
+                  </span>
+                </div>
+                <div className="space-y-1 text-xs text-slate-600">
+                  <div>Vehicle: <span className="font-bold text-slate-900">Eco Bike (KA-05-MK-3312)</span></div>
+                  <div>Dispatch Hub: <span className="font-medium text-slate-700">Bangalore Central Hub</span></div>
+                  <div>Active Dispatches: <span className="font-bold text-slate-900">0 Orders</span></div>
+                  <div>Customer Rating: <span className="font-bold text-emerald-700">★ 4.88 / 5.0</span></div>
+                </div>
+              </div>
+
+              <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <div className="font-black text-slate-900 text-sm">Sanjay Dutt</div>
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-2xs bg-amber-100 text-amber-800">
+                    ON ROUTE
+                  </span>
+                </div>
+                <div className="space-y-1 text-xs text-slate-600">
+                  <div>Vehicle: <span className="font-bold text-slate-900">EV Cargo (KA-02-EL-7744)</span></div>
+                  <div>Dispatch Hub: <span className="font-medium text-slate-700">Bangalore North Hub</span></div>
+                  <div>Active Dispatches: <span className="font-bold text-slate-900">1 Order</span></div>
+                  <div>Customer Rating: <span className="font-bold text-emerald-700">★ 4.92 / 5.0</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 8: INSTAGRAM AD & STUDIO */}
+        {activeTab === 'share' && (
+          <div className="p-3 sm:p-6 space-y-4">
+            <div className="bg-white border border-slate-200 rounded-sm p-4 sm:p-6 shadow-xs space-y-4">
+              <div className="border-b border-slate-200 pb-3">
+                <h2 className="text-base font-black text-slate-900">
+                  Organic Marketing &amp; Instagram Copy Studio
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Generate high-conversion Truemeds-style savings captions and direct checkout links.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-700">Select Formulation to Promote:</label>
+                  <select
+                    value={shareProduct}
+                    onChange={(e) => setShareProduct(e.target.value)}
+                    className="w-full text-xs font-bold border border-slate-300 rounded-xs p-2 bg-white"
+                  >
+                    <option value="swarna-bhasma-chyawanprash-1kg">Swarna Bhasma Amrit Chyawanprash (1kg)</option>
+                    <option value="pure-himalayan-shilajit-resin-20g">Pure Himalayan Shilajit Resin (20g)</option>
+                    <option value="kashmiri-saffron-kumkumadi-oil-30ml">Kashmiri Saffron Kumkumadi Night Oil (30ml)</option>
+                    <option value="ksm66-organic-ashwagandha-root-extract">KSM-66 Organic Ashwagandha (60 caps)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="bg-slate-50 border border-slate-200 rounded-xs p-4 space-y-3">
+                <div className="bg-white p-3 rounded-xs border border-slate-200 text-xs font-mono text-slate-800 leading-relaxed whitespace-pre-wrap">
+{`🌿 PURE AYURVEDA WELLNESS: Save up to 51% on genuine classical medicines! 🌿
+
+Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formulations give you 100% active bio-compounds with ZERO heavy metals?
+
+✨ NABL Lab Tested with zero lead or mercury
+✨ Up to 51% lower monthly expense
+✨ Pan-India Express delivery via Ekart
+
+👉 Order now: https://veda.prigenix.com/products/${shareProduct}
+
+#Ayurveda #Truemeds #VedaFlow #HolisticHealth #Save51Percent`}
+                </div>
+
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `🌿 PURE AYURVEDA WELLNESS: Save up to 51% on genuine classical medicines!\n\nOrder now: https://veda.prigenix.com/products/${shareProduct}`
+                    );
+                    setCopiedCaption(true);
+                    setTimeout(() => setCopiedCaption(false), 2000);
+                  }}
+                  className="bg-[#128983] hover:bg-[#0d6e68] text-white font-bold py-2 px-4 rounded-xs text-xs flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  {copiedCaption ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  <span>{copiedCaption ? 'Copied to Clipboard!' : 'Copy Instagram Ready Caption'}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 9: ANALYTICS & KPIS */}
         {activeTab === 'analytics' && (
-          <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="p-3 sm:p-6 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-2 shadow-xs">
                 <div className="flex justify-between items-center text-slate-500 text-xs font-bold">
                   <span>Today's Herbal Revenue</span>
-                  <DollarSign className="w-4 h-4 text-[#2874f0]" />
+                  <DollarSign className="w-4 h-4 text-[#128983]" />
                 </div>
                 <div className="text-2xl font-black text-slate-900">₹1,84,400</div>
                 <div className="text-xs font-bold text-[#388e3c] flex items-center gap-1">
@@ -1102,12 +1809,12 @@ export default function AdminDashboardPage() {
 
               <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-2 shadow-xs">
                 <div className="flex justify-between items-center text-slate-500 text-xs font-bold">
-                  <span>Remedies To Dispatch</span>
-                  <Package className="w-4 h-4 text-[#fb641b]" />
+                  <span>Customer Savings Generated</span>
+                  <Percent className="w-4 h-4 text-[#128983]" />
                 </div>
-                <div className="text-2xl font-black text-slate-900">18 Orders</div>
-                <div className="text-xs font-bold text-[#388e3c]">
-                  0 SLA Breaches · 100% on-time packing
+                <div className="text-2xl font-black text-[#128983]">₹94,280</div>
+                <div className="text-xs font-bold text-teal-700">
+                  Avg 51% saved per prescription
                 </div>
               </div>
 
@@ -1129,365 +1836,14 @@ export default function AdminDashboardPage() {
                 </div>
                 <div className="text-2xl font-black text-slate-900">4.88 / 5.0</div>
                 <div className="text-xs font-bold text-[#388e3c]">
-                  Top 1% Ayurvedic Sellers on Flipkart
-                </div>
-              </div>
-            </div>
-
-            {/* Visual Funnel and Acquisition Mix */}
-            <div className="grid grid-cols-12 gap-4 sm:gap-6">
-              <div className="col-span-12 lg:col-span-8 bg-white border border-slate-200 rounded-sm p-4 sm:p-5 shadow-xs space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                  <div>
-                    <h2 className="text-sm font-black text-slate-900">
-                      Conversion Funnel (Flipkart Ayurvedic Traffic)
-                    </h2>
-                    <span className="text-xs text-slate-500">
-                      Hourly traffic converted into verified orders
-                    </span>
-                  </div>
-                  <span className="text-xs font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-xs border border-emerald-200">
-                    Live Session Flow
-                  </span>
-                </div>
-
-                <div className="space-y-3 pt-2">
-                  <div>
-                    <div className="flex justify-between text-xs font-bold mb-1">
-                      <span className="text-slate-600">Storefront Product Views</span>
-                      <span className="text-slate-900">14,280 visits (100%)</span>
-                    </div>
-                    <div className="h-2.5 w-full bg-slate-100 rounded-xs overflow-hidden">
-                      <div className="h-full bg-[#2874f0] rounded-xs" style={{ width: '100%' }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-xs font-bold mb-1">
-                      <span className="text-slate-600">Added to Ayurvedic Cart</span>
-                      <span className="text-slate-900">2,856 carts (20.0%)</span>
-                    </div>
-                    <div className="h-2.5 w-full bg-slate-100 rounded-xs overflow-hidden">
-                      <div className="h-full bg-blue-400 rounded-xs" style={{ width: '20%' }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-xs font-bold mb-1">
-                      <span className="text-slate-600">Entered Checkout & Verified OTP</span>
-                      <span className="text-slate-900">1,428 customers (10.0%)</span>
-                    </div>
-                    <div className="h-2.5 w-full bg-slate-100 rounded-xs overflow-hidden">
-                      <div className="h-full bg-amber-400 rounded-xs" style={{ width: '10%' }} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-xs font-bold mb-1">
-                      <span className="text-slate-600">Payment Completed (Razorpay / UPI / COD)</span>
-                      <span className="text-emerald-700 font-black">814 successful orders (5.7%)</span>
-                    </div>
-                    <div className="h-2.5 w-full bg-slate-100 rounded-xs overflow-hidden">
-                      <div className="h-full bg-[#388e3c] rounded-xs" style={{ width: '5.7%' }} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-span-12 lg:col-span-4 bg-white border border-slate-200 rounded-sm p-4 sm:p-5 shadow-xs space-y-4">
-                <div className="border-b border-slate-100 pb-3">
-                  <h2 className="text-sm font-black text-slate-900">Top Remedies by Revenue</h2>
-                  <span className="text-xs text-slate-500">Highest grossing formulations</span>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs">
-                    <div>
-                      <div className="font-bold text-slate-900">Swarna Bhasma Chyawanprash</div>
-                      <div className="text-[10px] text-slate-400">420 units sold</div>
-                    </div>
-                    <div className="font-black text-slate-900">₹7,97,580</div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs">
-                    <div>
-                      <div className="font-bold text-slate-900">Pure Himalayan Shilajit 20g</div>
-                      <div className="text-[10px] text-slate-400">380 units sold</div>
-                    </div>
-                    <div className="font-black text-slate-900">₹5,69,620</div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs">
-                    <div>
-                      <div className="font-bold text-slate-900">Kashmiri Kumkumadi Oil</div>
-                      <div className="text-[10px] text-slate-400">290 units sold</div>
-                    </div>
-                    <div className="font-black text-slate-900">₹2,89,710</div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs">
-                    <div>
-                      <div className="font-bold text-slate-900">KSM-66 Ashwagandha 600mg</div>
-                      <div className="text-[10px] text-slate-400">310 units sold</div>
-                    </div>
-                    <div className="font-black text-slate-900">₹2,16,690</div>
-                  </div>
+                  Top 1% Ayurvedic E-Pharmacies
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Tab 2: Orders & Ekart Dispatch */}
-        {activeTab === 'orders' && (
-          <div className="p-3 sm:p-6 space-y-4">
-            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
-              <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50">
-                <div className="space-y-0.5">
-                  <h2 className="text-sm font-black text-slate-900">Ekart Fulfillment & Order Pipeline</h2>
-                  <p className="text-xs text-slate-500">Real-time status of orders, pin codes, and EV courier tracking</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-500">Fast Filter:</span>
-                  <span className="text-xs font-bold bg-[#2874f0] text-white px-2.5 py-1 rounded-xs">All Orders</span>
-                </div>
-              </div>
-
-              <div className="overflow-x-auto w-full">
-                <table className="w-full text-left text-xs min-w-[700px]">
-                  <thead className="bg-slate-100 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
-                    <tr>
-                      <th className="p-3">Order ID</th>
-                      <th className="p-3">Customer</th>
-                      <th className="p-3">Remedy Items</th>
-                      <th className="p-3">Amount</th>
-                      <th className="p-3">Destination Pin</th>
-                      <th className="p-3">Courier Logistics</th>
-                      <th className="p-3">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    {orders.map((order) => (
-                      <tr key={order.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-3 font-mono font-bold text-[#2874f0]">{order.id}</td>
-                        <td className="p-3 font-bold text-slate-900">{order.customer}</td>
-                        <td className="p-3 text-slate-600">{order.items} formulation(s)</td>
-                        <td className="p-3 font-bold text-slate-900">₹{order.amount}</td>
-                        <td className="p-3 font-mono text-slate-500">{order.pin}</td>
-                        <td className="p-3 text-slate-600">{order.courier}</td>
-                        <td className="p-3">
-                          <span
-                            className={`px-2 py-0.5 rounded-2xs text-[10px] font-black uppercase tracking-wider ${
-                              order.status === 'OUT_FOR_DELIVERY'
-                                ? 'bg-amber-100 text-amber-800'
-                                : order.status === 'PAID'
-                                ? 'bg-blue-100 text-blue-800'
-                                : order.status === 'PACKED'
-                                ? 'bg-purple-100 text-purple-800'
-                                : 'bg-emerald-100 text-emerald-800'
-                            }`}
-                          >
-                            {order.status.replace(/_/g, ' ')}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Tab 3: Botanical Stock & Inventory Alerts */}
-        {activeTab === 'inventory' && (
-          <div className="p-3 sm:p-6 space-y-4">
-            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
-              <div className="p-4 border-b border-slate-200 bg-amber-50/50 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-amber-600" />
-                  <div>
-                    <h2 className="text-sm font-black text-slate-900">
-                      Botanical Raw Material & Finished Goods Stock Alerts
-                    </h2>
-                    <span className="text-xs text-slate-500">
-                      Monitored against seasonal harvesting cycles and AYUSH GMP batch size
-                    </span>
-                  </div>
-                </div>
-                <span className="text-xs font-bold bg-amber-200 text-amber-900 px-2.5 py-1 rounded-xs">
-                  4 Items Below Threshold
-                </span>
-              </div>
-
-              <div className="overflow-x-auto w-full">
-                <table className="w-full text-left text-xs min-w-[700px]">
-                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
-                    <tr>
-                      <th className="p-3">SKU</th>
-                      <th className="p-3">Herbal Remedy</th>
-                      <th className="p-3">Current Units</th>
-                      <th className="p-3">Reorder Point</th>
-                      <th className="p-3">Primary Botanical Supplier</th>
-                      <th className="p-3">Active Batch</th>
-                      <th className="p-3">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    {inventoryAlerts.map((inv) => (
-                      <tr key={inv.sku} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-3 font-mono font-bold text-slate-500">{inv.sku}</td>
-                        <td className="p-3 font-bold text-slate-900">{inv.title}</td>
-                        <td className="p-3 font-black text-slate-900">{inv.stock}</td>
-                        <td className="p-3 text-slate-500">{inv.threshold}</td>
-                        <td className="p-3 text-slate-600">{inv.supplier}</td>
-                        <td className="p-3 font-mono text-[11px] text-slate-500">{inv.batch}</td>
-                        <td className="p-3">
-                          <span
-                            className={`px-2 py-0.5 rounded-2xs text-[10px] font-black uppercase ${
-                              inv.status === 'CRITICAL'
-                                ? 'bg-red-100 text-red-800'
-                                : inv.status === 'LOW_STOCK'
-                                ? 'bg-amber-100 text-amber-800'
-                                : 'bg-blue-100 text-blue-800'
-                            }`}
-                          >
-                            {inv.status.replace(/_/g, ' ')}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Tab 4: Logistics & EV Fleet */}
-        {activeTab === 'delivery' && (
-          <div className="p-3 sm:p-6 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {deliveryAgents.map((agent) => (
-                <div key={agent.name} className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <div className="font-black text-slate-900 text-sm">{agent.name}</div>
-                    <span
-                      className={`text-[10px] font-black px-2 py-0.5 rounded-2xs ${
-                        agent.status === 'ON_ROUTE'
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-emerald-100 text-emerald-800'
-                      }`}
-                    >
-                      {agent.status.replace(/_/g, ' ')}
-                    </span>
-                  </div>
-                  <div className="space-y-1 text-xs text-slate-600">
-                    <div>Vehicle: <span className="font-bold text-slate-900">{agent.vehicle}</span></div>
-                    <div>Dispatch Hub: <span className="font-medium text-slate-700">{agent.hub}</span></div>
-                    <div>Active Dispatches: <span className="font-bold text-slate-900">{agent.activeOrders}</span></div>
-                    <div>Customer Rating: <span className="font-bold text-emerald-700">★ {agent.rating} / 5.0</span></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Tab 5: Instagram Ad & Marketing Studio */}
-        {activeTab === 'share' && (
-          <div className="p-3 sm:p-6 space-y-6">
-            <div className="bg-white border border-slate-200 rounded-sm p-4 sm:p-6 shadow-xs space-y-4">
-              <div className="border-b border-slate-200 pb-3">
-                <h2 className="text-base font-black text-slate-900">
-                  Organic Instagram & WhatsApp Marketing Studio
-                </h2>
-                <p className="text-xs text-slate-500">
-                  Generate high-conversion viral Ayurvedic posts, captions, and direct checkout links without expensive agency retainers.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-700">Select Formulation to Promote:</label>
-                  <select
-                    value={shareProduct}
-                    onChange={(e) => setShareProduct(e.target.value)}
-                    className="w-full text-xs font-bold border border-slate-300 rounded-xs p-2 bg-white"
-                  >
-                    <option value="swarna-bhasma-chyawanprash-1kg">Swarna Bhasma Amrit Chyawanprash (1kg)</option>
-                    <option value="pure-himalayan-shilajit-resin-20g">Pure Himalayan Shilajit Resin (20g)</option>
-                    <option value="kashmiri-saffron-kumkumadi-oil-30ml">Kashmiri Saffron Kumkumadi Night Oil (30ml)</option>
-                    <option value="ksm66-organic-ashwagandha-root-extract">KSM-66 Organic Ashwagandha (60 caps)</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-700">Target Channel:</label>
-                  <select
-                    value={sharePlatform}
-                    onChange={(e) => setSharePlatform(e.target.value)}
-                    className="w-full text-xs font-bold border border-slate-300 rounded-xs p-2 bg-white"
-                  >
-                    <option value="instagram">Instagram Carousel / Reel Caption</option>
-                    <option value="whatsapp">WhatsApp Broadcast to Herbal Customers</option>
-                    <option value="google">Google Shopping Ad Copy</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Generated Copy Preview Box */}
-              <div className="bg-slate-50 border border-slate-200 rounded-xs p-4 space-y-3">
-                <div className="flex items-center justify-between text-xs font-bold text-slate-600">
-                  <span>AI Optimized Organic Marketing Copy:</span>
-                  <span className="text-emerald-700">Ready to post</span>
-                </div>
-                <div className="bg-white p-3 rounded-xs border border-slate-200 text-xs font-mono text-slate-800 leading-relaxed whitespace-pre-wrap">
-{`🌿 Pure Ayurvedic Potency. Zero Shortcuts. 🌿
-
-Are you taking authentic classical Rasayana or sugar-loaded generic tonics?
-At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
-✨ 24K Certified Gold Bhasma for deep cellular vitality (Ojas)
-✨ A2 Gir Cow Bilona Ghee & Wild Raw Honey base
-✨ NABL Heavy Metal Tested with zero lead or mercury
-
-🔥 Exclusive Offer: Get 37% OFF + Free Ekart EV delivery today!
-👉 Tap the link in bio or order now: https://vedaflow-theta.vercel.app/products/${shareProduct}
-
-#Ayurveda #NaturalHealing #VedaFlow #CharakaSamhita #HolisticHealth #NABLTested #SwarnaBhasma`}
-                </div>
-
-                <div className="flex items-center gap-2 pt-1">
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        `🌿 Pure Ayurvedic Potency. Zero Shortcuts. 🌿\n\nOrder now: https://vedaflow-theta.vercel.app/products/${shareProduct}`
-                      );
-                      setCopiedCaption(true);
-                      setTimeout(() => setCopiedCaption(false), 2000);
-                    }}
-                    className="flex-1 bg-[#2874f0] hover:bg-[#1a5bc4] text-white font-bold py-2 rounded-xs flex items-center justify-center gap-1.5 text-xs transition-colors"
-                  >
-                    {copiedCaption ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    <span>{copiedCaption ? 'Copied to Clipboard!' : 'Copy Instagram Ready Caption'}</span>
-                  </button>
-
-                  <a
-                    href={`/products/${shareProduct}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-xs text-xs flex items-center justify-center gap-1.5 transition-colors"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    <span>View Live Product Card</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Tab 6: Audit Logs & Regulatory Compliance */}
+        {/* TAB 10: AYUSH COMPLIANCE AUDIT */}
         {activeTab === 'audit' && (
           <div className="p-3 sm:p-6 space-y-4">
             <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
@@ -1495,23 +1851,31 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                 <table className="w-full text-left text-xs min-w-[640px]">
                   <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
                     <tr>
-                      <th className="p-3">Action / Log</th>
-                      <th className="p-3">Operator</th>
-                      <th className="p-3">Affected Entity</th>
-                      <th className="p-3">IP Address</th>
-                      <th className="p-3 text-right">Timestamp</th>
+                      <th className="p-3">Audit Event</th>
+                      <th className="p-3">Verified Entity</th>
+                      <th className="p-3">Compliance Standard</th>
+                      <th className="p-3 text-right">Time</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-medium">
-                    {auditLogs.map((log, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-3 font-mono font-bold text-[#2874f0]">{log.action}</td>
-                        <td className="p-3 font-semibold text-slate-900">{log.user}</td>
-                        <td className="p-3 text-slate-700">{log.entity}</td>
-                        <td className="p-3 font-mono text-slate-500">{log.ip}</td>
-                        <td className="p-3 text-slate-500 text-right">{log.time}</td>
-                      </tr>
-                    ))}
+                    <tr className="hover:bg-slate-50">
+                      <td className="p-3 font-mono font-bold text-[#128983]">NABL_HEAVY_METAL_CoA_PASS</td>
+                      <td className="p-3 text-slate-900">Batch #VD-2026-CHY-09 (Zero Lead/Mercury)</td>
+                      <td className="p-3 text-emerald-700 font-bold">AYUSH Premium Standard</td>
+                      <td className="p-3 text-slate-500 text-right">10 Mins ago</td>
+                    </tr>
+                    <tr className="hover:bg-slate-50">
+                      <td className="p-3 font-mono font-bold text-[#128983]">CATALOG_PRODUCT_UPDATE</td>
+                      <td className="p-3 text-slate-900">Dynamic Product Inventory Sync Verified</td>
+                      <td className="p-3 text-emerald-700 font-bold">REST API Synchronized</td>
+                      <td className="p-3 text-slate-500 text-right">15 Mins ago</td>
+                    </tr>
+                    <tr className="hover:bg-slate-50">
+                      <td className="p-3 font-mono font-bold text-[#128983]">AYUSH_LICENSE_VERIFICATION</td>
+                      <td className="p-3 text-slate-900">Ayurvedic Manufacturing License GA/1482 Active</td>
+                      <td className="p-3 text-emerald-700 font-bold">Ministry of AYUSH</td>
+                      <td className="p-3 text-slate-500 text-right">2 Hours ago</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -1520,17 +1884,17 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
         )}
       </main>
 
-      {/* 3. Mobile Bottom Navigation Bar */}
+      {/* 3. Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 z-30 flex items-center justify-around py-1 shadow-lg">
-        {navItems.map((item) => {
+        {navItems.slice(0, 5).map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
           return (
             <button
               key={item.id}
-              onClick={() => handleSelectTab(item.id)}
+              onClick={() => setActiveTab(item.id)}
               className={`flex flex-col items-center py-1 px-2 transition-colors ${
-                isActive ? 'text-[#2874f0] font-black' : 'text-slate-500 font-medium hover:text-slate-800'
+                isActive ? 'text-[#128983] font-black' : 'text-slate-500 font-medium hover:text-slate-800'
               }`}
             >
               <Icon className={`w-4 h-4 ${isActive ? 'stroke-[2.5]' : ''}`} />
@@ -1544,14 +1908,13 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
       {isProductModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
           <div className="bg-white rounded-sm border border-slate-300 shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden my-auto">
-            {/* Modal Header */}
-            <div className="p-4 bg-[#2874f0] text-white flex items-center justify-between">
+            <div className="p-4 bg-[#128983] text-white flex items-center justify-between">
               <div>
                 <h3 className="text-base font-black">
                   {editingProductId ? 'Edit Ayurvedic Formulation' : 'Add New Herbal Product to Catalog'}
                 </h3>
-                <p className="text-xs text-blue-100">
-                  Changes will immediately reflect on the live storefront and customer cart
+                <p className="text-xs text-teal-100">
+                  Immediately updates the live storefront, PDPs, and shopping cart
                 </p>
               </div>
               <button
@@ -1562,7 +1925,6 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
               </button>
             </div>
 
-            {/* Modal Body Form */}
             <form onSubmit={handleSaveProduct} className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs font-sans">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
@@ -1573,7 +1935,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                     value={productForm.title}
                     onChange={(e) => setProductForm({ ...productForm, title: e.target.value })}
                     placeholder="e.g. Pure Himalayan Shilajit Resin 20g"
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
+                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
                   />
                 </div>
 
@@ -1584,7 +1946,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                     value={productForm.hindiName}
                     onChange={(e) => setProductForm({ ...productForm, hindiName: e.target.value })}
                     placeholder="e.g. शुद्ध हिमालयन शिलाजीत स्वर्ण युक्त"
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
+                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
                   />
                 </div>
               </div>
@@ -1608,24 +1970,24 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                           : 'Herbal Infusions & Teas';
                       setProductForm({ ...productForm, categorySlug: sel, categoryName: name });
                     }}
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs bg-white focus:outline-hidden focus:border-[#2874f0]"
+                    className="w-full border border-slate-300 rounded-xs p-2 text-xs bg-white focus:outline-none focus:border-[#128983]"
                   >
                     <option value="classical-rasayanas">Classical Rasayanas</option>
                     <option value="pure-shilajit">Pure Shilajit</option>
-                    <option value="herbal-oils">Medicated Thailams & Hair Oils</option>
-                    <option value="churnas-single-herbs">Churnas & Single Herbs</option>
-                    <option value="herbal-infusions-teas">Herbal Infusions & Teas</option>
+                    <option value="herbal-oils">Medicated Thailams &amp; Hair Oils</option>
+                    <option value="churnas-single-herbs">Churnas &amp; Single Herbs</option>
+                    <option value="herbal-infusions-teas">Herbal Infusions &amp; Teas</option>
                   </select>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-700">URL Slug (leave blank to auto-generate)</label>
+                  <label className="font-bold text-slate-700">URL Slug</label>
                   <input
                     type="text"
                     value={productForm.slug}
                     onChange={(e) => setProductForm({ ...productForm, slug: e.target.value })}
                     placeholder="e.g. pure-himalayan-shilajit-resin-20g"
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs font-mono focus:outline-hidden focus:border-[#2874f0]"
+                    className="w-full border border-slate-300 rounded-xs p-2 text-xs font-mono focus:outline-none focus:border-[#128983]"
                   />
                 </div>
               </div>
@@ -1639,7 +2001,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                     required
                     value={productForm.price}
                     onChange={(e) => setProductForm({ ...productForm, price: Number(e.target.value) })}
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
+                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
                   />
                 </div>
 
@@ -1652,7 +2014,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                     onChange={(e) =>
                       setProductForm({ ...productForm, compareAtPrice: Number(e.target.value) })
                     }
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
+                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
                   />
                 </div>
 
@@ -1665,7 +2027,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                     onChange={(e) =>
                       setProductForm({ ...productForm, stockCount: Number(e.target.value) })
                     }
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
+                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
                   />
                 </div>
               </div>
@@ -1678,8 +2040,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                     required
                     value={productForm.image}
                     onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
-                    placeholder="https://images.unsplash.com/..."
-                    className="flex-1 border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
+                    className="flex-1 border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
                   />
                   {productForm.image && (
                     <img
@@ -1689,9 +2050,9 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                     />
                   )}
                 </div>
-                {/* Preset image picker */}
+
                 <div className="pt-1.5 flex flex-wrap gap-1.5 items-center">
-                  <span className="text-[10px] text-slate-500 font-bold">Pick Preset Photo:</span>
+                  <span className="text-[10px] text-slate-500 font-bold">Presets:</span>
                   {imagePresets.map((preset) => (
                     <button
                       type="button"
@@ -1705,59 +2066,13 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <label className="font-bold text-slate-700">Classical Reference (Grantha / Sutra)</label>
-                <input
-                  type="text"
-                  value={productForm.classicalReference}
-                  onChange={(e) =>
-                    setProductForm({ ...productForm, classicalReference: e.target.value })
-                  }
-                  placeholder="e.g. Charaka Samhita Chikitsa Sthana 1.3"
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-bold text-slate-700">Key Benefits (comma-separated)</label>
-                <input
-                  type="text"
-                  value={productForm.keyBenefitsText}
-                  onChange={(e) => setProductForm({ ...productForm, keyBenefitsText: e.target.value })}
-                  placeholder="e.g. Boosts Stamina, Rejuvenates Cells, Increases Ojas"
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-bold text-slate-700">Badges & Certifications (comma-separated)</label>
-                <input
-                  type="text"
-                  value={productForm.badgesText}
-                  onChange={(e) => setProductForm({ ...productForm, badgesText: e.target.value })}
-                  placeholder="e.g. AYUSH Certified, NABL Lab Tested, Cold-Pressed"
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-bold text-slate-700">Detailed Description & Preparation</label>
-                <textarea
-                  rows={3}
-                  value={productForm.description}
-                  onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
-                  placeholder="Describe botanical ingredients, harvesting location, and preparation method..."
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
-                />
-              </div>
-
               <div className="pt-2 flex items-center justify-between border-t border-slate-200">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={productForm.inStock}
                     onChange={(e) => setProductForm({ ...productForm, inStock: e.target.checked })}
-                    className="w-4 h-4 text-[#2874f0] rounded-xs"
+                    className="w-4 h-4 text-[#128983] rounded-xs"
                   />
                   <span className="font-bold text-slate-800">Immediately Available for Purchase (In Stock)</span>
                 </label>
@@ -1772,9 +2087,9 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-[#2874f0] hover:bg-[#1a5bc4] text-white font-bold rounded-xs shadow-xs transition-colors"
+                    className="px-5 py-2 bg-[#128983] hover:bg-[#0d6e68] text-white font-bold rounded-xs shadow-xs transition-colors"
                   >
-                    {editingProductId ? 'Save Product Changes' : 'Publish to Storefront'}
+                    {editingProductId ? 'Save Changes' : 'Publish to Storefront'}
                   </button>
                 </div>
               </div>
@@ -1792,9 +2107,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                 <h3 className="text-base font-black">
                   {editingBannerId ? 'Edit Hero Banner' : 'Create New Promotional Hero Banner'}
                 </h3>
-                <p className="text-xs text-slate-300">
-                  Visible on the homepage rotating carousel
-                </p>
+                <p className="text-xs text-slate-300">Visible on the customer homepage slider</p>
               </div>
               <button
                 onClick={() => setIsBannerModalOpen(false)}
@@ -1813,7 +2126,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                   value={bannerForm.title}
                   onChange={(e) => setBannerForm({ ...bannerForm, title: e.target.value })}
                   placeholder="e.g. Ayurvedic Immunity Mahotsav - Up to 50% Off"
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
+                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
                 />
               </div>
 
@@ -1823,8 +2136,8 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                   type="text"
                   value={bannerForm.subtitle}
                   onChange={(e) => setBannerForm({ ...bannerForm, subtitle: e.target.value })}
-                  placeholder="e.g. NABL Certified Classical Rasayanas & Pure Shilajit"
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
+                  placeholder="e.g. NABL Certified Classical Rasayanas &amp; Pure Shilajit"
+                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
                 />
               </div>
 
@@ -1835,8 +2148,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                     type="text"
                     value={bannerForm.tag}
                     onChange={(e) => setBannerForm({ ...bannerForm, tag: e.target.value })}
-                    placeholder="e.g. FLIPKART SPECIAL"
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
+                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
                   />
                 </div>
 
@@ -1846,8 +2158,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                     type="text"
                     value={bannerForm.ctaText}
                     onChange={(e) => setBannerForm({ ...bannerForm, ctaText: e.target.value })}
-                    placeholder="e.g. Shop Now"
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
+                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
                   />
                 </div>
               </div>
@@ -1858,8 +2169,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                   type="text"
                   value={bannerForm.ctaLink}
                   onChange={(e) => setBannerForm({ ...bannerForm, ctaLink: e.target.value })}
-                  placeholder="e.g. /categories/classical-rasayanas"
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs font-mono focus:outline-hidden focus:border-[#2874f0]"
+                  className="w-full border border-slate-300 rounded-xs p-2 text-xs font-mono focus:outline-none focus:border-[#128983]"
                 />
               </div>
 
@@ -1873,7 +2183,7 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                       onClick={() => setBannerForm({ ...bannerForm, bgGradient: grad.value })}
                       className={`p-2 rounded-xs border text-left flex items-center gap-2 ${
                         bannerForm.bgGradient === grad.value
-                          ? 'border-[#2874f0] ring-1 ring-[#2874f0]'
+                          ? 'border-[#128983] ring-1 ring-[#128983]'
                           : 'border-slate-200'
                       }`}
                     >
@@ -1884,24 +2194,13 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <label className="font-bold text-slate-700">Featured Image URL (Optional)</label>
-                <input
-                  type="url"
-                  value={bannerForm.imageUrl}
-                  onChange={(e) => setBannerForm({ ...bannerForm, imageUrl: e.target.value })}
-                  placeholder="https://images.unsplash.com/..."
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-hidden focus:border-[#2874f0]"
-                />
-              </div>
-
               <div className="pt-2 flex items-center justify-between border-t border-slate-200">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={bannerForm.active}
                     onChange={(e) => setBannerForm({ ...bannerForm, active: e.target.checked })}
-                    className="w-4 h-4 text-[#2874f0] rounded-xs"
+                    className="w-4 h-4 text-[#128983] rounded-xs"
                   />
                   <span className="font-bold text-slate-800">Active (Visible on Carousel)</span>
                 </label>
@@ -1916,11 +2215,270 @@ At VedaFlow, our formulation is crafted per Charaka Samhita guidelines:
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-[#2874f0] hover:bg-[#1a5bc4] text-white font-bold rounded-xs shadow-xs transition-colors"
+                    className="px-5 py-2 bg-[#128983] hover:bg-[#0d6e68] text-white font-bold rounded-xs shadow-xs transition-colors"
                   >
                     {editingBannerId ? 'Update Banner' : 'Publish Banner'}
                   </button>
                 </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 6. MODAL: PRESCRIPTION AUDIT & APPROVAL (TRUEMEDS) */}
+      {viewingRx && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/70 backdrop-blur-xs overflow-y-auto">
+          <div className="bg-white rounded-md border border-slate-300 shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto">
+            <div className="p-4 bg-[#128983] text-white flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-black">
+                  Pharmacist Prescription Review — {viewingRx.id}
+                </h3>
+                <p className="text-xs text-teal-100">
+                  Patient: {viewingRx.patientName} ({viewingRx.phone} · PIN: {viewingRx.pin})
+                </p>
+              </div>
+              <button
+                onClick={() => setViewingRx(null)}
+                className="p-1 text-white/80 hover:text-white rounded-xs"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4 overflow-y-auto text-xs">
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
+                <div className="w-full sm:w-1/2 border border-slate-200 rounded-md overflow-hidden bg-slate-100">
+                  <img
+                    src={viewingRx.imageUrl}
+                    alt="Doctor Prescription Slip"
+                    className="w-full h-56 object-cover"
+                  />
+                  <div className="p-2 text-center text-[10px] text-slate-500 font-semibold bg-white border-t border-slate-200">
+                    Uploaded Doctor&apos;s Prescription Slip
+                  </div>
+                </div>
+
+                <div className="w-full sm:w-1/2 space-y-3">
+                  <div className="p-3 bg-teal-50 border border-teal-200 rounded-sm space-y-1">
+                    <span className="text-[10px] font-black text-[#128983] uppercase tracking-wide">
+                      Customer Savings Preference:
+                    </span>
+                    <div className="font-bold text-slate-800 text-xs">
+                      {viewingRx.preference === 'substitute'
+                        ? '⚡ Recommend 51% Cheaper Classical Substitute'
+                        : '🔒 Supply Exact Brands Only'}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-700">Identified Chemical / Drug:</label>
+                    <input
+                      type="text"
+                      defaultValue={viewingRx.prescribedDrug}
+                      id="rx-drug-input"
+                      className="w-full border border-slate-300 rounded-xs p-2 font-medium"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-700">Assigned Classical Herbal Substitute:</label>
+                    <input
+                      type="text"
+                      defaultValue={viewingRx.recommendedHerbal}
+                      id="rx-herbal-input"
+                      className="w-full border border-slate-300 rounded-xs p-2 font-bold text-[#128983]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleUpdateRxStatus(viewingRx.id, 'REJECTED')}
+                  className="px-3 py-2 text-red-600 hover:bg-red-50 font-bold rounded-xs border border-red-200"
+                >
+                  Reject Invalid Slip
+                </button>
+
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const input = (document.getElementById('rx-herbal-input') as HTMLInputElement)?.value;
+                      handleUpdateRxStatus(viewingRx.id, 'SUBSTITUTE_RECOMMENDED', input);
+                    }}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xs shadow-xs"
+                  >
+                    Suggest 51% Substitute
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const input = (document.getElementById('rx-herbal-input') as HTMLInputElement)?.value;
+                      handleUpdateRxStatus(viewingRx.id, 'APPROVED', input);
+                    }}
+                    className="px-5 py-2 bg-[#128983] hover:bg-[#0d6e68] text-white font-black rounded-xs shadow-sm flex items-center gap-1.5"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Approve &amp; Send WhatsApp Cart</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 7. MODAL: GST TAX INVOICE PRINT VIEW */}
+      {printingOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs overflow-y-auto">
+          <div className="bg-white rounded-md border border-slate-300 shadow-2xl max-w-xl w-full p-6 space-y-4 my-auto text-xs">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div>
+                <h3 className="text-base font-black text-slate-900">TAX INVOICE / CASH MEMO</h3>
+                <p className="text-[10px] text-slate-500 font-mono">Invoice #: INV-{printingOrder.id}</p>
+              </div>
+              <button
+                onClick={() => setPrintingOrder(null)}
+                className="p-1 text-slate-400 hover:text-slate-800"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-[11px]">
+              <div>
+                <span className="font-bold text-slate-500 block">Sold By:</span>
+                <div className="font-bold text-slate-900">VedaFlow Botanical Pharmacy</div>
+                <div>Embassy Tech Village, Outer Ring Road</div>
+                <div>Bengaluru, Karnataka 560103</div>
+                <div>GSTIN: 29AABCV1234F1Z9</div>
+                <div>AYUSH Lic: GA/1482</div>
+              </div>
+
+              <div>
+                <span className="font-bold text-slate-500 block">Billed To (Customer):</span>
+                <div className="font-bold text-slate-900">{printingOrder.customer}</div>
+                <div>Phone: {printingOrder.phone}</div>
+                <div>PIN: {printingOrder.pin}</div>
+                <div>Ekart Express EV Delivery</div>
+              </div>
+            </div>
+
+            <table className="w-full text-left text-xs border border-slate-200">
+              <thead className="bg-slate-50 font-bold border-b">
+                <tr>
+                  <th className="p-2">Item Description</th>
+                  <th className="p-2">Qty</th>
+                  <th className="p-2 text-right">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="p-2 font-medium">{printingOrder.itemsSummary}</td>
+                  <td className="p-2">{printingOrder.itemsCount}</td>
+                  <td className="p-2 text-right font-bold">₹{printingOrder.amount}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div className="flex justify-between items-center pt-2 border-t font-black text-sm">
+              <span>Grand Total Paid (Inc. 5% AYUSH GST):</span>
+              <span className="text-[#128983]">₹{printingOrder.amount}</span>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={() => window.print()}
+                className="bg-[#128983] text-white px-4 py-2 rounded-xs font-bold flex items-center gap-1.5"
+              >
+                <Printer className="w-4 h-4" />
+                <span>Print Invoice</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 8. MODAL: CREATE NEW COUPON */}
+      {isCouponModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/60 backdrop-blur-xs">
+          <div className="bg-white rounded-sm border border-slate-300 shadow-2xl max-w-md w-full p-5 space-y-4">
+            <div className="flex items-center justify-between border-b pb-2">
+              <h3 className="font-black text-sm text-slate-900">Create New Coupon Code</h3>
+              <button onClick={() => setIsCouponModalOpen(false)}>
+                <X className="w-4 h-4 text-slate-400" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveCoupon} className="space-y-3 text-xs">
+              <div className="space-y-1">
+                <label className="font-bold text-slate-700">Coupon Code *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. WELLNESS30"
+                  value={couponForm.code}
+                  onChange={(e) => setCouponForm({ ...couponForm, code: e.target.value })}
+                  className="w-full border border-slate-300 rounded-xs p-2 font-mono uppercase font-black"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700">Discount % *</label>
+                  <input
+                    type="number"
+                    min="5"
+                    max="80"
+                    required
+                    value={couponForm.discountPct}
+                    onChange={(e) => setCouponForm({ ...couponForm, discountPct: Number(e.target.value) })}
+                    className="w-full border border-slate-300 rounded-xs p-2"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700">Min Cart Value (₹) *</label>
+                  <input
+                    type="number"
+                    min="1"
+                    required
+                    value={couponForm.minOrder}
+                    onChange={(e) => setCouponForm({ ...couponForm, minOrder: Number(e.target.value) })}
+                    className="w-full border border-slate-300 rounded-xs p-2"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-bold text-slate-700">Description</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Save 30% on classical Rasayanas"
+                  value={couponForm.description}
+                  onChange={(e) => setCouponForm({ ...couponForm, description: e.target.value })}
+                  className="w-full border border-slate-300 rounded-xs p-2"
+                />
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsCouponModalOpen(false)}
+                  className="px-3 py-1.5 border border-slate-300 rounded-xs"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-[#128983] text-white px-4 py-1.5 rounded-xs font-bold"
+                >
+                  Publish Coupon
+                </button>
               </div>
             </form>
           </div>
