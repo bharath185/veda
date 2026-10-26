@@ -46,6 +46,15 @@ import {
   AlertCircle,
   FileCheck,
   Send,
+  Zap,
+  Activity,
+  ArrowRight,
+  Calendar,
+  SlidersHorizontal,
+  Compass,
+  Command,
+  Bell,
+  Heart,
 } from 'lucide-react';
 
 interface AdminProduct {
@@ -259,7 +268,7 @@ const initialDefaultBanners: AdminBanner[] = [
     tag: 'FLIPKART AYUSH EXCLUSIVE',
     ctaText: 'Shop Classical Rasayanas',
     ctaLink: '/categories/classical-rasayanas',
-    bgGradient: 'from-[#0057b7] via-[#2874f0] to-[#0a84ff]',
+    bgGradient: 'from-[#0d9488] via-[#0f766e] to-[#115e59]',
     imageUrl: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop&q=80',
     active: true,
   },
@@ -270,7 +279,7 @@ const initialDefaultBanners: AdminBanner[] = [
     tag: 'BESTSELLER HERBAL REMEDY',
     ctaText: 'Discover Pure Shilajit',
     ctaLink: '/categories/pure-shilajit',
-    bgGradient: 'from-[#0b3d20] via-[#1b5e20] to-[#2e7d32]',
+    bgGradient: 'from-[#065f46] via-[#047857] to-[#059669]',
     imageUrl: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=800&auto=format&fit=crop&q=80',
     active: true,
   },
@@ -281,7 +290,7 @@ const initialDefaultBanners: AdminBanner[] = [
     tag: 'VEDIC BEAUTY APOTHECARY',
     ctaText: 'Explore Medicated Oils',
     ctaLink: '/categories/herbal-oils',
-    bgGradient: 'from-[#b76e00] via-[#e65100] to-[#ff9800]',
+    bgGradient: 'from-[#b45309] via-[#d97706] to-[#f59e0b]',
     imageUrl: 'https://images.unsplash.com/photo-1608248597359-597597143922?w=800&auto=format&fit=crop&q=80',
     active: true,
   },
@@ -401,11 +410,11 @@ const imagePresets = [
 ];
 
 const gradientPresets = [
-  { label: 'Sapphire Blue (Flipkart)', value: 'from-[#0057b7] via-[#2874f0] to-[#0a84ff]' },
-  { label: 'Forest Emerald (Truemeds)', value: 'from-[#0d6e68] via-[#128983] to-[#1bb5ac]' },
-  { label: 'Sunset Saffron (Veda)', value: 'from-[#b76e00] via-[#e65100] to-[#ff9800]' },
-  { label: 'Deep Crimson Herbal', value: 'from-[#880e4f] via-[#b71c1c] to-[#c2185b]' },
-  { label: 'Royal Midnight Slate', value: 'from-[#172337] via-[#263238] to-[#37474f]' },
+  { label: 'Emerald Mint (Botanical)', value: 'from-[#059669] via-[#0d9488] to-[#14b8a6]' },
+  { label: 'Obsidian Cyan (Linear Style)', value: 'from-[#0f172a] via-[#1e293b] to-[#0891b2]' },
+  { label: 'Saffron Gold (Veda Aura)', value: 'from-[#b45309] via-[#d97706] to-[#f59e0b]' },
+  { label: 'Crimson Shodhita (Classical)', value: 'from-[#881337] via-[#9f1239] to-[#be123c]' },
+  { label: 'Midnight Indigo (Tech)', value: 'from-[#1e1b4b] via-[#312e81] to-[#4338ca]' },
 ];
 
 export default function AdminDashboardPage() {
@@ -439,7 +448,7 @@ export default function AdminDashboardPage() {
     badgesText: 'AYUSH Certified, NABL Tested, 100% Herbal',
     keyBenefitsText: 'Immunity, Vitality, Digestion',
     nablCertified: true,
-    description: 'Handcrafted classical Ayurvedic medicine formulated per ancient authentic Ayurvedic Pharmacopoeia of India standards.',
+    description: 'Handcrafted classical Ayurvedic medicine formulated strictly per ancient authentic Ayurvedic Pharmacopoeia of India standards.',
   });
 
   // Banners State
@@ -452,7 +461,7 @@ export default function AdminDashboardPage() {
     tag: 'FESTIVAL SPECIAL',
     ctaText: 'Shop Now',
     ctaLink: '/categories/classical-rasayanas',
-    bgGradient: gradientPresets[1].value,
+    bgGradient: gradientPresets[0].value,
     imageUrl: imagePresets[0].url,
     active: true,
   });
@@ -480,33 +489,27 @@ export default function AdminDashboardPage() {
   const [shareProduct, setShareProduct] = useState('swarna-bhasma-chyawanprash-1kg');
   const [copiedCaption, setCopiedCaption] = useState(false);
 
-  // Show Toast Alert helper
   const showToast = (msg: string) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
+    setTimeout(() => setToastMessage(null), 3200);
   };
 
-  // Sync with LocalStorage & Server API on mount
   useEffect(() => {
     try {
       if (typeof window !== 'undefined') {
         const storedProducts = localStorage.getItem(CATALOG_KEY);
         if (storedProducts) {
           const parsed = JSON.parse(storedProducts);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setProducts(parsed);
-          }
+          if (Array.isArray(parsed) && parsed.length > 0) setProducts(parsed);
         }
         const storedBanners = localStorage.getItem(BANNERS_KEY);
         if (storedBanners) {
           const parsed = JSON.parse(storedBanners);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setBanners(parsed);
-          }
+          if (Array.isArray(parsed) && parsed.length > 0) setBanners(parsed);
         }
       }
     } catch (e) {
-      console.warn('Failed to parse admin storage', e);
+      console.warn('Failed to parse storage', e);
     }
   }, []);
 
@@ -544,7 +547,6 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // Product Actions
   const handleOpenAddProduct = () => {
     setEditingProductId(null);
     setProductForm({
@@ -634,7 +636,7 @@ export default function AdminDashboardPage() {
         return p;
       });
       persistProducts(updated);
-      showToast('Product updated successfully!');
+      showToast('Formulation updated successfully');
     } else {
       const newProd: AdminProduct = {
         id: `prod-${Date.now()}`,
@@ -658,32 +660,25 @@ export default function AdminDashboardPage() {
         description: productForm.description,
       };
       persistProducts([newProd, ...products]);
-      showToast('New product published to live storefront!');
+      showToast('Published new medicine to live storefront');
     }
-
     setIsProductModalOpen(false);
   };
 
   const handleToggleStock = (id: string) => {
-    const updated = products.map((p) => {
-      if (p.id === id) {
-        return { ...p, inStock: !p.inStock };
-      }
-      return p;
-    });
+    const updated = products.map((p) => (p.id === id ? { ...p, inStock: !p.inStock } : p));
     persistProducts(updated);
-    showToast('Stock availability toggled!');
+    showToast('Stock status toggled');
   };
 
   const handleDeleteProduct = (id: string) => {
     if (confirm('Delete this product from catalog?')) {
       const updated = products.filter((p) => p.id !== id);
       persistProducts(updated);
-      showToast('Product deleted from catalog');
+      showToast('Product removed');
     }
   };
 
-  // Banner Actions
   const handleOpenAddBanner = () => {
     setEditingBannerId(null);
     setBannerForm({
@@ -692,7 +687,7 @@ export default function AdminDashboardPage() {
       tag: 'TRUEMEDS SPECIAL',
       ctaText: 'Shop Now',
       ctaLink: '/categories/classical-rasayanas',
-      bgGradient: gradientPresets[1].value,
+      bgGradient: gradientPresets[0].value,
       imageUrl: imagePresets[0].url,
       active: true,
     });
@@ -721,11 +716,11 @@ export default function AdminDashboardPage() {
     if (editingBannerId) {
       const updated = banners.map((b) => (b.id === editingBannerId ? { ...b, ...bannerForm } : b));
       persistBanners(updated);
-      showToast('Banner updated successfully!');
+      showToast('Hero banner updated');
     } else {
       const newBanner: AdminBanner = { id: `banner-${Date.now()}`, ...bannerForm };
       persistBanners([newBanner, ...banners]);
-      showToast('Promotional banner published to homepage carousel!');
+      showToast('Hero banner published');
     }
     setIsBannerModalOpen(false);
   };
@@ -737,22 +732,18 @@ export default function AdminDashboardPage() {
   };
 
   const handleDeleteBanner = (id: string) => {
-    if (confirm('Delete this banner from homepage?')) {
+    if (confirm('Delete banner?')) {
       const updated = banners.filter((b) => b.id !== id);
       persistBanners(updated);
-      showToast('Banner removed');
+      showToast('Banner deleted');
     }
   };
 
-  // Order Actions
   const handleUpdateOrderStatus = (orderId: string, newStatus: AdminOrder['status']) => {
-    setOrders((prev) =>
-      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
-    );
-    showToast(`Order ${orderId} updated to ${newStatus}`);
+    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)));
+    showToast(`Order status updated to ${newStatus}`);
   };
 
-  // Prescription Review Actions (Truemeds)
   const handleUpdateRxStatus = (
     rxId: string,
     newStatus: AdminPrescription['status'],
@@ -774,12 +765,9 @@ export default function AdminDashboardPage() {
     showToast(`Prescription ${rxId} updated to ${newStatus}`);
   };
 
-  // Coupon Actions
   const handleToggleCoupon = (code: string) => {
-    setCoupons((prev) =>
-      prev.map((c) => (c.code === code ? { ...c, active: !c.active } : c))
-    );
-    showToast(`Coupon ${code} status toggled`);
+    setCoupons((prev) => prev.map((c) => (c.code === code ? { ...c, active: !c.active } : c)));
+    showToast(`Coupon ${code} status changed`);
   };
 
   const handleSaveCoupon = (e: React.FormEvent) => {
@@ -795,10 +783,9 @@ export default function AdminDashboardPage() {
     };
     setCoupons([newCoupon, ...coupons]);
     setIsCouponModalOpen(false);
-    showToast(`Coupon ${newCoupon.code} created and live!`);
+    showToast(`Coupon ${newCoupon.code} created`);
   };
 
-  // Inventory Quick Stock Adjust
   const handleAdjustStock = (sku: string, delta: number) => {
     setProducts((prev) =>
       prev.map((p) => {
@@ -812,7 +799,6 @@ export default function AdminDashboardPage() {
     showToast(`Adjusted inventory for ${sku}`);
   };
 
-  // Filtered Products
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
       const matchesSearch =
@@ -825,31 +811,30 @@ export default function AdminDashboardPage() {
     });
   }, [products, productSearch, productCategoryFilter]);
 
-  // Filtered Orders
   const filteredOrders = useMemo(() => {
     if (orderStatusFilter === 'ALL') return orders;
     return orders.filter((o) => o.status === orderStatusFilter);
   }, [orders, orderStatusFilter]);
 
   const navItems = [
-    { id: 'products' as const, label: 'Products & Live Catalog', shortLabel: 'Products', icon: Package, badge: `${products.length}` },
-    { id: 'prescriptions' as const, label: 'Prescriptions & Substitutes', shortLabel: 'Rx Queue', icon: FileCheck, badge: `${prescriptions.filter((r) => r.status === 'PENDING_REVIEW').length} Pending` },
-    { id: 'orders' as const, label: 'Orders & Ekart Pipeline', shortLabel: 'Orders', icon: ShoppingBag, badge: `${orders.length}` },
-    { id: 'banners' as const, label: 'Hero Banners & Promotions', shortLabel: 'Banners', icon: Sparkles },
-    { id: 'inventory' as const, label: 'Botanical Stock & NABL', shortLabel: 'Stock', icon: Layers },
-    { id: 'coupons' as const, label: 'Coupons & Discount Codes', shortLabel: 'Coupons', icon: Percent },
-    { id: 'delivery' as const, label: 'Logistics & EV Fleet', shortLabel: 'Fleet', icon: Truck },
-    { id: 'share' as const, label: 'Instagram Ad & Studio', shortLabel: 'Studio', icon: Share2 },
-    { id: 'analytics' as const, label: 'Sales & SuperCoins', shortLabel: 'Analytics', icon: TrendingUp },
-    { id: 'audit' as const, label: 'AYUSH Compliance Audit', shortLabel: 'Audit', icon: ShieldCheck },
+    { id: 'products' as const, label: 'Catalog & Formulations', shortLabel: 'Products', icon: Package, badge: `${products.length}` },
+    { id: 'prescriptions' as const, label: 'Prescription Queue', shortLabel: 'Rx Queue', icon: FileCheck, badge: `${prescriptions.filter((r) => r.status === 'PENDING_REVIEW').length} New` },
+    { id: 'orders' as const, label: 'Order Dispatch Pipeline', shortLabel: 'Orders', icon: ShoppingBag, badge: `${orders.length}` },
+    { id: 'banners' as const, label: 'Hero Promotions', shortLabel: 'Banners', icon: Sparkles },
+    { id: 'inventory' as const, label: 'Botanical Inventory', shortLabel: 'Stock', icon: Layers },
+    { id: 'coupons' as const, label: 'Coupons & Vouchers', shortLabel: 'Coupons', icon: Percent },
+    { id: 'delivery' as const, label: 'Ekart EV Fleet', shortLabel: 'Fleet', icon: Truck },
+    { id: 'share' as const, label: 'Ad Copy Studio', shortLabel: 'Studio', icon: Share2 },
+    { id: 'analytics' as const, label: 'Revenue Analytics', shortLabel: 'Analytics', icon: TrendingUp },
+    { id: 'audit' as const, label: 'AYUSH Compliance', shortLabel: 'Audit', icon: ShieldCheck },
   ];
 
   return (
-    <div className="flex h-screen bg-[#F0F2F5] text-slate-800 font-sans overflow-hidden">
+    <div className="flex h-screen bg-[#090D16] text-slate-100 font-sans overflow-hidden antialiased selection:bg-teal-500 selection:text-white">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-4 right-4 z-50 bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-sm shadow-xl flex items-center gap-2 animate-in slide-in-from-top duration-200">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-5 right-5 z-50 bg-slate-900/95 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl border border-teal-500/30 flex items-center gap-2.5 backdrop-blur-md animate-in slide-in-from-top-4 duration-300">
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
           <span>{toastMessage}</span>
         </div>
       )}
@@ -858,42 +843,55 @@ export default function AdminDashboardPage() {
       {isMobileMenuOpen && (
         <div
           onClick={() => setIsMobileMenuOpen(false)}
-          className="fixed inset-0 bg-slate-900/60 z-40 md:hidden backdrop-blur-xs"
+          className="fixed inset-0 bg-black/70 z-40 md:hidden backdrop-blur-sm"
         />
       )}
 
-      {/* 1. Flipkart & Truemeds Seller Hub Sidebar */}
+      {/* 1. SIDEBAR: Deep Luxury Obsidian & Emerald Aura */}
       <aside
-        className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-[#172337] text-slate-200 flex flex-col justify-between p-3 shrink-0 shadow-xl md:shadow-lg transform transition-transform duration-200 ease-in-out ${
+        className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-[#0B101E] text-slate-300 flex flex-col justify-between p-3.5 shrink-0 border-r border-slate-800/80 shadow-2xl transform transition-transform duration-300 ease-in-out ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
-        <div className="space-y-3">
-          {/* Brand */}
-          <div className="p-3 border-b border-slate-700/80 flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xl font-black italic tracking-tight text-white">
-                  Veda<span className="text-[#ffe500]">Flow</span>
+        <div className="space-y-4">
+          {/* Brand Header */}
+          <div className="p-3 bg-gradient-to-br from-slate-900 to-[#0e172a] rounded-xl border border-slate-800/80 flex items-center justify-between shadow-inner">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-teal-500 to-emerald-400 flex items-center justify-center text-slate-950 font-black shadow-md shadow-teal-500/20">
+                  <Leaf className="w-4 h-4 stroke-[2.5]" />
+                </div>
+                <span className="text-base font-black tracking-tight text-white">
+                  Veda<span className="text-teal-400">Flow</span>
                 </span>
-                <span className="text-[9px] bg-[#128983] text-white font-black px-1 rounded-2xs uppercase">
-                  ENTERPRISE
+                <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded-full bg-teal-500/10 text-teal-300 border border-teal-500/30">
+                  PRO
                 </span>
               </div>
-              <span className="block text-[10px] font-bold text-slate-400 mt-0.5">
-                Merchant &amp; Pharmacist Control Center
-              </span>
+              <div className="text-[10px] text-slate-400 font-medium pl-9">
+                Pharmacist Control Center
+              </div>
             </div>
+
             <button
               onClick={() => setIsMobileMenuOpen(false)}
-              className="p-1 rounded-xs text-slate-400 hover:text-white md:hidden"
+              className="p-1 rounded-lg text-slate-400 hover:text-white md:hidden"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
+          {/* Quick System Badge */}
+          <div className="px-3 py-1.5 bg-slate-900/60 rounded-lg border border-slate-800/60 flex items-center justify-between text-[11px]">
+            <span className="text-slate-400 font-medium flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span>Production Live</span>
+            </span>
+            <span className="text-[10px] font-mono text-teal-400 font-bold">veda.prigenix.com</span>
+          </div>
+
           {/* Navigation Links */}
-          <nav className="space-y-0.5 overflow-y-auto max-h-[calc(100vh-160px)] scrollbar-thin">
+          <nav className="space-y-1 overflow-y-auto max-h-[calc(100vh-250px)] pr-1 scrollbar-none">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -904,22 +902,27 @@ export default function AdminDashboardPage() {
                     setActiveTab(item.id);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xs text-xs font-bold transition-all text-left ${
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all text-left group ${
                     isActive
-                      ? 'bg-[#128983] text-white shadow-sm'
-                      : 'text-slate-300 hover:bg-slate-800'
+                      ? 'bg-gradient-to-r from-teal-500/20 to-emerald-500/10 text-teal-300 border border-teal-500/30 shadow-sm shadow-teal-950'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 border border-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 truncate">
-                    <Icon className="w-4 h-4 shrink-0" />
+                  <div className="flex items-center gap-3 truncate">
+                    <Icon
+                      className={`w-4 h-4 shrink-0 transition-colors ${
+                        isActive ? 'text-teal-400' : 'text-slate-400 group-hover:text-slate-200'
+                      }`}
+                    />
                     <span className="truncate">{item.label}</span>
                   </div>
+
                   {item.badge && (
                     <span
-                      className={`text-[9px] font-black px-1.5 py-0.2 rounded-full ${
+                      className={`text-[9px] font-black px-2 py-0.5 rounded-full transition-colors ${
                         isActive
-                          ? 'bg-white text-[#128983]'
-                          : 'bg-slate-800 text-slate-300'
+                          ? 'bg-teal-400 text-slate-950'
+                          : 'bg-slate-800 text-slate-400 group-hover:text-slate-200'
                       }`}
                     >
                       {item.badge}
@@ -931,147 +934,167 @@ export default function AdminDashboardPage() {
           </nav>
         </div>
 
-        {/* Seller Info Card */}
-        <div className="border-t border-slate-700/80 pt-2 p-2 bg-slate-900/60 rounded-xs">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-xs font-black text-white">Vaidya R. K. Sharma</div>
-              <div className="text-[10px] text-[#ffe500] font-bold">Role: Chief Pharmacist (Gold Tier)</div>
+        {/* Pharmacist Profile */}
+        <div className="p-3 bg-gradient-to-b from-slate-900/90 to-slate-950 rounded-xl border border-slate-800/80 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center font-black text-slate-950 text-xs shadow-md">
+              RK
             </div>
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" title="System Live &amp; Connected" />
+            <div>
+              <div className="text-xs font-bold text-white leading-tight">Vaidya R. K. Sharma</div>
+              <div className="text-[10px] text-teal-400 font-medium">Head Pharmacist (GA/1482)</div>
+            </div>
           </div>
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" title="SLA 99.9% Uptime" />
         </div>
       </aside>
 
-      {/* 2. Main Executive View Area */}
-      <main className="flex-1 flex flex-col overflow-y-auto pb-16 md:pb-0">
-        {/* Top Header Bar */}
-        <header className="h-14 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between shadow-xs sticky top-0 z-30">
+      {/* 2. MAIN EXECUTIVE CANVAS */}
+      <main className="flex-1 flex flex-col bg-[#F8FAFC] text-slate-900 overflow-y-auto pb-16 md:pb-0">
+        {/* Modern Frosted Header */}
+        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-1.5 -ml-1 text-slate-700 hover:bg-slate-100 rounded-xs md:hidden"
+              className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg md:hidden"
             >
               <Menu className="w-5 h-5" />
             </button>
 
-            <h1 className="text-sm sm:text-base font-black text-slate-900 capitalize truncate">
-              {activeTab === 'products'
-                ? 'Products & Live Catalog'
-                : activeTab === 'prescriptions'
-                ? 'Prescription (Rx) Review & Substitute Matching'
-                : activeTab === 'banners'
-                ? 'Hero Banners & Promotions'
-                : activeTab === 'orders'
-                ? 'Orders & Ekart Fulfillment Pipeline'
-                : activeTab === 'inventory'
-                ? 'Botanical Stock & NABL Batch Verification'
-                : activeTab === 'coupons'
-                ? 'Coupons & Promotional Discounts'
-                : `${activeTab} Overview`}
-            </h1>
-
-            <span className="hidden sm:flex text-[11px] font-bold bg-teal-50 text-[#128983] border border-teal-200 px-2 py-0.5 rounded-xs items-center gap-1">
-              <Award className="w-3.5 h-3.5" /> AYUSH Certified · Truemeds Architecture
-            </span>
+            <div className="space-y-0.5">
+              <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span>VedaFlow</span>
+                <ChevronRight className="w-3 h-3 text-slate-300" />
+                <span className="text-teal-600 font-bold capitalize">{activeTab}</span>
+              </div>
+              <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-none">
+                {activeTab === 'products'
+                  ? 'Catalog & Live Formulations'
+                  : activeTab === 'prescriptions'
+                  ? 'Prescription (Rx) Review & Substitute Matching'
+                  : activeTab === 'orders'
+                  ? 'Order Dispatch & Fulfillment Pipeline'
+                  : activeTab === 'banners'
+                  ? 'Hero Carousel Promotions & Banners'
+                  : activeTab === 'inventory'
+                  ? 'Botanical Stock & NABL Batch Clearance'
+                  : activeTab === 'coupons'
+                  ? 'Discount Coupons & Promotional Vouchers'
+                  : activeTab === 'delivery'
+                  ? 'Ekart Electric Vehicle Logistics'
+                  : activeTab === 'share'
+                  ? 'AI Marketing & Social Copy Studio'
+                  : activeTab === 'analytics'
+                  ? 'Revenue & Customer Savings Analytics'
+                  : 'AYUSH Regulatory Compliance Audit'}
+              </h1>
+            </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden md:flex items-center gap-1 text-[11px] font-medium text-slate-500 bg-slate-100/80 px-2.5 py-1.5 rounded-lg border border-slate-200/60">
+              <Command className="w-3.5 h-3.5 text-slate-400" />
+              <span>⌘K Quick Switch</span>
+            </div>
+
             <a
               href="/"
               target="_blank"
               rel="noreferrer"
-              className="text-xs font-bold text-[#128983] hover:bg-teal-50 px-2.5 sm:px-3 py-1.5 rounded-xs border border-teal-200 flex items-center gap-1 transition-colors"
+              className="text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100/80 px-3 py-1.5 rounded-lg border border-teal-200/80 flex items-center gap-1.5 transition-all shadow-xs"
             >
-              <span>View Storefront</span>
+              <span>Live Storefront</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
-            <div className="hidden lg:block text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xs">
-              Live Gateway: Razorpay Active · Ekart EV
+
+            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 hover:text-slate-900 cursor-pointer transition-colors relative">
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-teal-500" />
             </div>
           </div>
         </header>
 
         {/* TAB 1: PRODUCTS & LIVE CATALOG */}
         {activeTab === 'products' && (
-          <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
-            <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="p-4 sm:p-6 space-y-5">
+            {/* Action Bar */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-base sm:text-lg font-black text-slate-900">
-                    Live Herbal Formulations &amp; Medicines
+                <div className="flex items-center gap-2.5">
+                  <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                    Medicines &amp; Botanical Remedies
                   </h2>
-                  <span className="bg-teal-100 text-[#128983] text-xs font-bold px-2 py-0.5 rounded-full">
-                    {products.length} Products Live
+                  <span className="bg-teal-50 text-teal-700 border border-teal-200 text-xs font-bold px-2.5 py-0.5 rounded-full">
+                    {products.length} Active Formulations
                   </span>
                 </div>
                 <p className="text-xs text-slate-500">
-                  Any product added here immediately displays on the storefront, PDPs, search, and cart.
+                  Real-time catalog. Products published here immediately appear on the storefront, PDPs, and shopping cart.
                 </p>
               </div>
 
               <button
                 onClick={handleOpenAddProduct}
-                className="bg-[#128983] hover:bg-[#0d6e68] text-white font-bold text-xs px-4 py-2.5 rounded-xs flex items-center justify-center gap-2 shadow-sm transition-colors shrink-0"
+                className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-sm shadow-teal-700/20 transition-all active:scale-95 shrink-0"
               >
                 <Plus className="w-4 h-4" />
-                <span>Add New Medicine / Formulation</span>
+                <span>Add New Medicine</span>
               </button>
             </div>
 
-            {/* Filter and Search Bar */}
-            <div className="bg-white border border-slate-200 rounded-sm p-3 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="relative w-full sm:w-72">
+            {/* Filter & Search */}
+            <div className="bg-white rounded-xl border border-slate-200/80 p-3 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="relative w-full sm:w-80">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 <input
                   type="text"
-                  placeholder="Search products by name, Hindi, or category..."
+                  placeholder="Search medicines by title, Hindi, or reference..."
                   value={productSearch}
                   onChange={(e) => setProductSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded-xs text-xs focus:outline-none focus:border-[#128983]"
+                  className="w-full pl-9 pr-3 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 font-medium"
                 />
               </div>
 
               <div className="flex items-center gap-2 w-full sm:w-auto">
-                <span className="text-xs font-bold text-slate-500 whitespace-nowrap">Category:</span>
+                <span className="text-xs font-bold text-slate-500 whitespace-nowrap">Filter:</span>
                 <select
                   value={productCategoryFilter}
                   onChange={(e) => setProductCategoryFilter(e.target.value)}
-                  className="w-full sm:w-auto text-xs font-bold border border-slate-300 rounded-xs px-2.5 py-1.5 bg-white text-slate-700 focus:outline-none focus:border-[#128983]"
+                  className="w-full sm:w-auto text-xs font-semibold border border-slate-200 rounded-lg px-3 py-1.5 bg-slate-50 text-slate-700 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
                 >
                   <option value="all">All Categories</option>
                   <option value="classical-rasayanas">Classical Rasayanas</option>
                   <option value="pure-shilajit">Pure Shilajit</option>
-                  <option value="herbal-oils">Medicated Thailams &amp; Hair Oils</option>
+                  <option value="herbal-oils">Medicated Thailams &amp; Oils</option>
                   <option value="churnas-single-herbs">Churnas &amp; Single Herbs</option>
-                  <option value="herbal-infusions-teas">Herbal Infusions &amp; Teas</option>
+                  <option value="herbal-infusions-teas">Herbal Teas &amp; Kwath</option>
                 </select>
               </div>
             </div>
 
-            {/* Table */}
-            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
+            {/* Products Table */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs min-w-[760px]">
-                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
+                  <thead className="bg-slate-50/80 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200/80">
                     <tr>
-                      <th className="p-3">Product / Remedy</th>
-                      <th className="p-3">Category</th>
-                      <th className="p-3">Selling Price &amp; MRP</th>
-                      <th className="p-3">Stock Units</th>
-                      <th className="p-3">Compliance</th>
-                      <th className="p-3 text-right">Actions</th>
+                      <th className="p-4">Remedy &amp; Classical Reference</th>
+                      <th className="p-4">Category</th>
+                      <th className="p-4">Price &amp; MRP</th>
+                      <th className="p-4">Inventory Units</th>
+                      <th className="p-4">NABL Quality</th>
+                      <th className="p-4 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-medium">
                     {filteredProducts.map((p) => (
-                      <tr key={p.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-3">
+                      <tr key={p.id} className="hover:bg-slate-50/60 transition-colors">
+                        <td className="p-4">
                           <div className="flex items-center gap-3">
                             <img
                               src={p.image}
                               alt={p.title}
-                              className="w-12 h-12 object-cover rounded-xs border border-slate-200 bg-slate-50 shrink-0"
+                              className="w-12 h-12 object-cover rounded-xl border border-slate-200 shadow-xs shrink-0"
                             />
                             <div className="max-w-xs sm:max-w-sm space-y-0.5">
                               <div className="font-bold text-slate-900 line-clamp-1">{p.title}</div>
@@ -1088,12 +1111,12 @@ export default function AdminDashboardPage() {
                             </div>
                           </div>
                         </td>
-                        <td className="p-3">
-                          <span className="bg-teal-50 text-[#128983] font-bold px-2 py-0.5 rounded-2xs text-[11px]">
+                        <td className="p-4">
+                          <span className="bg-teal-50 text-teal-800 font-bold px-2.5 py-1 rounded-lg text-[11px] border border-teal-200/60">
                             {p.categoryName}
                           </span>
                         </td>
-                        <td className="p-3">
+                        <td className="p-4">
                           <div className="space-y-0.5">
                             <div className="font-black text-slate-900 text-sm">₹{p.price}</div>
                             {p.compareAtPrice > p.price && (
@@ -1101,40 +1124,41 @@ export default function AdminDashboardPage() {
                                 <span className="line-through text-slate-400 text-[11px]">
                                   ₹{p.compareAtPrice}
                                 </span>
-                                <span className="text-[#388e3c] font-black text-[10px]">
+                                <span className="text-emerald-700 font-black text-[10px]">
                                   {p.discountPct}% off
                                 </span>
                               </div>
                             )}
                           </div>
                         </td>
-                        <td className="p-3">
+                        <td className="p-4">
                           <div className="space-y-1">
                             <button
                               onClick={() => handleToggleStock(p.id)}
-                              className={`flex items-center gap-1.5 px-2 py-0.5 rounded-xs font-bold text-[10px] transition-colors ${
+                              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-bold text-[10px] transition-all ${
                                 p.inStock
-                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                  : 'bg-red-50 text-red-700 border border-red-200'
+                                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                                  : 'bg-rose-50 text-rose-800 border border-rose-200'
                               }`}
                             >
                               <span
                                 className={`w-1.5 h-1.5 rounded-full ${
-                                  p.inStock ? 'bg-emerald-500' : 'bg-red-500'
+                                  p.inStock ? 'bg-emerald-500' : 'bg-rose-500'
                                 }`}
                               />
                               <span>{p.inStock ? 'In Stock' : 'Out of Stock'}</span>
                             </button>
-                            <div className="text-[10px] text-slate-500">
+                            <div className="text-[10px] text-slate-400 pl-1">
                               {p.stockCount} units available
                             </div>
                           </div>
                         </td>
-                        <td className="p-3">
+                        <td className="p-4">
                           <div className="flex flex-col gap-1">
                             {p.nablCertified ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-2xs border border-emerald-200 w-fit">
-                                <ShieldCheck className="w-3 h-3 text-emerald-600" /> NABL Passed
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200/80 w-fit">
+                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                                <span>Heavy Metal Pass</span>
                               </span>
                             ) : (
                               <span className="text-[10px] text-slate-400">Standard</span>
@@ -1145,27 +1169,27 @@ export default function AdminDashboardPage() {
                             </div>
                           </div>
                         </td>
-                        <td className="p-3 text-right">
+                        <td className="p-4 text-right">
                           <div className="flex items-center justify-end gap-1.5">
                             <a
                               href={`/products/${p.slug}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="p-1.5 text-slate-500 hover:text-[#128983] hover:bg-slate-100 rounded-xs transition-colors"
+                              className="p-1.5 text-slate-500 hover:text-teal-700 hover:bg-teal-50 rounded-lg transition-colors"
                               title="View on Storefront"
                             >
                               <Eye className="w-4 h-4" />
                             </a>
                             <button
                               onClick={() => handleOpenEditProduct(p)}
-                              className="p-1.5 text-slate-600 hover:text-[#128983] hover:bg-slate-100 rounded-xs transition-colors"
+                              className="p-1.5 text-slate-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg transition-colors"
                               title="Edit product"
                             >
                               <Edit2 className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => handleDeleteProduct(p.id)}
-                              className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xs transition-colors"
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                               title="Delete from catalog"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -1181,60 +1205,61 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* TAB 2: PRESCRIPTION (RX) REVIEW & SUBSTITUTE MATCHING (TRUEMEDS) */}
+        {/* TAB 2: PRESCRIPTION (RX) REVIEW & SUBSTITUTE MATCHING */}
         {activeTab === 'prescriptions' && (
-          <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
-            <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="p-4 sm:p-6 space-y-5">
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base sm:text-lg font-black text-slate-900">
+                  <h2 className="text-lg font-black text-slate-900 tracking-tight">
                     Truemeds Prescription Audit Queue
                   </h2>
-                  <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full">
+                  <span className="bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold px-2.5 py-0.5 rounded-full">
                     {prescriptions.filter((r) => r.status === 'PENDING_REVIEW').length} Pending Pharmacist Review
                   </span>
                 </div>
                 <p className="text-xs text-slate-500">
-                  Review uploaded doctor prescriptions, identify active chemical salts, and approve 51% cheaper classical Ayurvedic substitutes.
+                  Review customer doctor slips, verify active salts, and recommend 51% cheaper classical formulations.
                 </p>
               </div>
 
-              <div className="text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-3 py-1.5 rounded-xs">
-                Pharmacist On-Duty: Vaidya R. K. Sharma (GA/1482)
+              <div className="text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200/80 px-3.5 py-2 rounded-xl flex items-center gap-2">
+                <Award className="w-4 h-4 text-teal-600" />
+                <span>On-Duty Pharmacist: Vaidya R. K. Sharma</span>
               </div>
             </div>
 
             {/* Prescriptions Table */}
-            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
+            <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs min-w-[760px]">
-                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
+                  <thead className="bg-slate-50/80 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200/80">
                     <tr>
-                      <th className="p-3">Rx ID &amp; Date</th>
-                      <th className="p-3">Customer Contact</th>
-                      <th className="p-3">Prescription Slip</th>
-                      <th className="p-3">Customer Preference</th>
-                      <th className="p-3">Recommended Classical Substitute</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3 text-right">Review Action</th>
+                      <th className="p-4">Rx ID &amp; Time</th>
+                      <th className="p-4">Patient / Contact</th>
+                      <th className="p-4">Doctor Slip</th>
+                      <th className="p-4">Customer Preference</th>
+                      <th className="p-4">Recommended Classical Substitute</th>
+                      <th className="p-4">Status</th>
+                      <th className="p-4 text-right">Review</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-medium">
                     {prescriptions.map((rx) => (
-                      <tr key={rx.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-3">
-                          <div className="font-mono font-bold text-[#128983]">{rx.id}</div>
+                      <tr key={rx.id} className="hover:bg-slate-50/60 transition-colors">
+                        <td className="p-4">
+                          <div className="font-mono font-bold text-teal-700">{rx.id}</div>
                           <div className="text-[10px] text-slate-400">{rx.uploadedAt}</div>
                         </td>
-                        <td className="p-3">
+                        <td className="p-4">
                           <div className="font-bold text-slate-900">{rx.patientName}</div>
                           <div className="text-[11px] text-slate-500 font-mono">{rx.phone}</div>
                           <div className="text-[10px] text-slate-400">PIN: {rx.pin}</div>
                         </td>
-                        <td className="p-3">
+                        <td className="p-4">
                           <button
                             onClick={() => setViewingRx(rx)}
-                            className="group relative block w-14 h-14 rounded-xs overflow-hidden border border-slate-300 hover:border-[#128983] shadow-xs"
+                            className="group relative block w-14 h-14 rounded-xl overflow-hidden border border-slate-200 hover:border-teal-500 shadow-xs"
                           >
                             <img
                               src={rx.imageUrl}
@@ -1246,47 +1271,47 @@ export default function AdminDashboardPage() {
                             </div>
                           </button>
                         </td>
-                        <td className="p-3">
+                        <td className="p-4">
                           {rx.preference === 'substitute' ? (
-                            <span className="bg-emerald-50 text-emerald-800 font-black px-2 py-0.5 rounded-2xs text-[10px] border border-emerald-200">
-                              Recommend 51% Cheaper Substitute
+                            <span className="bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded-lg text-[10px] border border-emerald-200">
+                              ⚡ Recommend 51% Cheaper Substitute
                             </span>
                           ) : (
-                            <span className="bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded-2xs text-[10px]">
+                            <span className="bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded-lg text-[10px]">
                               Exact Brands Only
                             </span>
                           )}
                         </td>
-                        <td className="p-3 max-w-xs">
+                        <td className="p-4 max-w-xs">
                           <div className="text-[11px] text-slate-500 line-clamp-1">
                             Prescribed: <span className="font-bold text-slate-800">{rx.prescribedDrug}</span>
                           </div>
-                          <div className="text-[11px] text-[#128983] font-bold line-clamp-1">
+                          <div className="text-[11px] text-teal-700 font-bold line-clamp-1">
                             Substitute: {rx.recommendedHerbal}
                           </div>
                           <div className="text-[10px] text-emerald-700 font-black">
                             Saves Customer ~{rx.savingsEstimated}%
                           </div>
                         </td>
-                        <td className="p-3">
+                        <td className="p-4">
                           <span
-                            className={`px-2 py-0.5 rounded-2xs text-[10px] font-black uppercase ${
+                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
                               rx.status === 'PENDING_REVIEW'
                                 ? 'bg-amber-100 text-amber-800'
                                 : rx.status === 'SUBSTITUTE_RECOMMENDED'
                                 ? 'bg-blue-100 text-blue-800'
                                 : rx.status === 'APPROVED'
                                 ? 'bg-emerald-100 text-emerald-800'
-                                : 'bg-red-100 text-red-800'
+                                : 'bg-rose-100 text-rose-800'
                             }`}
                           >
                             {rx.status.replace(/_/g, ' ')}
                           </span>
                         </td>
-                        <td className="p-3 text-right">
+                        <td className="p-4 text-right">
                           <button
                             onClick={() => setViewingRx(rx)}
-                            className="bg-[#128983] hover:bg-[#0d6e68] text-white font-bold text-[11px] px-3 py-1.5 rounded-xs transition-colors shadow-xs"
+                            className="bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition-colors shadow-xs"
                           >
                             Review &amp; Approve
                           </button>
@@ -1300,30 +1325,30 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* TAB 3: ORDERS & EKART FULFILLMENT PIPELINE */}
+        {/* TAB 3: ORDERS & EKART PIPELINE */}
         {activeTab === 'orders' && (
-          <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
-            <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="p-4 sm:p-6 space-y-5">
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base sm:text-lg font-black text-slate-900">
-                    Ekart Dispatch &amp; Order Pipeline
+                  <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                    Ekart Dispatch Pipeline
                   </h2>
-                  <span className="bg-blue-100 text-[#2874f0] text-xs font-bold px-2 py-0.5 rounded-full">
-                    {orders.length} Live Orders
+                  <span className="bg-teal-50 text-teal-800 border border-teal-200 text-xs font-bold px-2.5 py-0.5 rounded-full">
+                    {orders.length} Active Shipments
                   </span>
                 </div>
                 <p className="text-xs text-slate-500">
-                  Update dispatch status, assign EV couriers, or print GST invoices.
+                  Update parcel fulfillment statuses or print official GST tax invoices.
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-500">Filter Status:</span>
+                <span className="text-xs font-bold text-slate-500">Status Filter:</span>
                 <select
                   value={orderStatusFilter}
                   onChange={(e) => setOrderStatusFilter(e.target.value)}
-                  className="text-xs font-bold border border-slate-300 rounded-xs px-2.5 py-1.5 bg-white text-slate-700"
+                  className="text-xs font-bold border border-slate-200 rounded-lg px-3 py-1.5 bg-slate-50 text-slate-700"
                 >
                   <option value="ALL">All Statuses</option>
                   <option value="PAID">PAID</option>
@@ -1334,50 +1359,49 @@ export default function AdminDashboardPage() {
               </div>
             </div>
 
-            {/* Orders Table */}
-            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
+            <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs min-w-[760px]">
-                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
+                  <thead className="bg-slate-50/80 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200/80">
                     <tr>
-                      <th className="p-3">Order ID &amp; Time</th>
-                      <th className="p-3">Customer</th>
-                      <th className="p-3">Items Summary</th>
-                      <th className="p-3">Total Amount</th>
-                      <th className="p-3">Courier Logistics</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3 text-right">Fulfillment Actions</th>
+                      <th className="p-4">Order ID &amp; Date</th>
+                      <th className="p-4">Customer Details</th>
+                      <th className="p-4">Items Summary</th>
+                      <th className="p-4">Total Amount</th>
+                      <th className="p-4">Courier Assignment</th>
+                      <th className="p-4">Status</th>
+                      <th className="p-4 text-right">Invoice</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-medium">
                     {filteredOrders.map((order) => (
-                      <tr key={order.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-3">
-                          <div className="font-mono font-bold text-[#128983]">{order.id}</div>
+                      <tr key={order.id} className="hover:bg-slate-50/60 transition-colors">
+                        <td className="p-4">
+                          <div className="font-mono font-bold text-teal-700">{order.id}</div>
                           <div className="text-[10px] text-slate-400">{order.date}</div>
                         </td>
-                        <td className="p-3">
+                        <td className="p-4">
                           <div className="font-bold text-slate-900">{order.customer}</div>
                           <div className="text-[10px] text-slate-400">PIN: {order.pin} · {order.phone}</div>
                         </td>
-                        <td className="p-3 max-w-xs">
+                        <td className="p-4 max-w-xs">
                           <div className="text-slate-800 line-clamp-1">{order.itemsSummary}</div>
                           <div className="text-[10px] text-slate-400">{order.itemsCount} formulation unit(s)</div>
                         </td>
-                        <td className="p-3">
+                        <td className="p-4">
                           <div className="font-black text-slate-900 text-sm">₹{order.amount}</div>
                           <div className="text-[10px] text-emerald-700 font-bold">
                             {order.paymentMethod.replace('_', ' ')}
                           </div>
                         </td>
-                        <td className="p-3 text-slate-600">{order.courier}</td>
-                        <td className="p-3">
+                        <td className="p-4 text-slate-600">{order.courier}</td>
+                        <td className="p-4">
                           <select
                             value={order.status}
                             onChange={(e) =>
                               handleUpdateOrderStatus(order.id, e.target.value as AdminOrder['status'])
                             }
-                            className={`text-[10px] font-black uppercase px-2 py-1 rounded-xs border cursor-pointer ${
+                            className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border cursor-pointer ${
                               order.status === 'OUT_FOR_DELIVERY'
                                 ? 'bg-amber-100 text-amber-800 border-amber-300'
                                 : order.status === 'PAID'
@@ -1386,7 +1410,7 @@ export default function AdminDashboardPage() {
                                 ? 'bg-purple-100 text-purple-800 border-purple-300'
                                 : order.status === 'DELIVERED'
                                 ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                                : 'bg-red-100 text-red-800 border-red-300'
+                                : 'bg-rose-100 text-rose-800 border-rose-300'
                             }`}
                           >
                             <option value="PAID">PAID</option>
@@ -1396,10 +1420,10 @@ export default function AdminDashboardPage() {
                             <option value="CANCELLED">CANCELLED</option>
                           </select>
                         </td>
-                        <td className="p-3 text-right">
+                        <td className="p-4 text-right">
                           <button
                             onClick={() => setPrintingOrder(order)}
-                            className="p-1.5 text-slate-600 hover:text-[#128983] hover:bg-slate-100 rounded-xs transition-colors inline-flex items-center gap-1 font-bold"
+                            className="p-1.5 text-slate-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg transition-colors inline-flex items-center gap-1 font-bold"
                             title="Print GST Invoice"
                           >
                             <Printer className="w-4 h-4" />
@@ -1417,25 +1441,25 @@ export default function AdminDashboardPage() {
 
         {/* TAB 4: HERO BANNERS & PROMOTIONS */}
         {activeTab === 'banners' && (
-          <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
-            <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="p-4 sm:p-6 space-y-5">
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base sm:text-lg font-black text-slate-900">
-                    Homepage Carousel &amp; Offers
+                  <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                    Storefront Hero Carousel
                   </h2>
-                  <span className="bg-teal-100 text-[#128983] text-xs font-bold px-2 py-0.5 rounded-full">
+                  <span className="bg-teal-50 text-teal-800 border border-teal-200 text-xs font-bold px-2.5 py-0.5 rounded-full">
                     {banners.filter((b) => b.active).length} Active Banners
                   </span>
                 </div>
                 <p className="text-xs text-slate-500">
-                  Manage rotating banners displayed on the customer homepage.
+                  Manage rotating banners on the homepage hero carousel.
                 </p>
               </div>
 
               <button
                 onClick={handleOpenAddBanner}
-                className="bg-[#128983] hover:bg-[#0d6e68] text-white font-bold text-xs px-4 py-2.5 rounded-xs flex items-center justify-center gap-2 shadow-sm transition-colors shrink-0"
+                className="bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-xs transition-colors shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>Create New Banner</span>
@@ -1446,17 +1470,17 @@ export default function AdminDashboardPage() {
               {banners.map((banner) => (
                 <div
                   key={banner.id}
-                  className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs flex flex-col justify-between"
+                  className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs flex flex-col justify-between"
                 >
                   <div
-                    className={`relative p-5 bg-gradient-to-r ${banner.bgGradient} text-white min-h-[160px] flex flex-col justify-between overflow-hidden`}
+                    className={`relative p-6 bg-gradient-to-r ${banner.bgGradient} text-white min-h-[170px] flex flex-col justify-between overflow-hidden`}
                   >
                     <div className="relative z-10 flex items-start justify-between gap-4">
                       <div className="space-y-1.5 max-w-[70%]">
-                        <span className="inline-block bg-[#ffe500] text-slate-900 text-[9px] font-black uppercase px-2 py-0.5 rounded-2xs">
+                        <span className="inline-block bg-[#ffe500] text-slate-950 text-[9px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">
                           {banner.tag}
                         </span>
-                        <h3 className="text-base sm:text-lg font-black leading-tight drop-shadow-xs">
+                        <h3 className="text-lg font-black leading-tight drop-shadow-xs">
                           {banner.title}
                         </h3>
                         <p className="text-xs text-white/90 line-clamp-2">
@@ -1465,7 +1489,7 @@ export default function AdminDashboardPage() {
                       </div>
 
                       {banner.imageUrl && (
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xs overflow-hidden border border-white/20 shadow-md shrink-0 bg-white/10">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-white/20 shadow-md shrink-0 bg-white/10">
                           <img
                             src={banner.imageUrl}
                             alt={banner.title}
@@ -1476,7 +1500,7 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <div className="relative z-10 pt-3 flex items-center justify-between">
-                      <span className="inline-block bg-white text-[#128983] font-black text-xs px-3 py-1 rounded-xs shadow-sm">
+                      <span className="inline-block bg-white text-slate-900 font-black text-xs px-3.5 py-1 rounded-lg shadow-sm">
                         {banner.ctaText} →
                       </span>
                       <span className="text-[10px] font-mono text-white/70 truncate max-w-[150px]">
@@ -1485,28 +1509,34 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs font-bold">
+                  <div className="p-3.5 bg-slate-50/80 border-t border-slate-200/80 flex items-center justify-between text-xs font-semibold">
                     <button
                       onClick={() => handleToggleBanner(banner.id)}
-                      className={`flex items-center gap-1.5 px-2 py-1 rounded-xs transition-colors ${
-                        banner.active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-full transition-colors ${
+                        banner.active
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-slate-200 text-slate-600'
                       }`}
                     >
-                      <span className={`w-2 h-2 rounded-full ${banner.active ? 'bg-emerald-500' : 'bg-slate-400'}`} />
+                      <span
+                        className={`w-2 h-2 rounded-full ${
+                          banner.active ? 'bg-emerald-500' : 'bg-slate-400'
+                        }`}
+                      />
                       <span>{banner.active ? 'Active on Carousel' : 'Hidden'}</span>
                     </button>
 
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleOpenEditBanner(banner)}
-                        className="px-2 py-1 text-slate-700 hover:text-[#128983] rounded-xs flex items-center gap-1"
+                        className="px-2.5 py-1 text-slate-700 hover:text-teal-700 rounded-lg flex items-center gap-1"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                         <span>Edit</span>
                       </button>
                       <button
                         onClick={() => handleDeleteBanner(banner.id)}
-                        className="px-2 py-1 text-red-600 hover:bg-red-50 rounded-xs flex items-center gap-1"
+                        className="px-2.5 py-1 text-rose-600 hover:bg-rose-50 rounded-lg flex items-center gap-1"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         <span>Delete</span>
@@ -1519,114 +1549,109 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* TAB 5: BOTANICAL STOCK & INVENTORY */}
+        {/* TAB 5: BOTANICAL INVENTORY */}
         {activeTab === 'inventory' && (
-          <div className="p-3 sm:p-6 space-y-4">
-            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
-              <div className="p-4 border-b border-slate-200 bg-amber-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-amber-600" />
-                  <div>
-                    <h2 className="text-sm font-black text-slate-900">
-                      Live Botanical Inventory &amp; Batch Thresholds
-                    </h2>
-                    <span className="text-xs text-slate-500">
-                      Quickly adjust stock units or trigger botanical batch restocks.
-                    </span>
-                  </div>
-                </div>
-                <div className="text-xs font-bold text-amber-900 bg-amber-200 px-2.5 py-1 rounded-xs">
-                  GMP Shodhita Standards Verified
-                </div>
+          <div className="p-4 sm:p-6 space-y-4">
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-black text-slate-900">
+                  Botanical Stock &amp; Batch Thresholds
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Quick stock adjustments and NABL Heavy Metal clearance logs.
+                </p>
               </div>
+              <div className="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
+                AYUSH GMP Standards Pass
+              </div>
+            </div>
 
-              <div className="overflow-x-auto w-full">
-                <table className="w-full text-left text-xs min-w-[700px]">
-                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
-                    <tr>
-                      <th className="p-3">SKU / Remedy</th>
-                      <th className="p-3">Current Stock</th>
-                      <th className="p-3">Quick Adjust</th>
-                      <th className="p-3">NABL Heavy Metal Clearance</th>
-                      <th className="p-3">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    {products.map((p) => (
-                      <tr key={p.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-3">
-                          <div className="font-bold text-slate-900">{p.title}</div>
-                          <div className="font-mono text-[10px] text-slate-400">ID: {p.id}</div>
-                        </td>
-                        <td className="p-3">
-                          <span className="font-black text-sm text-slate-900">{p.stockCount}</span> units
-                        </td>
-                        <td className="p-3">
-                          <div className="flex items-center gap-1.5">
-                            <button
-                              onClick={() => handleAdjustStock(p.id, -5)}
-                              className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black rounded-xs text-[10px]"
-                            >
-                              -5
-                            </button>
-                            <button
-                              onClick={() => handleAdjustStock(p.id, 10)}
-                              className="px-2 py-1 bg-teal-50 hover:bg-teal-100 text-[#128983] font-black rounded-xs text-[10px]"
-                            >
-                              +10
-                            </button>
-                            <button
-                              onClick={() => handleAdjustStock(p.id, 50)}
-                              className="px-2 py-1 bg-teal-100 hover:bg-teal-200 text-[#128983] font-black rounded-xs text-[10px]"
-                            >
-                              +50
-                            </button>
-                          </div>
-                        </td>
-                        <td className="p-3">
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-2xs border border-emerald-200">
-                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>Zero Lead/Mercury Pass</span>
-                          </span>
-                        </td>
-                        <td className="p-3">
-                          <span
-                            className={`px-2 py-0.5 rounded-2xs text-[10px] font-black uppercase ${
-                              p.stockCount > 15
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : p.stockCount > 0
-                                ? 'bg-amber-100 text-amber-800'
-                                : 'bg-red-100 text-red-800'
-                            }`}
+            <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
+              <table className="w-full text-left text-xs min-w-[700px]">
+                <thead className="bg-slate-50/80 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200/80">
+                  <tr>
+                    <th className="p-4">SKU / Medicine</th>
+                    <th className="p-4">Available Units</th>
+                    <th className="p-4">Quick Adjust</th>
+                    <th className="p-4">NABL Heavy Metal Test</th>
+                    <th className="p-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  {products.map((p) => (
+                    <tr key={p.id} className="hover:bg-slate-50/60 transition-colors">
+                      <td className="p-4">
+                        <div className="font-bold text-slate-900">{p.title}</div>
+                        <div className="font-mono text-[10px] text-slate-400">ID: {p.id}</div>
+                      </td>
+                      <td className="p-4">
+                        <span className="font-black text-sm text-slate-900">{p.stockCount}</span> units
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => handleAdjustStock(p.id, -5)}
+                            className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-black rounded-lg text-[10px]"
                           >
-                            {p.stockCount > 15 ? 'OPTIMAL' : p.stockCount > 0 ? 'LOW STOCK' : 'OUT OF STOCK'}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                            -5
+                          </button>
+                          <button
+                            onClick={() => handleAdjustStock(p.id, 10)}
+                            className="px-2.5 py-1 bg-teal-50 hover:bg-teal-100 text-teal-800 font-black rounded-lg text-[10px]"
+                          >
+                            +10
+                          </button>
+                          <button
+                            onClick={() => handleAdjustStock(p.id, 50)}
+                            className="px-2.5 py-1 bg-teal-100 hover:bg-teal-200 text-teal-900 font-black rounded-lg text-[10px]"
+                          >
+                            +50
+                          </button>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Zero Lead/Mercury Pass</span>
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                            p.stockCount > 15
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : p.stockCount > 0
+                              ? 'bg-amber-100 text-amber-800'
+                              : 'bg-rose-100 text-rose-800'
+                          }`}
+                        >
+                          {p.stockCount > 15 ? 'OPTIMAL' : p.stockCount > 0 ? 'LOW STOCK' : 'OUT OF STOCK'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
 
-        {/* TAB 6: COUPONS & DISCOUNTS */}
+        {/* TAB 6: COUPONS */}
         {activeTab === 'coupons' && (
-          <div className="p-3 sm:p-6 space-y-4">
-            <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="space-y-1">
-                <h2 className="text-base sm:text-lg font-black text-slate-900">
-                  Promotional Coupons &amp; Discount Vouchers
+          <div className="p-4 sm:p-6 space-y-4">
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-black text-slate-900">
+                  Discount Coupons &amp; Vouchers
                 </h2>
                 <p className="text-xs text-slate-500">
-                  Create and manage discount codes for Truemeds &amp; VedaFlow customers.
+                  Manage promotional coupons for customer checkout.
                 </p>
               </div>
 
               <button
                 onClick={() => setIsCouponModalOpen(true)}
-                className="bg-[#128983] hover:bg-[#0d6e68] text-white font-bold text-xs px-4 py-2 rounded-xs flex items-center justify-center gap-1.5 shadow-sm"
+                className="bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1.5 shadow-xs"
               >
                 <Plus className="w-4 h-4" />
                 <span>Create New Coupon</span>
@@ -1637,15 +1662,15 @@ export default function AdminDashboardPage() {
               {coupons.map((coupon) => (
                 <div
                   key={coupon.code}
-                  className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs relative overflow-hidden"
+                  className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-3 shadow-xs"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-mono font-black text-sm bg-teal-50 text-[#128983] border border-teal-200 px-2 py-1 rounded-xs">
+                    <span className="font-mono font-black text-sm bg-teal-50 text-teal-800 border border-teal-200 px-2.5 py-1 rounded-lg">
                       {coupon.code}
                     </span>
                     <button
                       onClick={() => handleToggleCoupon(coupon.code)}
-                      className={`text-[10px] font-black px-2 py-0.5 rounded-2xs ${
+                      className={`text-[10px] font-black px-2.5 py-0.5 rounded-full ${
                         coupon.active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'
                       }`}
                     >
@@ -1654,14 +1679,14 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div className="space-y-1 text-xs">
-                    <div className="font-bold text-slate-900 text-base">{coupon.discountPct}% OFF</div>
+                    <div className="font-bold text-slate-900 text-lg">{coupon.discountPct}% OFF</div>
                     <p className="text-slate-500 text-[11px]">{coupon.description}</p>
-                    <div className="text-[10px] text-slate-400">Min Cart: ₹{coupon.minOrder}</div>
+                    <div className="text-[10px] text-slate-400">Min Order: ₹{coupon.minOrder}</div>
                   </div>
 
                   <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-600">
                     <span>Used {coupon.usedCount.toLocaleString('en-IN')} times</span>
-                    <span className="text-[#128983]">Valid</span>
+                    <span className="text-teal-700">Verified</span>
                   </div>
                 </div>
               ))}
@@ -1671,85 +1696,85 @@ export default function AdminDashboardPage() {
 
         {/* TAB 7: LOGISTICS & EV FLEET */}
         {activeTab === 'delivery' && (
-          <div className="p-3 sm:p-6 space-y-4">
-            <div className="bg-white border border-slate-200 rounded-sm p-4 shadow-xs">
-              <h2 className="text-base font-black text-slate-900 mb-1">
-                Ekart EV Logistics &amp; Pincode Hubs
+          <div className="p-4 sm:p-6 space-y-4">
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs">
+              <h2 className="text-lg font-black text-slate-900 mb-1">
+                Ekart EV Fleet &amp; Logistics Hubs
               </h2>
               <p className="text-xs text-slate-500">
-                19,000+ Pincodes serviced with eco-friendly zero-emission electric vehicles.
+                19,000+ PIN codes served with zero-carbon electric couriers.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs">
+              <div className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-3 shadow-xs">
                 <div className="flex items-center justify-between">
                   <div className="font-black text-slate-900 text-sm">Ramesh Kumar</div>
-                  <span className="text-[10px] font-black px-2 py-0.5 rounded-2xs bg-amber-100 text-amber-800">
+                  <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
                     ON ROUTE
                   </span>
                 </div>
-                <div className="space-y-1 text-xs text-slate-600">
+                <div className="space-y-1.5 text-xs text-slate-600">
                   <div>Vehicle: <span className="font-bold text-slate-900">EV Scooter (KA-01-EQ-9988)</span></div>
-                  <div>Dispatch Hub: <span className="font-medium text-slate-700">Bangalore South Hub</span></div>
+                  <div>Hub: <span className="font-medium text-slate-700">Bangalore South Hub</span></div>
                   <div>Active Dispatches: <span className="font-bold text-slate-900">2 Orders</span></div>
-                  <div>Customer Rating: <span className="font-bold text-emerald-700">★ 4.96 / 5.0</span></div>
+                  <div>Rating: <span className="font-bold text-emerald-700">★ 4.96 / 5.0</span></div>
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs">
+              <div className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-3 shadow-xs">
                 <div className="flex items-center justify-between">
                   <div className="font-black text-slate-900 text-sm">Vikas Singh</div>
-                  <span className="text-[10px] font-black px-2 py-0.5 rounded-2xs bg-emerald-100 text-emerald-800">
+                  <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
                     AVAILABLE
                   </span>
                 </div>
-                <div className="space-y-1 text-xs text-slate-600">
+                <div className="space-y-1.5 text-xs text-slate-600">
                   <div>Vehicle: <span className="font-bold text-slate-900">Eco Bike (KA-05-MK-3312)</span></div>
-                  <div>Dispatch Hub: <span className="font-medium text-slate-700">Bangalore Central Hub</span></div>
+                  <div>Hub: <span className="font-medium text-slate-700">Bangalore Central Hub</span></div>
                   <div>Active Dispatches: <span className="font-bold text-slate-900">0 Orders</span></div>
-                  <div>Customer Rating: <span className="font-bold text-emerald-700">★ 4.88 / 5.0</span></div>
+                  <div>Rating: <span className="font-bold text-emerald-700">★ 4.88 / 5.0</span></div>
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-3 shadow-xs">
+              <div className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-3 shadow-xs">
                 <div className="flex items-center justify-between">
                   <div className="font-black text-slate-900 text-sm">Sanjay Dutt</div>
-                  <span className="text-[10px] font-black px-2 py-0.5 rounded-2xs bg-amber-100 text-amber-800">
+                  <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
                     ON ROUTE
                   </span>
                 </div>
-                <div className="space-y-1 text-xs text-slate-600">
+                <div className="space-y-1.5 text-xs text-slate-600">
                   <div>Vehicle: <span className="font-bold text-slate-900">EV Cargo (KA-02-EL-7744)</span></div>
-                  <div>Dispatch Hub: <span className="font-medium text-slate-700">Bangalore North Hub</span></div>
+                  <div>Hub: <span className="font-medium text-slate-700">Bangalore North Hub</span></div>
                   <div>Active Dispatches: <span className="font-bold text-slate-900">1 Order</span></div>
-                  <div>Customer Rating: <span className="font-bold text-emerald-700">★ 4.92 / 5.0</span></div>
+                  <div>Rating: <span className="font-bold text-emerald-700">★ 4.92 / 5.0</span></div>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* TAB 8: INSTAGRAM AD & STUDIO */}
+        {/* TAB 8: INSTAGRAM AD COPY STUDIO */}
         {activeTab === 'share' && (
-          <div className="p-3 sm:p-6 space-y-4">
-            <div className="bg-white border border-slate-200 rounded-sm p-4 sm:p-6 shadow-xs space-y-4">
-              <div className="border-b border-slate-200 pb-3">
-                <h2 className="text-base font-black text-slate-900">
-                  Organic Marketing &amp; Instagram Copy Studio
+          <div className="p-4 sm:p-6 space-y-4">
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+              <div className="border-b border-slate-100 pb-3">
+                <h2 className="text-lg font-black text-slate-900">
+                  Organic Marketing &amp; Ad Studio
                 </h2>
                 <p className="text-xs text-slate-500">
-                  Generate high-conversion Truemeds-style savings captions and direct checkout links.
+                  Generate Truemeds-style savings captions and direct checkout links.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700">Select Formulation to Promote:</label>
                   <select
                     value={shareProduct}
                     onChange={(e) => setShareProduct(e.target.value)}
-                    className="w-full text-xs font-bold border border-slate-300 rounded-xs p-2 bg-white"
+                    className="w-full text-xs font-bold border border-slate-200 rounded-xl p-2.5 bg-slate-50"
                   >
                     <option value="swarna-bhasma-chyawanprash-1kg">Swarna Bhasma Amrit Chyawanprash (1kg)</option>
                     <option value="pure-himalayan-shilajit-resin-20g">Pure Himalayan Shilajit Resin (20g)</option>
@@ -1759,17 +1784,17 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div className="bg-slate-50 border border-slate-200 rounded-xs p-4 space-y-3">
-                <div className="bg-white p-3 rounded-xs border border-slate-200 text-xs font-mono text-slate-800 leading-relaxed whitespace-pre-wrap">
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                <div className="bg-white p-4 rounded-xl border border-slate-200 text-xs font-mono text-slate-800 leading-relaxed whitespace-pre-wrap">
 {`🌿 PURE AYURVEDA WELLNESS: Save up to 51% on genuine classical medicines! 🌿
 
 Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formulations give you 100% active bio-compounds with ZERO heavy metals?
 
 ✨ NABL Lab Tested with zero lead or mercury
-✨ Up to 51% lower monthly expense
-✨ Pan-India Express delivery via Ekart
+✨ Up to 51% lower monthly medical expenditure
+✨ Pan-India Express delivery via Ekart EV
 
-👉 Order now: https://veda.prigenix.com/products/${shareProduct}
+👉 Order directly: https://veda.prigenix.com/products/${shareProduct}
 
 #Ayurveda #Truemeds #VedaFlow #HolisticHealth #Save51Percent`}
                 </div>
@@ -1782,7 +1807,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     setCopiedCaption(true);
                     setTimeout(() => setCopiedCaption(false), 2000);
                   }}
-                  className="bg-[#128983] hover:bg-[#0d6e68] text-white font-bold py-2 px-4 rounded-xs text-xs flex items-center justify-center gap-1.5 transition-colors"
+                  className="bg-teal-700 hover:bg-teal-800 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs"
                 >
                   {copiedCaption ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   <span>{copiedCaption ? 'Copied to Clipboard!' : 'Copy Instagram Ready Caption'}</span>
@@ -1794,31 +1819,31 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
 
         {/* TAB 9: ANALYTICS & KPIS */}
         {activeTab === 'analytics' && (
-          <div className="p-3 sm:p-6 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-2 shadow-xs">
+          <div className="p-4 sm:p-6 space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-2 shadow-xs">
                 <div className="flex justify-between items-center text-slate-500 text-xs font-bold">
-                  <span>Today's Herbal Revenue</span>
-                  <DollarSign className="w-4 h-4 text-[#128983]" />
+                  <span>Today&apos;s Herbal Revenue</span>
+                  <DollarSign className="w-4 h-4 text-teal-700" />
                 </div>
                 <div className="text-2xl font-black text-slate-900">₹1,84,400</div>
-                <div className="text-xs font-bold text-[#388e3c] flex items-center gap-1">
+                <div className="text-xs font-bold text-emerald-700 flex items-center gap-1">
                   <ArrowUpRight className="w-3.5 h-3.5" /> +24.8% vs last week
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-2 shadow-xs">
+              <div className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-2 shadow-xs">
                 <div className="flex justify-between items-center text-slate-500 text-xs font-bold">
                   <span>Customer Savings Generated</span>
-                  <Percent className="w-4 h-4 text-[#128983]" />
+                  <Percent className="w-4 h-4 text-teal-700" />
                 </div>
-                <div className="text-2xl font-black text-[#128983]">₹94,280</div>
+                <div className="text-2xl font-black text-teal-800">₹94,280</div>
                 <div className="text-xs font-bold text-teal-700">
                   Avg 51% saved per prescription
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-2 shadow-xs">
+              <div className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-2 shadow-xs">
                 <div className="flex justify-between items-center text-slate-500 text-xs font-bold">
                   <span>Average Order Value</span>
                   <TrendingUp className="w-4 h-4 text-amber-500" />
@@ -1829,13 +1854,13 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-sm p-4 space-y-2 shadow-xs">
+              <div className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-2 shadow-xs">
                 <div className="flex justify-between items-center text-slate-500 text-xs font-bold">
                   <span>Customer Satisfaction</span>
                   <Star className="w-4 h-4 text-emerald-600 fill-emerald-600" />
                 </div>
                 <div className="text-2xl font-black text-slate-900">4.88 / 5.0</div>
-                <div className="text-xs font-bold text-[#388e3c]">
+                <div className="text-xs font-bold text-emerald-700">
                   Top 1% Ayurvedic E-Pharmacies
                 </div>
               </div>
@@ -1845,47 +1870,45 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
 
         {/* TAB 10: AYUSH COMPLIANCE AUDIT */}
         {activeTab === 'audit' && (
-          <div className="p-3 sm:p-6 space-y-4">
-            <div className="bg-white border border-slate-200 rounded-sm overflow-hidden shadow-xs">
-              <div className="overflow-x-auto w-full">
-                <table className="w-full text-left text-xs min-w-[640px]">
-                  <thead className="bg-slate-50 text-slate-600 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
-                    <tr>
-                      <th className="p-3">Audit Event</th>
-                      <th className="p-3">Verified Entity</th>
-                      <th className="p-3">Compliance Standard</th>
-                      <th className="p-3 text-right">Time</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    <tr className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold text-[#128983]">NABL_HEAVY_METAL_CoA_PASS</td>
-                      <td className="p-3 text-slate-900">Batch #VD-2026-CHY-09 (Zero Lead/Mercury)</td>
-                      <td className="p-3 text-emerald-700 font-bold">AYUSH Premium Standard</td>
-                      <td className="p-3 text-slate-500 text-right">10 Mins ago</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold text-[#128983]">CATALOG_PRODUCT_UPDATE</td>
-                      <td className="p-3 text-slate-900">Dynamic Product Inventory Sync Verified</td>
-                      <td className="p-3 text-emerald-700 font-bold">REST API Synchronized</td>
-                      <td className="p-3 text-slate-500 text-right">15 Mins ago</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold text-[#128983]">AYUSH_LICENSE_VERIFICATION</td>
-                      <td className="p-3 text-slate-900">Ayurvedic Manufacturing License GA/1482 Active</td>
-                      <td className="p-3 text-emerald-700 font-bold">Ministry of AYUSH</td>
-                      <td className="p-3 text-slate-500 text-right">2 Hours ago</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+          <div className="p-4 sm:p-6 space-y-4">
+            <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs">
+              <table className="w-full text-left text-xs min-w-[640px]">
+                <thead className="bg-slate-50/80 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200/80">
+                  <tr>
+                    <th className="p-4">Audit Event</th>
+                    <th className="p-4">Verified Entity</th>
+                    <th className="p-4">Compliance Standard</th>
+                    <th className="p-4 text-right">Time</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  <tr className="hover:bg-slate-50/60">
+                    <td className="p-4 font-mono font-bold text-teal-800">NABL_HEAVY_METAL_CoA_PASS</td>
+                    <td className="p-4 text-slate-900">Batch #VD-2026-CHY-09 (Zero Lead/Mercury)</td>
+                    <td className="p-4 text-emerald-700 font-bold">AYUSH Premium Standard</td>
+                    <td className="p-4 text-slate-500 text-right">10 Mins ago</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50/60">
+                    <td className="p-4 font-mono font-bold text-teal-800">CATALOG_PRODUCT_UPDATE</td>
+                    <td className="p-4 text-slate-900">Dynamic Product Inventory Sync Verified</td>
+                    <td className="p-4 text-emerald-700 font-bold">REST API Synchronized</td>
+                    <td className="p-4 text-slate-500 text-right">15 Mins ago</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50/60">
+                    <td className="p-4 font-mono font-bold text-teal-800">AYUSH_LICENSE_VERIFICATION</td>
+                    <td className="p-4 text-slate-900">Ayurvedic Manufacturing License GA/1482 Active</td>
+                    <td className="p-4 text-emerald-700 font-bold">Ministry of AYUSH</td>
+                    <td className="p-4 text-slate-500 text-right">2 Hours ago</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         )}
       </main>
 
       {/* 3. Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 z-30 flex items-center justify-around py-1 shadow-lg">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-30 flex items-center justify-around py-1.5 shadow-lg">
         {navItems.slice(0, 5).map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -1894,7 +1917,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={`flex flex-col items-center py-1 px-2 transition-colors ${
-                isActive ? 'text-[#128983] font-black' : 'text-slate-500 font-medium hover:text-slate-800'
+                isActive ? 'text-teal-700 font-black' : 'text-slate-500 font-medium hover:text-slate-800'
               }`}
             >
               <Icon className={`w-4 h-4 ${isActive ? 'stroke-[2.5]' : ''}`} />
@@ -1906,9 +1929,9 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
 
       {/* 4. MODAL: ADD / EDIT PRODUCT */}
       {isProductModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-sm border border-slate-300 shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden my-auto">
-            <div className="p-4 bg-[#128983] text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 bg-gradient-to-r from-teal-700 to-emerald-700 text-white flex items-center justify-between">
               <div>
                 <h3 className="text-base font-black">
                   {editingProductId ? 'Edit Ayurvedic Formulation' : 'Add New Herbal Product to Catalog'}
@@ -1919,13 +1942,13 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
               </div>
               <button
                 onClick={() => setIsProductModalOpen(false)}
-                className="p-1 text-white/80 hover:text-white rounded-xs"
+                className="p-1.5 text-white/80 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveProduct} className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs font-sans">
+            <form onSubmit={handleSaveProduct} className="p-5 sm:p-6 overflow-y-auto space-y-4 text-xs font-sans">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="font-bold text-slate-700">Product Title / Name *</label>
@@ -1935,7 +1958,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     value={productForm.title}
                     onChange={(e) => setProductForm({ ...productForm, title: e.target.value })}
                     placeholder="e.g. Pure Himalayan Shilajit Resin 20g"
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
+                    className="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 font-medium"
                   />
                 </div>
 
@@ -1946,7 +1969,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     value={productForm.hindiName}
                     onChange={(e) => setProductForm({ ...productForm, hindiName: e.target.value })}
                     placeholder="e.g. शुद्ध हिमालयन शिलाजीत स्वर्ण युक्त"
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
+                    className="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 font-medium"
                   />
                 </div>
               </div>
@@ -1970,7 +1993,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                           : 'Herbal Infusions & Teas';
                       setProductForm({ ...productForm, categorySlug: sel, categoryName: name });
                     }}
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs bg-white focus:outline-none focus:border-[#128983]"
+                    className="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/30"
                   >
                     <option value="classical-rasayanas">Classical Rasayanas</option>
                     <option value="pure-shilajit">Pure Shilajit</option>
@@ -1987,7 +2010,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     value={productForm.slug}
                     onChange={(e) => setProductForm({ ...productForm, slug: e.target.value })}
                     placeholder="e.g. pure-himalayan-shilajit-resin-20g"
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs font-mono focus:outline-none focus:border-[#128983]"
+                    className="w-full border border-slate-200 rounded-xl p-2.5 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-teal-500/30"
                   />
                 </div>
               </div>
@@ -2001,7 +2024,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     required
                     value={productForm.price}
                     onChange={(e) => setProductForm({ ...productForm, price: Number(e.target.value) })}
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
+                    className="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 font-bold"
                   />
                 </div>
 
@@ -2014,7 +2037,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     onChange={(e) =>
                       setProductForm({ ...productForm, compareAtPrice: Number(e.target.value) })
                     }
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
+                    className="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 text-slate-500"
                   />
                 </div>
 
@@ -2027,7 +2050,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     onChange={(e) =>
                       setProductForm({ ...productForm, stockCount: Number(e.target.value) })
                     }
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
+                    className="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 font-bold"
                   />
                 </div>
               </div>
@@ -2040,25 +2063,25 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     required
                     value={productForm.image}
                     onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
-                    className="flex-1 border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
+                    className="flex-1 border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30"
                   />
                   {productForm.image && (
                     <img
                       src={productForm.image}
                       alt="Preview"
-                      className="w-9 h-9 object-cover rounded-xs border border-slate-200"
+                      className="w-10 h-10 object-cover rounded-xl border border-slate-200 shadow-xs"
                     />
                   )}
                 </div>
 
-                <div className="pt-1.5 flex flex-wrap gap-1.5 items-center">
-                  <span className="text-[10px] text-slate-500 font-bold">Presets:</span>
+                <div className="pt-2 flex flex-wrap gap-1.5 items-center">
+                  <span className="text-[10px] text-slate-400 font-bold">Pick Presets:</span>
                   {imagePresets.map((preset) => (
                     <button
                       type="button"
                       key={preset.label}
                       onClick={() => setProductForm({ ...productForm, image: preset.url })}
-                      className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-0.5 rounded-xs font-semibold"
+                      className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg font-semibold transition-colors"
                     >
                       {preset.label}
                     </button>
@@ -2066,30 +2089,30 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                 </div>
               </div>
 
-              <div className="pt-2 flex items-center justify-between border-t border-slate-200">
+              <div className="pt-3 flex items-center justify-between border-t border-slate-100">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={productForm.inStock}
                     onChange={(e) => setProductForm({ ...productForm, inStock: e.target.checked })}
-                    className="w-4 h-4 text-[#128983] rounded-xs"
+                    className="w-4 h-4 text-teal-700 rounded-md"
                   />
-                  <span className="font-bold text-slate-800">Immediately Available for Purchase (In Stock)</span>
+                  <span className="font-bold text-slate-800">Immediately Available for Purchase</span>
                 </label>
 
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={() => setIsProductModalOpen(false)}
-                    className="px-4 py-2 border border-slate-300 text-slate-700 font-bold rounded-xs hover:bg-slate-50 transition-colors"
+                    className="px-4 py-2 border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-[#128983] hover:bg-[#0d6e68] text-white font-bold rounded-xs shadow-xs transition-colors"
+                    className="px-5 py-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold rounded-xl shadow-xs transition-colors"
                   >
-                    {editingProductId ? 'Save Changes' : 'Publish to Storefront'}
+                    {editingProductId ? 'Save Changes' : 'Publish Formulation'}
                   </button>
                 </div>
               </div>
@@ -2100,24 +2123,24 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
 
       {/* 5. MODAL: ADD / EDIT BANNER */}
       {isBannerModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-sm border border-slate-300 shadow-2xl max-w-xl w-full flex flex-col overflow-hidden my-auto">
-            <div className="p-4 bg-[#172337] text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-xl w-full flex flex-col overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 bg-[#0B101E] text-white flex items-center justify-between">
               <div>
                 <h3 className="text-base font-black">
                   {editingBannerId ? 'Edit Hero Banner' : 'Create New Promotional Hero Banner'}
                 </h3>
-                <p className="text-xs text-slate-300">Visible on the customer homepage slider</p>
+                <p className="text-xs text-slate-400">Visible on the customer homepage slider</p>
               </div>
               <button
                 onClick={() => setIsBannerModalOpen(false)}
-                className="p-1 text-white/80 hover:text-white rounded-xs"
+                className="p-1.5 text-white/80 hover:text-white rounded-lg hover:bg-white/10"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveBanner} className="p-4 sm:p-6 space-y-4 text-xs font-sans">
+            <form onSubmit={handleSaveBanner} className="p-5 sm:p-6 space-y-4 text-xs font-sans">
               <div className="space-y-1">
                 <label className="font-bold text-slate-700">Headline / Title *</label>
                 <input
@@ -2126,7 +2149,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                   value={bannerForm.title}
                   onChange={(e) => setBannerForm({ ...bannerForm, title: e.target.value })}
                   placeholder="e.g. Ayurvedic Immunity Mahotsav - Up to 50% Off"
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
+                  className="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30"
                 />
               </div>
 
@@ -2137,7 +2160,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                   value={bannerForm.subtitle}
                   onChange={(e) => setBannerForm({ ...bannerForm, subtitle: e.target.value })}
                   placeholder="e.g. NABL Certified Classical Rasayanas &amp; Pure Shilajit"
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
+                  className="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30"
                 />
               </div>
 
@@ -2148,7 +2171,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     type="text"
                     value={bannerForm.tag}
                     onChange={(e) => setBannerForm({ ...bannerForm, tag: e.target.value })}
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
+                    className="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30"
                   />
                 </div>
 
@@ -2158,7 +2181,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     type="text"
                     value={bannerForm.ctaText}
                     onChange={(e) => setBannerForm({ ...bannerForm, ctaText: e.target.value })}
-                    className="w-full border border-slate-300 rounded-xs p-2 text-xs focus:outline-none focus:border-[#128983]"
+                    className="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30"
                   />
                 </div>
               </div>
@@ -2169,7 +2192,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                   type="text"
                   value={bannerForm.ctaLink}
                   onChange={(e) => setBannerForm({ ...bannerForm, ctaLink: e.target.value })}
-                  className="w-full border border-slate-300 rounded-xs p-2 text-xs font-mono focus:outline-none focus:border-[#128983]"
+                  className="w-full border border-slate-200 rounded-xl p-2.5 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-teal-500/30"
                 />
               </div>
 
@@ -2181,26 +2204,26 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                       key={grad.label}
                       type="button"
                       onClick={() => setBannerForm({ ...bannerForm, bgGradient: grad.value })}
-                      className={`p-2 rounded-xs border text-left flex items-center gap-2 ${
+                      className={`p-2.5 rounded-xl border text-left flex items-center gap-2.5 transition-all ${
                         bannerForm.bgGradient === grad.value
-                          ? 'border-[#128983] ring-1 ring-[#128983]'
-                          : 'border-slate-200'
+                          ? 'border-teal-600 bg-teal-50/40 ring-1 ring-teal-500'
+                          : 'border-slate-200 hover:border-slate-300'
                       }`}
                     >
-                      <div className={`w-5 h-5 rounded-xs bg-gradient-to-r ${grad.value} shrink-0`} />
+                      <div className={`w-6 h-6 rounded-lg bg-gradient-to-r ${grad.value} shrink-0 shadow-xs`} />
                       <span className="text-[11px] font-bold text-slate-800 truncate">{grad.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="pt-2 flex items-center justify-between border-t border-slate-200">
+              <div className="pt-3 flex items-center justify-between border-t border-slate-100">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={bannerForm.active}
                     onChange={(e) => setBannerForm({ ...bannerForm, active: e.target.checked })}
-                    className="w-4 h-4 text-[#128983] rounded-xs"
+                    className="w-4 h-4 text-teal-700 rounded-md"
                   />
                   <span className="font-bold text-slate-800">Active (Visible on Carousel)</span>
                 </label>
@@ -2209,13 +2232,13 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                   <button
                     type="button"
                     onClick={() => setIsBannerModalOpen(false)}
-                    className="px-4 py-2 border border-slate-300 text-slate-700 font-bold rounded-xs hover:bg-slate-50 transition-colors"
+                    className="px-4 py-2 border border-slate-200 text-slate-600 font-bold rounded-xl"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-[#128983] hover:bg-[#0d6e68] text-white font-bold rounded-xs shadow-xs transition-colors"
+                    className="px-5 py-2 bg-teal-700 hover:bg-teal-800 text-white font-bold rounded-xl shadow-xs"
                   >
                     {editingBannerId ? 'Update Banner' : 'Publish Banner'}
                   </button>
@@ -2226,14 +2249,14 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
         </div>
       )}
 
-      {/* 6. MODAL: PRESCRIPTION AUDIT & APPROVAL (TRUEMEDS) */}
+      {/* 6. MODAL: PRESCRIPTION AUDIT & APPROVAL */}
       {viewingRx && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/70 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-md border border-slate-300 shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto">
-            <div className="p-4 bg-[#128983] text-white flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full max-h-[92vh] flex flex-col overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-5 bg-gradient-to-r from-teal-700 to-emerald-700 text-white flex items-center justify-between">
               <div>
                 <h3 className="text-base font-black">
-                  Pharmacist Prescription Review — {viewingRx.id}
+                  Prescription Review — {viewingRx.id}
                 </h3>
                 <p className="text-xs text-teal-100">
                   Patient: {viewingRx.patientName} ({viewingRx.phone} · PIN: {viewingRx.pin})
@@ -2241,28 +2264,28 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
               </div>
               <button
                 onClick={() => setViewingRx(null)}
-                className="p-1 text-white/80 hover:text-white rounded-xs"
+                className="p-1.5 text-white/80 hover:text-white rounded-lg hover:bg-white/10"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="p-5 space-y-4 overflow-y-auto text-xs">
+            <div className="p-5 sm:p-6 space-y-4 overflow-y-auto text-xs">
               <div className="flex flex-col sm:flex-row gap-4 items-start">
-                <div className="w-full sm:w-1/2 border border-slate-200 rounded-md overflow-hidden bg-slate-100">
+                <div className="w-full sm:w-1/2 border border-slate-200 rounded-xl overflow-hidden bg-slate-50 shadow-inner">
                   <img
                     src={viewingRx.imageUrl}
                     alt="Doctor Prescription Slip"
                     className="w-full h-56 object-cover"
                   />
-                  <div className="p-2 text-center text-[10px] text-slate-500 font-semibold bg-white border-t border-slate-200">
+                  <div className="p-2.5 text-center text-[10px] text-slate-500 font-semibold bg-white border-t border-slate-200">
                     Uploaded Doctor&apos;s Prescription Slip
                   </div>
                 </div>
 
                 <div className="w-full sm:w-1/2 space-y-3">
-                  <div className="p-3 bg-teal-50 border border-teal-200 rounded-sm space-y-1">
-                    <span className="text-[10px] font-black text-[#128983] uppercase tracking-wide">
+                  <div className="p-3 bg-teal-50 border border-teal-200 rounded-xl space-y-1">
+                    <span className="text-[10px] font-black text-teal-800 uppercase tracking-wide">
                       Customer Savings Preference:
                     </span>
                     <div className="font-bold text-slate-800 text-xs">
@@ -2278,7 +2301,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                       type="text"
                       defaultValue={viewingRx.prescribedDrug}
                       id="rx-drug-input"
-                      className="w-full border border-slate-300 rounded-xs p-2 font-medium"
+                      className="w-full border border-slate-200 rounded-xl p-2.5 font-medium"
                     />
                   </div>
 
@@ -2288,17 +2311,17 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                       type="text"
                       defaultValue={viewingRx.recommendedHerbal}
                       id="rx-herbal-input"
-                      className="w-full border border-slate-300 rounded-xs p-2 font-bold text-[#128983]"
+                      className="w-full border border-slate-200 rounded-xl p-2.5 font-bold text-teal-700"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+              <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
                 <button
                   type="button"
                   onClick={() => handleUpdateRxStatus(viewingRx.id, 'REJECTED')}
-                  className="px-3 py-2 text-red-600 hover:bg-red-50 font-bold rounded-xs border border-red-200"
+                  className="px-3.5 py-2 text-rose-600 hover:bg-rose-50 font-bold rounded-xl border border-rose-200"
                 >
                   Reject Invalid Slip
                 </button>
@@ -2310,7 +2333,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                       const input = (document.getElementById('rx-herbal-input') as HTMLInputElement)?.value;
                       handleUpdateRxStatus(viewingRx.id, 'SUBSTITUTE_RECOMMENDED', input);
                     }}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xs shadow-xs"
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-xs"
                   >
                     Suggest 51% Substitute
                   </button>
@@ -2321,7 +2344,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                       const input = (document.getElementById('rx-herbal-input') as HTMLInputElement)?.value;
                       handleUpdateRxStatus(viewingRx.id, 'APPROVED', input);
                     }}
-                    className="px-5 py-2 bg-[#128983] hover:bg-[#0d6e68] text-white font-black rounded-xs shadow-sm flex items-center gap-1.5"
+                    className="px-5 py-2 bg-teal-700 hover:bg-teal-800 text-white font-black rounded-xl shadow-sm flex items-center gap-1.5"
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>Approve &amp; Send WhatsApp Cart</span>
@@ -2335,8 +2358,8 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
 
       {/* 7. MODAL: GST TAX INVOICE PRINT VIEW */}
       {printingOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-md border border-slate-300 shadow-2xl max-w-xl w-full p-6 space-y-4 my-auto text-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-xl w-full p-6 space-y-4 my-auto text-xs animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between border-b pb-3">
               <div>
                 <h3 className="text-base font-black text-slate-900">TAX INVOICE / CASH MEMO</h3>
@@ -2344,7 +2367,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
               </div>
               <button
                 onClick={() => setPrintingOrder(null)}
-                className="p-1 text-slate-400 hover:text-slate-800"
+                className="p-1.5 text-slate-400 hover:text-slate-800 rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -2352,7 +2375,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
 
             <div className="grid grid-cols-2 gap-4 text-[11px]">
               <div>
-                <span className="font-bold text-slate-500 block">Sold By:</span>
+                <span className="font-bold text-slate-400 block">Sold By:</span>
                 <div className="font-bold text-slate-900">VedaFlow Botanical Pharmacy</div>
                 <div>Embassy Tech Village, Outer Ring Road</div>
                 <div>Bengaluru, Karnataka 560103</div>
@@ -2361,7 +2384,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
               </div>
 
               <div>
-                <span className="font-bold text-slate-500 block">Billed To (Customer):</span>
+                <span className="font-bold text-slate-400 block">Billed To (Customer):</span>
                 <div className="font-bold text-slate-900">{printingOrder.customer}</div>
                 <div>Phone: {printingOrder.phone}</div>
                 <div>PIN: {printingOrder.pin}</div>
@@ -2369,32 +2392,32 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
               </div>
             </div>
 
-            <table className="w-full text-left text-xs border border-slate-200">
+            <table className="w-full text-left text-xs border border-slate-200 rounded-xl overflow-hidden">
               <thead className="bg-slate-50 font-bold border-b">
                 <tr>
-                  <th className="p-2">Item Description</th>
-                  <th className="p-2">Qty</th>
-                  <th className="p-2 text-right">Price</th>
+                  <th className="p-2.5">Item Description</th>
+                  <th className="p-2.5">Qty</th>
+                  <th className="p-2.5 text-right">Price</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="p-2 font-medium">{printingOrder.itemsSummary}</td>
-                  <td className="p-2">{printingOrder.itemsCount}</td>
-                  <td className="p-2 text-right font-bold">₹{printingOrder.amount}</td>
+                  <td className="p-2.5 font-medium">{printingOrder.itemsSummary}</td>
+                  <td className="p-2.5">{printingOrder.itemsCount}</td>
+                  <td className="p-2.5 text-right font-bold">₹{printingOrder.amount}</td>
                 </tr>
               </tbody>
             </table>
 
             <div className="flex justify-between items-center pt-2 border-t font-black text-sm">
               <span>Grand Total Paid (Inc. 5% AYUSH GST):</span>
-              <span className="text-[#128983]">₹{printingOrder.amount}</span>
+              <span className="text-teal-700">₹{printingOrder.amount}</span>
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => window.print()}
-                className="bg-[#128983] text-white px-4 py-2 rounded-xs font-bold flex items-center gap-1.5"
+                className="bg-teal-700 text-white px-5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow-sm"
               >
                 <Printer className="w-4 h-4" />
                 <span>Print Invoice</span>
@@ -2406,9 +2429,9 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
 
       {/* 8. MODAL: CREATE NEW COUPON */}
       {isCouponModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/60 backdrop-blur-xs">
-          <div className="bg-white rounded-sm border border-slate-300 shadow-2xl max-w-md w-full p-5 space-y-4">
-            <div className="flex items-center justify-between border-b pb-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/70 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between border-b pb-3">
               <h3 className="font-black text-sm text-slate-900">Create New Coupon Code</h3>
               <button onClick={() => setIsCouponModalOpen(false)}>
                 <X className="w-4 h-4 text-slate-400" />
@@ -2424,7 +2447,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                   placeholder="e.g. WELLNESS30"
                   value={couponForm.code}
                   onChange={(e) => setCouponForm({ ...couponForm, code: e.target.value })}
-                  className="w-full border border-slate-300 rounded-xs p-2 font-mono uppercase font-black"
+                  className="w-full border border-slate-200 rounded-xl p-2.5 font-mono uppercase font-black"
                 />
               </div>
 
@@ -2438,7 +2461,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     required
                     value={couponForm.discountPct}
                     onChange={(e) => setCouponForm({ ...couponForm, discountPct: Number(e.target.value) })}
-                    className="w-full border border-slate-300 rounded-xs p-2"
+                    className="w-full border border-slate-200 rounded-xl p-2.5"
                   />
                 </div>
                 <div className="space-y-1">
@@ -2449,7 +2472,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                     required
                     value={couponForm.minOrder}
                     onChange={(e) => setCouponForm({ ...couponForm, minOrder: Number(e.target.value) })}
-                    className="w-full border border-slate-300 rounded-xs p-2"
+                    className="w-full border border-slate-200 rounded-xl p-2.5"
                   />
                 </div>
               </div>
@@ -2461,7 +2484,7 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                   placeholder="e.g. Save 30% on classical Rasayanas"
                   value={couponForm.description}
                   onChange={(e) => setCouponForm({ ...couponForm, description: e.target.value })}
-                  className="w-full border border-slate-300 rounded-xs p-2"
+                  className="w-full border border-slate-200 rounded-xl p-2.5"
                 />
               </div>
 
@@ -2469,13 +2492,13 @@ Why pay ₹1,000+ for chemical supplements when authentic Charaka Samhita formul
                 <button
                   type="button"
                   onClick={() => setIsCouponModalOpen(false)}
-                  className="px-3 py-1.5 border border-slate-300 rounded-xs"
+                  className="px-3.5 py-2 border border-slate-200 rounded-xl font-bold text-slate-600"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-[#128983] text-white px-4 py-1.5 rounded-xs font-bold"
+                  className="bg-teal-700 hover:bg-teal-800 text-white px-5 py-2 rounded-xl font-bold shadow-xs"
                 >
                   Publish Coupon
                 </button>
